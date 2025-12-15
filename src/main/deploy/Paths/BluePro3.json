@@ -1,0 +1,322 @@
+{
+  "curves": [
+    {
+      "startPoint": {
+        "x": 224.0,
+        "y": 282.0,
+        "degrees": 0.0,
+        "error": 12.0,
+        "velocity": 3.5
+      },
+      "endPoint": {
+        "x": 195.0,
+        "y": 146.0,
+        "degrees": 240.0,
+        "error": 12.0,
+        "velocity": 3.5
+      },
+      "constraintPoint0": {
+        "x": 249.58359872611464,
+        "y": 207.56779661016952,
+        "degrees": 0.0,
+        "error": 0.0,
+        "velocity": 0.0
+      },
+      "constraintPoint1": {
+        "x": 238.85708598726114,
+        "y": 136.3813559322034,
+        "degrees": 0.0,
+        "error": 0.0,
+        "velocity": 0.0
+      }
+    },
+    {
+      "startPoint": {
+        "x": 194.6890923566879,
+        "y": 147.18644067796612,
+        "degrees": 240.0,
+        "error": 12.0,
+        "velocity": 3.5
+      },
+      "endPoint": {
+        "x": 230.5,
+        "y": 89.34745762711866,
+        "degrees": 180.0,
+        "error": 12.0,
+        "velocity": 3.5
+      },
+      "constraintPoint0": {
+        "x": 229.39251592356686,
+        "y": 124.30508474576273,
+        "degrees": 0.0,
+        "error": 0.0,
+        "velocity": 0.0
+      },
+      "constraintPoint1": {
+        "x": 227.499601910828,
+        "y": 108.41525423728815,
+        "degrees": 0.0,
+        "error": 0.0,
+        "velocity": 0.0
+      }
+    },
+    {
+      "startPoint": {
+        "x": 230.5,
+        "y": 89.34745762711866,
+        "degrees": 180.0,
+        "error": 12.0,
+        "velocity": 3.5
+      },
+      "endPoint": {
+        "x": 180.17675159235668,
+        "y": 87.4406779661017,
+        "degrees": 180.0,
+        "error": 12.0,
+        "velocity": 3.5
+      },
+      "constraintPoint0": {
+        "x": 236.9641719745223,
+        "y": 34.686440677966104,
+        "degrees": 0.0,
+        "error": 0.0,
+        "velocity": 0.0
+      },
+      "constraintPoint1": {
+        "x": 211.72531847133757,
+        "y": 60.11016949152543,
+        "degrees": 0.0,
+        "error": 0.0,
+        "velocity": 0.0
+      }
+    },
+    {
+      "startPoint": {
+        "x": 180.17675159235668,
+        "y": 87.4406779661017,
+        "degrees": 180.0,
+        "error": 12.0,
+        "velocity": 3.5
+      },
+      "endPoint": {
+        "x": 166.0,
+        "y": 128.5,
+        "degrees": 180.0,
+        "error": 12.0,
+        "velocity": 3.5
+      },
+      "constraintPoint0": {
+        "x": 168.18829617834393,
+        "y": 98.24576271186442,
+        "degrees": 0.0,
+        "error": 0.0,
+        "velocity": 0.0
+      },
+      "constraintPoint1": {
+        "x": 166.29538216560508,
+        "y": 112.22881355932205,
+        "degrees": 0.0,
+        "error": 0.0,
+        "velocity": 0.0
+      }
+    },
+    {
+      "startPoint": {
+        "x": 166.0,
+        "y": 128.5,
+        "degrees": 180.0,
+        "error": 12.0,
+        "velocity": 3.5
+      },
+      "endPoint": {
+        "x": 158.5,
+        "y": 87.4406779661017,
+        "degrees": 180.0,
+        "error": 12.0,
+        "velocity": 3.5
+      },
+      "constraintPoint0": {
+        "x": 165.66441082802547,
+        "y": 113.50000000000001,
+        "degrees": 0.0,
+        "error": 0.0,
+        "velocity": 0.0
+      },
+      "constraintPoint1": {
+        "x": 158.72372611464968,
+        "y": 102.05932203389831,
+        "degrees": 0.0,
+        "error": 0.0,
+        "velocity": 0.0
+      }
+    },
+    {
+      "startPoint": {
+        "x": 158.5,
+        "y": 87.4406779661017,
+        "degrees": 180.0,
+        "error": 12.0,
+        "velocity": 3.5
+      },
+      "endPoint": {
+        "x": 153.0,
+        "y": 128.5,
+        "degrees": 180.0,
+        "error": 12.0,
+        "velocity": 3.5
+      },
+      "constraintPoint0": {
+        "x": 154.30692675159233,
+        "y": 98.24576271186442,
+        "degrees": 0.0,
+        "error": 0.0,
+        "velocity": 0.0
+      },
+      "constraintPoint1": {
+        "x": 150.52109872611462,
+        "y": 107.77966101694916,
+        "degrees": 0.0,
+        "error": 0.0,
+        "velocity": 0.0
+      }
+    }
+  ],
+  "cmdObjects": [
+    {
+      "cmds": [
+        {
+          "selectedCMD": "Wait",
+          "value": 1.0
+        },
+        {
+          "selectedCMD": "ScoreL4",
+          "value": 0.0
+        },
+        {
+          "selectedCMD": "Wait",
+          "value": 0.25
+        },
+        {
+          "selectedCMD": "Ground",
+          "value": 0.0
+        }
+      ],
+      "spline": 0,
+      "pos": 0.958
+    },
+    {
+      "cmds": [
+        {
+          "selectedCMD": "Wait",
+          "value": 0.0
+        },
+        {
+          "selectedCMD": "Trip",
+          "value": 0.0
+        },
+        {
+          "selectedCMD": "MoveForwardAndIntake",
+          "value": 1.5
+        }
+      ],
+      "spline": 1,
+      "pos": 0.966
+    },
+    {
+      "cmds": [
+        {
+          "selectedCMD": "Wait",
+          "value": 1.0
+        },
+        {
+          "selectedCMD": "ScoreL4",
+          "value": 0.0
+        },
+        {
+          "selectedCMD": "Wait",
+          "value": 0.25
+        },
+        {
+          "selectedCMD": "Ground",
+          "value": 0.0
+        }
+      ],
+      "spline": 3,
+      "pos": 0.9280000000000007
+    },
+    {
+      "cmds": [
+        {
+          "selectedCMD": "Wait",
+          "value": 0.25
+        },
+        {
+          "selectedCMD": "Trip",
+          "value": 0.0
+        },
+        {
+          "selectedCMD": "MoveForwardAndIntake",
+          "value": 2.0
+        }
+      ],
+      "spline": 4,
+      "pos": 0.9996923076923079
+    },
+    {
+      "cmds": [
+        {
+          "selectedCMD": "Wait",
+          "value": 1.0
+        },
+        {
+          "selectedCMD": "ScoreL4",
+          "value": 0.0
+        },
+        {
+          "selectedCMD": "Wait",
+          "value": 0.25
+        },
+        {
+          "selectedCMD": "Stow",
+          "value": 0.0
+        },
+        {
+          "selectedCMD": "Wait",
+          "value": 2.0
+        }
+      ],
+      "spline": 5,
+      "pos": 0.998
+    },
+    {
+      "cmds": [
+        {
+          "selectedCMD": "MoveToL4",
+          "value": 0.0
+        }
+      ],
+      "spline": 2,
+      "pos": 0.6072631578947366
+    },
+    {
+      "cmds": [
+        {
+          "selectedCMD": "MoveToL4",
+          "value": 0.0
+        }
+      ],
+      "spline": 5,
+      "pos": 0.2721951219512193
+    },
+    {
+      "cmds": [
+        {
+          "selectedCMD": "MoveToL4",
+          "value": 0.0
+        }
+      ],
+      "spline": 0,
+      "pos": 0.5467625899280576
+    }
+  ]
+}
