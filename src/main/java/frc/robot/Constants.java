@@ -112,4 +112,5 @@ public class Constants {
         public static final double kMaxSpeedInchesPerSecond = Units.metersToInches(kMaxSpeedMetersPerSecond);
         public static final double kMaxAccelerationInchesPerSecondSquared = Units.metersToInches(kMaxAccelerationMetersPerSecondSquared);
     }
+
 }

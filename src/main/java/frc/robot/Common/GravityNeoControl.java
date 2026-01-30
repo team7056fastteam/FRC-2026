@@ -5,8 +5,6 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.SparkBase.ControlType;
-import com.revrobotics.spark.SparkBase.PersistMode;
-import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.ClosedLoopConfig;
 import com.revrobotics.spark.config.EncoderConfig;
@@ -66,11 +64,12 @@ public class GravityNeoControl {
         motorConfig.idleMode(IdleMode.kBrake);
         motorConfig.inverted(reveresed);
         motorConfig.smartCurrentLimit(0,0,0);
-        motorConfig.apply(new ClosedLoopConfig().pidf(kP, kI, kD, 0));
+        // motorConfig.apply(new ClosedLoopConfig().pidf(kP, kI, kD, 0)); 
+        motorConfig.apply(new ClosedLoopConfig().pid(kP, kI, kD)); 
         motorConfig.apply(new EncoderConfig().positionConversionFactor(gearRatio).velocityConversionFactor(gearRatio));
 
 
-        motor.configure(motorConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
+        motor.configure(motorConfig, com.revrobotics.ResetMode.kNoResetSafeParameters, com.revrobotics.PersistMode.kNoPersistParameters);
     }
 
     public GravityNeoControl(int motorID, double gearRatio, Boolean reveresed, double kMinPosition, double kMaxPosition, double kMaxVelocity, double kMaxAcceleration, double kMaxPower, PIDValues pids, FeedForwardValues feed){ 
@@ -94,11 +93,11 @@ public class GravityNeoControl {
         motorConfig.idleMode(IdleMode.kBrake);
         motorConfig.inverted(reveresed);
         // motorConfig.smartCurrentLimit(0,0,0);
-        motorConfig.apply(new ClosedLoopConfig().pidf(kP, kI, kD, 0).outputRange(-kMaxPower, kMaxPower));
+        motorConfig.apply(new ClosedLoopConfig().pid(kP, kI, kD).outputRange(-kMaxPower, kMaxPower));
         motorConfig.apply(new EncoderConfig().positionConversionFactor(gearRatio).velocityConversionFactor(gearRatio));
 
 
-        motor.configure(motorConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
+        motor.configure(motorConfig, com.revrobotics.ResetMode.kNoResetSafeParameters, com.revrobotics.PersistMode.kNoPersistParameters);
     }
 
     public void init(){
@@ -131,7 +130,9 @@ public class GravityNeoControl {
             encoder.setPosition(getEncoderRadians());
         }
         setpoint = mProfile.calculate(0.02, setpoint, goal);
-        motor.getClosedLoopController().setReference(setpoint.position, ControlType.kPosition,ClosedLoopSlot.kSlot0,
+        // motor.getClosedLoopController().setReference(setpoint.position, ControlType.kPosition,ClosedLoopSlot.kSlot0,
+        // armFeedForwardCalculate(setpoint.position, setpoint.velocity, 0));
+        motor.getClosedLoopController().setSetpoint(setpoint.position, ControlType.kPosition, ClosedLoopSlot.kSlot0,
         armFeedForwardCalculate(setpoint.position, setpoint.velocity, 0));
     }
 

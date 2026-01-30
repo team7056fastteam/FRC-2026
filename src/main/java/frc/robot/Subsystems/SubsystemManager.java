@@ -12,16 +12,25 @@ public class SubsystemManager {
     private List<FastSubsystemBase> subsystems = new ArrayList<>();
 
     private SwerveSubsystem _swerve;
-
+    private Spindexer _spindexer;
+    private Shooter _shooter;
+    private Intake _intake;
+    private IntakePivot _intakePivot;
     KurtLogger logger;
     
     public void registerSubsystems(){
         //Create the subsystems
         _swerve = new SwerveSubsystem();
-        // _outTake = new BackUpIntake();
+        _spindexer = new Spindexer();
+        _shooter = new Shooter();
+        _intake = new Intake();
+        _intakePivot = new IntakePivot();
         // Initialize and add subsystems to the list
         subsystems.add(_swerve);
-        // subsystems.add(_outTake);
+        subsystems.add(_spindexer);
+        subsystems.add(_shooter);
+        subsystems.add(_intake);
+        subsystems.add(_intakePivot);
     }
 
     public static SubsystemManager getInstance() {

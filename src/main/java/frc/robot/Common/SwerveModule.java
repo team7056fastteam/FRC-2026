@@ -1,8 +1,6 @@
 package frc.robot.Common;
 
 import com.revrobotics.RelativeEncoder;
-import com.revrobotics.spark.SparkBase.PersistMode;
-import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.EncoderConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
@@ -43,9 +41,9 @@ public class SwerveModule {
         turningMotor = new SparkMax(turningMotorId, MotorType.kBrushless);
 
         driveMotor.configure(driveMotorConfig.inverted(driveMotorReversed).apply(new EncoderConfig().velocityConversionFactor(ModuleConstants.kDriveEncoderRPM2MeterPerSec)),
-            ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
+            com.revrobotics.ResetMode.kNoResetSafeParameters, com.revrobotics.PersistMode.kNoPersistParameters);
         turningMotor.configure(turningMotorConfig.inverted(turningMotorReversed),
-            ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
+            com.revrobotics.ResetMode.kNoResetSafeParameters, com.revrobotics.PersistMode.kNoPersistParameters);
 
         driveEncoder = driveMotor.getEncoder();
 
