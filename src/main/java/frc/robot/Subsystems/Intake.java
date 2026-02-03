@@ -4,12 +4,12 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.KurtLogger;
 import frc.robot.Common.FastSubsystemBase;
 
 public class Intake extends FastSubsystemBase {
-    //TODO Real enum
-    public enum IntakeState{Idle,Forward}
+    public enum IntakeState{Idle,Forward, ForwardSlow, Backward}
     IntakeState state = IntakeState.Idle;
     KurtLogger logger;
     SparkMax intakeMotor;
@@ -35,20 +35,27 @@ public class Intake extends FastSubsystemBase {
                 break;
             case Idle:
                 intakeMotor.set(0);
-                break;    
+                break;   
+            case ForwardSlow:
+                intakeMotor.set(IntakeConstants.IntakeForwardSlowVelocity);
+            case Backward:
+                intakeMotor.set(IntakeConstants.IntakeBackwardVelocity);
         }
     }
 
     @Override
     public void stop() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'stop'");
+        intakeMotor.stopMotor();
     }
 
     @Override
     public void dashboard() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'dashboard'");
+        SmartDashboard.putNumber("Intake Current", intakeMotor.getOutputCurrent());
+        SmartDashboard.putString("Intake State", state.toString());
+    }
+
+    public void setState(IntakeState state){
+        this.state = state;
     }
     
     public static final class IntakeConstants{
@@ -56,6 +63,8 @@ public class Intake extends FastSubsystemBase {
         public static final int IntakeMotorID = 0;
         public static final boolean ReversedIntake = false;
         public static final double IntakeForwardVelocity = 0;
+        public static final double IntakeForwardSlowVelocity = 0;
+        public static final double IntakeBackwardVelocity = -.1;
     }
 
 }

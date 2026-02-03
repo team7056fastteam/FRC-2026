@@ -66,7 +66,7 @@ public class ControllerFunction {
         return driver.getAButton();
     }
     /**Driver Y Button*/
-    public boolean ResetHeadingToNearestTag(){
+    public boolean ResetHeadingHub(){
         return driver.getYButton();
     }
     /**Driver D-Pad Up */
@@ -90,19 +90,19 @@ public class ControllerFunction {
         return driver.getRawAxis(2) > 0.1;
     }
     /**Operator A Button*/
-    public boolean Stow(){
+    public boolean IntakePivotToggle(){
         return operator.getAButton();
     }
     /**Operator B Button*/
-    public boolean Score(){
+    public boolean Shoot(){
         return operator.getBButton();
     }
     /**Operator Y Button*/
-    public boolean GroundGrab(){
+    public boolean ToggleSpindexer(){
         return operator.getYButton();
     }
     /**Operator X Button*/
-    public boolean Home(){
+    public boolean IntakePivotRehome(){
         return operator.getXButton();
     }
     /**Operator Left Bumper*/
@@ -114,7 +114,7 @@ public class ControllerFunction {
         return operator.getRightBumperButton();
     }
     /**Operator Left Trigger*/
-    public boolean FlipWrist(){
+    public boolean IngestSlow(){
         return operator.getRawAxis(2) > 0.1;
     }
     /**Operator Left Trigger*/
@@ -126,19 +126,19 @@ public class ControllerFunction {
         return operator.getRawAxis(3) > 0.1;
     }
     // /**Operator POV Up*/
-    public boolean L4(){
+    public boolean OverrideShortShot(){
         return operator.getPOV() == 0;
     }
     /**Operator POV Down*/
-    public boolean L2(){
+    public boolean OverrideMidShot(){
         return operator.getPOV() == 180;
     }
     /**Operator POV Right*/
-    public boolean L3(){
+    public boolean OverrideLongShot(){
         return operator.getPOV() == 90;
     }
     /**Operator POV Left*/
-    public boolean L1(){
+    public boolean AutoTargeting(){
         return operator.getPOV() == 270;
     }
     /**Operator Stick Up*/

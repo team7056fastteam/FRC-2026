@@ -16,6 +16,7 @@ public class SubsystemManager {
     private Shooter _shooter;
     private Intake _intake;
     private IntakePivot _intakePivot;
+    private Kicker _kicker;
     KurtLogger logger;
     
     public void registerSubsystems(){
@@ -25,12 +26,14 @@ public class SubsystemManager {
         _shooter = new Shooter();
         _intake = new Intake();
         _intakePivot = new IntakePivot();
+        _kicker = new Kicker();
         // Initialize and add subsystems to the list
         subsystems.add(_swerve);
         subsystems.add(_spindexer);
         subsystems.add(_shooter);
         subsystems.add(_intake);
         subsystems.add(_intakePivot);
+        subsystems.add(_kicker);
     }
 
     public static SubsystemManager getInstance() {
@@ -67,5 +70,29 @@ public class SubsystemManager {
         for (FastSubsystemBase subsystem : subsystems) {
             subsystem.dashboard();
         }
+    }
+
+    public SwerveSubsystem getSwerveInstance(){
+        return _swerve;
+    }
+
+    public Spindexer getSpindexerInstance(){
+        return _spindexer;
+    }
+
+    public Intake getIntakeInstance(){
+        return _intake;
+    }
+
+    public IntakePivot getIntakePivotInstance(){
+        return _intakePivot;
+    }
+
+    public Shooter getShooterInstance(){
+        return _shooter;
+    }
+
+    public Kicker getKickerInstance(){
+        return _kicker;
     }
 }
