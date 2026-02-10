@@ -7,14 +7,12 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.Common.FastSubsystemBase;
-import frc.robot.KurtLogger;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class Spindexer extends FastSubsystemBase {
+public class Spindexer extends SubsystemBase {
 
     SparkMax spindexerMotor;
     SparkMaxConfig motorConfig;
-    KurtLogger logger;
     private Timer timer = new Timer();
 
     public enum SpindexerState{Idle, Forward, ForwardSlow}
@@ -28,13 +26,9 @@ public class Spindexer extends FastSubsystemBase {
         spindexerMotor.configure(motorConfig, com.revrobotics.ResetMode.kNoResetSafeParameters, com.revrobotics.PersistMode.kNoPersistParameters);
     }
 
-    @Override
-    public void Init(KurtLogger logger) {
-        this.logger = logger;
-    }
 
     @Override
-    public void run() {
+    public void periodic() {
         switch(state){
             case Forward:
             spindexerMotor.set(SpindexerConstants.SpindexerForwardVelocity);
@@ -48,13 +42,13 @@ public class Spindexer extends FastSubsystemBase {
         }
     }
 
-    @Override
-    public void stop() {
-       logger = null;
-       spindexerMotor.stopMotor();
-    }
+    // @Override
+    // public void stop() {
+    //    logger = null;
+    //    spindexerMotor.stopMotor();
+    // }
 
-    @Override
+    // @Override
     public void dashboard() {
         SmartDashboard.putNumber("Spindexer Current", spindexerMotor.getOutputCurrent());
         SmartDashboard.putString("Spindexer State", state.toString());
@@ -88,7 +82,7 @@ public class Spindexer extends FastSubsystemBase {
     
     public static final class SpindexerConstants{
         // TODO Find Actual Constants
-        public static final int SpindexerMotorID = 0;
+        public static final int SpindexerMotorID = 11;
         public static final boolean ReversedSpindexer = false;
 
         public static final double SpindexerForwardVelocity = 0;

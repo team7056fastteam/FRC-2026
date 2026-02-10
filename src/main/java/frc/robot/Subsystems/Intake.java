@@ -5,13 +5,12 @@ import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.KurtLogger;
-import frc.robot.Common.FastSubsystemBase;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+// import frc.robot.Common.FastSubsystemBase;
 
-public class Intake extends FastSubsystemBase {
+public class Intake extends SubsystemBase {
     public enum IntakeState{Idle,Forward, ForwardSlow, Backward}
     IntakeState state = IntakeState.Idle;
-    KurtLogger logger;
     SparkMax intakeMotor;
     SparkMaxConfig motorConfig;
 
@@ -22,13 +21,9 @@ public class Intake extends FastSubsystemBase {
         intakeMotor.configure(motorConfig, com.revrobotics.ResetMode.kNoResetSafeParameters, com.revrobotics.PersistMode.kNoPersistParameters);
     }
 
-    @Override
-    public void Init(KurtLogger logger) {
-        this.logger = logger;
-    }
 
     @Override
-    public void run() {
+    public void periodic() {
         switch (state) {
             case Forward:
                 intakeMotor.set(IntakeConstants.IntakeForwardVelocity);
@@ -43,12 +38,12 @@ public class Intake extends FastSubsystemBase {
         }
     }
 
-    @Override
-    public void stop() {
-        intakeMotor.stopMotor();
-    }
+    // @Override
+    // public void stop() {
+    //     intakeMotor.stopMotor();
+    // }
 
-    @Override
+    // @Override
     public void dashboard() {
         SmartDashboard.putNumber("Intake Current", intakeMotor.getOutputCurrent());
         SmartDashboard.putString("Intake State", state.toString());
@@ -58,9 +53,10 @@ public class Intake extends FastSubsystemBase {
         this.state = state;
     }
     
+    
     public static final class IntakeConstants{
         //TODO Find Actual Constants
-        public static final int IntakeMotorID = 0;
+        public static final int IntakeMotorID = 10;
         public static final boolean ReversedIntake = false;
         public static final double IntakeForwardVelocity = 0;
         public static final double IntakeForwardSlowVelocity = 0;

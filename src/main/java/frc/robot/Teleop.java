@@ -23,7 +23,6 @@ import frc.robot.Subsystems.Spindexer.SpindexerState;
 import frc.robot.Subsystems.SwerveSubsystem.SwerveState;
 
 public class Teleop {
-    SubsystemManager _manager = SubsystemManager.getInstance();
     SwerveSubsystem _drive;
     Intake _intake;
     Spindexer _spindexer;
@@ -53,12 +52,12 @@ public class Teleop {
     Boolean up, down, right, left;
 
     public void TeleopInit(){
-        _drive = _manager.getSwerveInstance();
-        _intake = _manager.getIntakeInstance();
-        _intakePivot = _manager.getIntakePivotInstance();
-        _kicker = _manager.getKickerInstance();
-        _shooter = _manager.getShooterInstance();
-        _spindexer = _manager.getSpindexerInstance();
+        _drive = Robot.getSwerveInstance();
+        // _intake = Robot.getIntakeInstance();
+        // _intakePivot = Robot.getIntakePivotInstance();
+        // _kicker = Robot.getKickerInstance();
+        // _shooter = Robot.getShooterInstance();
+        // _spindexer = Robot.getSpindexerInstance();
         
         get = new ControllerFunction(driver, operator);
 
@@ -76,7 +75,7 @@ public class Teleop {
             yPowerOffset = 0;
         });
 
-        get.isPressed(driver.getAButton(),() -> Robot.setPose(new Pose2d(0,0, Rotation2d.fromDegrees(0))));
+        // get.isPressed(driver.getAButton(),() -> Robot.setPose(new Pose2d(0,0, Rotation2d.fromDegrees(0))));
 
 
         get.isPressed(get.Up() && up, ()-> {adjustment = adjustment.plus(new Translation2d(0,2)); up = false; System.out.println(adjustment.toString());});

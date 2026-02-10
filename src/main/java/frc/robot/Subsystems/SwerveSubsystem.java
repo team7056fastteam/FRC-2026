@@ -1,34 +1,43 @@
 package frc.robot.Subsystems;
 
+import frc.robot.Odometry;
+
+import com.pathplanner.lib.commands.FollowPathCommand;
+import com.pathplanner.lib.config.PIDConstants;
+import com.pathplanner.lib.config.RobotConfig;
+import com.pathplanner.lib.controllers.PPHolonomicDriveController;
+import com.pathplanner.lib.path.PathPlannerPath;
+import com.pathplanner.lib.util.DriveFeedforwards;
+
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
-import frc.robot.Common.FastSubsystemBase;
-import frc.robot.Common.FastTrajectory;
-import frc.robot.Common.PurePursuitController;
 import frc.robot.Common.SwerveHeadingController;
 import frc.robot.Common.SwerveModule;
 import frc.robot.Common.SwerveHeadingController.HeadingType;
 import frc.robot.Constants.*;
 import frc.robot.Constants;
-import frc.robot.KurtLogger;
-import frc.robot.KurtLogger.logType;
 
-public class SwerveSubsystem extends FastSubsystemBase{
+public class SwerveSubsystem extends SubsystemBase{
     private SwerveState state = SwerveState.Idle;
-
-    private KurtLogger logger;
 
     private ChassisSpeeds inputSpeeds = new ChassisSpeeds(0, 0, 0);
 
-    private FastTrajectory currentTraj = null;
-    private PurePursuitController mController;
-
     private SwerveHeadingController mHeadingController;
 
+    RobotConfig robotConfig;
+
+    private Odometry _odometry = Robot.getOdometryInstance();
+
+    
     public enum SwerveState{Idle, Lock_Wheels, TeleOp, Path_Following, Heading_Control, Auto_Extra}
 
     //sets the constants for each module
@@ -68,6 +77,8 @@ public class SwerveSubsystem extends FastSubsystemBase{
             DriveConstants.kBackRightDriveAbsoluteEncoderOffsetRad,
             DriveConstants.kBackRightDriveAbsoluteEncoderReversed);
 
+    
+
     //sets the states for each module
     public void setModuleStates(SwerveModuleState[] desiredStates) {
         SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
@@ -79,7 +90,6 @@ public class SwerveSubsystem extends FastSubsystemBase{
 
     public void setState(SwerveState state){
         this.state = state;
-        logger.logData(logType.event, state.toString(), "SwerveSubsystem");
     }
 
     public void runChassis(double driveX, double driveY, double driveZ){
@@ -121,10 +131,10 @@ public class SwerveSubsystem extends FastSubsystemBase{
             if (Math.abs(speeds.omegaRadiansPerSecond) > 1.0) {
                     state = SwerveState.TeleOp;
 			} else {
-                double x = speeds.vxMetersPerSecond;
-				double y = speeds.vyMetersPerSecond;
-				double theta = mHeadingController.calculate(Robot.getPose().getRotation().getRadians());
-                this.inputSpeeds = new ChassisSpeeds(x,y,theta);
+                // double x = speeds.vxMetersPerSecond;
+				// double y = speeds.vyMetersPerSecond;
+				// double theta = mHeadingController.calculate(Robot.getPose().getRotation().getRadians());
+                // this.inputSpeeds = new ChassisSpeeds(x,y,theta);
 				return;
 			}
         }
@@ -144,15 +154,21 @@ public class SwerveSubsystem extends FastSubsystemBase{
         this.inputSpeeds = speeds;
     }
 
-    @Override
-    public void Init(KurtLogger logger) {
-        this.logger = logger;
+    public SwerveSubsystem() {
         runChassis(0, 0, 0);
-        mController = new PurePursuitController();
+        // mController = new PurePursuitController();
         mHeadingController = new SwerveHeadingController();
+        try{
+      robotConfig = RobotConfig.fromGUISettings();
+    } catch (Exception e) {
+      // Handle exception as needed
+      e.printStackTrace();
     }
+
+    }
+
     @Override
-    public void run() {
+    public void periodic() {
         switch (state) {
             case Idle:
                 runChassis(0, 0, 0);
@@ -164,7 +180,7 @@ public class SwerveSubsystem extends FastSubsystemBase{
                 runChassis(inputSpeeds);
                 break;
             case Path_Following:
-                updatePathFollower();
+                // updatePathFollower();
                 runChassis(inputSpeeds);
                 break;
             case Lock_Wheels:
@@ -179,44 +195,67 @@ public class SwerveSubsystem extends FastSubsystemBase{
         }
     }
 
-    public SwerveState getState(){
-        return state;
-    }
+    public Command followPathCommand(String pathName){
+        try{
+            PathPlannerPath path = PathPlannerPath.fromPathFile(pathName);
 
-    @Override
-    public void stop() {
-        logger = null;
-        runChassis(0, 0, 0);
-    }
+            return new FollowPathCommand(
+                path,
+                () -> _odometry.getPose(), // Robot pose supplier
+                this::getRobotRelativeSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
+                this::drive, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds, AND feedforwards
+                new PPHolonomicDriveController( // PPHolonomicController is the built in path following controller for holonomic drive trains
+                        new PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
+                        new PIDConstants(5.0, 0.0, 0.0) // Rotation PID constants
+                ),
+                robotConfig, // The robot configuration
+                () -> {
+                  // Boolean supplier that controls when the path will be mirrored for the red alliance
+                  // This will flip the path being followed to the red side of the field.
+                  // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
 
-    public void setTrajectory(FastTrajectory trajectory){
-        if(trajectory == null) return;
-        setState(SwerveState.Path_Following);
-        mController.setTrajectory(trajectory);
-        currentTraj = trajectory;
-    }
-
-    public boolean trajectoryDone(){
-        if(currentTraj == null) return true; 
-        return currentTraj.isDone();
-    }
-
-    void updatePathFollower(){
-        if(currentTraj != null){
-            inputSpeeds = mController.update(Robot.getPose());
-            if(mController.isDone()){
-                currentTraj.reset();
-                setState(SwerveState.Idle);
-                currentTraj = null;
-            }
+                  var alliance = DriverStation.getAlliance();
+                  if (alliance.isPresent()) {
+                    return alliance.get() == DriverStation.Alliance.Red;
+                  }
+                  return false;
+                },
+                this // Reference to this subsystem to set requirements
+            );
+        } catch (Exception e) {
+            DriverStation.reportError("Big oops: " + e.getMessage(), e.getStackTrace());
+            return Commands.none();
         }
-        else{
-            setState(SwerveState.Idle);
-        }
-        
+  
     }
 
-    @Override
+    public SwerveModulePosition[] getModulePositions() {
+        return new SwerveModulePosition[] {
+            frontLeft.getPosition(),
+            frontRight.getPosition(),
+            backLeft.getPosition(),
+            backRight.getPosition()
+        };
+    }
+
+    public void drive(ChassisSpeeds speeds, DriveFeedforwards feedforwards) {
+        // PathPlanner outputs ROBOT-relative speeds
+        runChassis(speeds);
+    }
+
+
+
+    public ChassisSpeeds getRobotRelativeSpeeds() {
+        return DriveConstants.kDriveKinematics.toChassisSpeeds(
+            frontLeft.getState(),
+            frontRight.getState(),
+            backLeft.getState(),
+            backRight.getState()
+    );
+    }
+
+
+
     public void dashboard() {
         SmartDashboard.putString("Front Left State", frontLeft.getState().toString());
         SmartDashboard.putString("Front Right State", frontRight.getState().toString());

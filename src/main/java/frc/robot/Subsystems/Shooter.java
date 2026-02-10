@@ -6,19 +6,18 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.KurtLogger;
-import frc.robot.Common.FastSubsystemBase;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+// import frc.robot.Common.FastSubsystemBase;
 import frc.robot.Constants.FieldConstants;
 
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 
-public class Shooter extends FastSubsystemBase{
+public class Shooter extends SubsystemBase{
     public enum ShooterState{Idle, Targeting, Far, Close, Mid, Auto}
     ShooterState intendedState = ShooterState.Targeting;
     ShooterState state = ShooterState.Idle;
-    KurtLogger logger;
     SparkFlex shooterMotor;
     SparkFlexConfig motorConfig;
     Pose2d currentPose;
@@ -35,13 +34,15 @@ public class Shooter extends FastSubsystemBase{
         shooterMotor.configure(motorConfig, com.revrobotics.ResetMode.kNoResetSafeParameters, com.revrobotics.PersistMode.kNoPersistParameters);
     }
 
-    @Override
-    public void Init(KurtLogger logger) {
-        this.logger = logger;
-    }
+    
+
+    // @Override
+    // public void Init(KurtLogger logger) {
+    //     this.logger = logger;
+    // }
 
     @Override
-    public void run() {
+    public void periodic() {
         switch (state) {
             case Idle:
                 shooterMotor.set(0);
@@ -63,32 +64,47 @@ public class Shooter extends FastSubsystemBase{
         }
     }
 
-    @Override
-    public void stop() {
-        shooterMotor.stopMotor();
-    }
+    // @Override
+    // public void stop() {
+    //     shooterMotor.stopMotor();
+    // }
 
-    @Override
+    // @Override
     public void dashboard() {
         SmartDashboard.putNumber("Shooter RPM", shooterMotor.getEncoder().getVelocity());
         SmartDashboard.putNumber("Shooter Current", shooterMotor.getOutputCurrent());
         SmartDashboard.putString("Shooter State", state.toString());
     }
     
-public double calculateRPM() {
+    public double calculateRPM() {
     if (currentPose == null) return 0.0;
-    double horizontalDistance = currentPose.getTranslation().getDistance(FieldConstants.hubPos);
+
+    double horizontalDistance =
+        currentPose.getTranslation().getDistance(FieldConstants.hubPos);
+
+    horizontalDistance = MathUtil.clamp(horizontalDistance, 0.5, 8.0);
+
     double dz = FieldConstants.hubHeight - ShooterConstants.ShooterExitHeight;
-    double denominator = 2 * Math.pow(Math.cos(ShooterConstants.ShooterExitAngle), 2) * (horizontalDistance * Math.tan(ShooterConstants.ShooterExitAngle) - dz);
-    if (denominator <= 0 || horizontalDistance <= 0) {
-        return 0.0;
-    }
-    //Linear velocity (m/s)
-    double velocity = Math.sqrt(9.81 * horizontalDistance * horizontalDistance / denominator);
-    double rpm = (velocity / (2 * Math.PI * ShooterConstants.ShooterWheelRadius)) * 60; //toRPM
-    rpm = MathUtil.clamp(rpm, 0, 6000);
-    return rpm;
+
+    double theta = ShooterConstants.ShooterExitAngle;
+
+    double denominator =
+        2 * Math.pow(Math.cos(theta), 2) *
+        (horizontalDistance * Math.tan(theta) - dz);
+
+    if (denominator <= 0) return 0.0;
+
+    double velocity =
+        Math.sqrt(9.81 * horizontalDistance * horizontalDistance / denominator);
+
+    velocity *= ShooterConstants.VelocityMultiplier; // ← tuning knob
+
+    double rpm =
+        (velocity / (2 * Math.PI * ShooterConstants.ShooterWheelRadius)) * 60.0;
+
+    return MathUtil.clamp(rpm, 0, 6000);
 }
+
 
 
     public void poseIn(Pose2d currentPose){
@@ -111,9 +127,16 @@ public double calculateRPM() {
         return shooterMotor.getOutputCurrent();
     }
 
+    public boolean atSpeed() {
+        double target = shooterMotor.getClosedLoopController().getSetpoint();
+        double actual = shooterMotor.getEncoder().getVelocity();
+        return Math.abs(target - actual) < 100; // RPM tolerance
+    }
+
+
     public static final class ShooterConstants{
         //TODO Find Actual Constants
-        public static final int ShooterMotorID = 0;
+        public static final int ShooterMotorID = 13;
         public static final boolean ReversedShooter = false;
         public static final double kP = .0005;
         public static final double kI = 0;
@@ -122,5 +145,6 @@ public double calculateRPM() {
         public static final double ShooterExitHeight = Units.inchesToMeters(14.95);
         public static final double ShooterExitAngle = Math.toRadians(90); //degrees not correct
         public static final double ShooterWheelRadius = Units.inchesToMeters(2);
+        public static final double VelocityMultiplier = 1.15;
     }
 }

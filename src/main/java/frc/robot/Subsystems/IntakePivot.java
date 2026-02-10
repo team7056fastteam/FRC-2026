@@ -8,16 +8,15 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.KurtLogger;
-import frc.robot.Common.FastSubsystemBase;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+// import frc.robot.Common.FastSubsystemBase;
 
-public class IntakePivot extends FastSubsystemBase {
+public class IntakePivot extends SubsystemBase {
     public enum IntakePivotState{Starting, Up, Down, Rehoming}
 
     IntakePivotState state = IntakePivotState.Starting;
     SparkMax intakePivotMotor;
     SparkMaxConfig motorConfig;
-    KurtLogger logger;
     private Timer timer = new Timer();
 
     public IntakePivot(){
@@ -28,12 +27,7 @@ public class IntakePivot extends FastSubsystemBase {
     }
 
     @Override
-    public void Init(KurtLogger logger) {
-        this.logger = logger;
-    }
-
-    @Override
-    public void run() {
+    public void periodic() {
         switch(state){
             case Starting:
             intakePivotMotor.stopMotor();
@@ -59,12 +53,12 @@ public class IntakePivot extends FastSubsystemBase {
         }
     }
 
-    @Override
-    public void stop() {
-        intakePivotMotor.stopMotor();
-    }
+    // @Override
+    // public void stop() {
+    //     intakePivotMotor.stopMotor();
+    // }
 
-    @Override
+    // @Override
     public void dashboard() {
         SmartDashboard.putNumber("Intake Pivot Pos", intakePivotMotor.getEncoder().getPosition());
         SmartDashboard.putNumber("Intake Pivot Current", intakePivotMotor.getOutputCurrent());
@@ -91,7 +85,7 @@ public class IntakePivot extends FastSubsystemBase {
 
     public static final class IntakePivotConstants{
         //TODO Find Actual Constants
-        public static final int IntakePivotMotorID = 0;
+        public static final int IntakePivotMotorID = 9;
         public static final boolean ReversedIntakePivot = false;
         public static final double IntakePivotHomingVelocity = -.2;
 

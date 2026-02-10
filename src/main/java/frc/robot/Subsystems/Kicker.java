@@ -7,18 +7,16 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.KurtLogger;
-import frc.robot.Common.FastSubsystemBase;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+// import frc.robot.Common.FastSubsystemBase;
 
-public class Kicker extends FastSubsystemBase {
+public class Kicker extends SubsystemBase {
     public enum KickerState{Idle, Holding, Firing}
 
     KickerState state = KickerState.Idle;
     CANrange fuelSensor;
     SparkMax kickerMotor;
     SparkMaxConfig motorConfig;
-
-    KurtLogger logger;
 
     public Kicker(){
         kickerMotor = new SparkMax(KickerConstants.KickerMotorID, MotorType.kBrushless);
@@ -28,13 +26,13 @@ public class Kicker extends FastSubsystemBase {
         kickerMotor.configure(motorConfig, com.revrobotics.ResetMode.kNoResetSafeParameters, com.revrobotics.PersistMode.kNoPersistParameters);
     }
 
-    @Override
-    public void Init(KurtLogger logger) {
-        this.logger = logger;
-    }
+    // @Override
+    // public void Init(KurtLogger logger) {
+    //     this.logger = logger;
+    // }
 
     @Override
-    public void run() {
+    public void periodic() {
         switch (state) {
             case Firing:
                 kickerMotor.set(KickerConstants.KickerFiringVelocity);
@@ -53,12 +51,12 @@ public class Kicker extends FastSubsystemBase {
         }
     }
 
-    @Override
-    public void stop() {
-        kickerMotor.stopMotor();
-    }
+    // @Override
+    // public void stop() {
+    //     kickerMotor.stopMotor();
+    // }
 
-    @Override
+    // @Override
     public void dashboard() {
         SmartDashboard.putNumber("Kicker Current", kickerMotor.getOutputCurrent());
         SmartDashboard.putNumber("Kicker RPM", kickerMotor.getEncoder().getVelocity());
@@ -71,7 +69,7 @@ public class Kicker extends FastSubsystemBase {
     
     public static final class KickerConstants{
         //TODO contants
-        public static final int KickerMotorID = 0;
+        public static final int KickerMotorID = 12;
         public static final boolean ReversedKicker = false;
         public static final double KickerFiringVelocity = 0;
         public static final int FuelSensorID = 0;
