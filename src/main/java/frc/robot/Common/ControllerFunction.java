@@ -90,16 +90,24 @@ public class ControllerFunction {
         return driver.getRawAxis(2) > 0.1;
     }
     /**Operator A Button*/
-    public boolean IntakePivotToggle(){
+    public boolean Extra2(){
         return operator.getAButton();
+    }
+    /**Operator A Button Pressed */
+    public boolean IntakePivotToggle(){
+        return operator.getAButtonPressed();
     }
     /**Operator B Button*/
     public boolean Shoot(){
         return operator.getBButton();
     }
     /**Operator Y Button*/
-    public boolean ToggleSpindexer(){
+    public boolean Extra(){
         return operator.getYButton();
+    }
+    /**Operator Y Button Pressed */
+    public boolean ToggleSpindexer(){
+        return operator.getYButtonPressed();
     }
     /**Operator X Button*/
     public boolean IntakePivotRehome(){

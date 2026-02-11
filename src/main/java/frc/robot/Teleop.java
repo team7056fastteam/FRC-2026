@@ -53,11 +53,11 @@ public class Teleop {
 
     public void TeleopInit(){
         _drive = Robot.getSwerveInstance();
-        // _intake = Robot.getIntakeInstance();
-        // _intakePivot = Robot.getIntakePivotInstance();
-        // _kicker = Robot.getKickerInstance();
-        // _shooter = Robot.getShooterInstance();
-        // _spindexer = Robot.getSpindexerInstance();
+        _intake = Robot.getIntakeInstance();
+        _intakePivot = Robot.getIntakePivotInstance();
+        _kicker = Robot.getKickerInstance();
+        _shooter = Robot.getShooterInstance();
+        _spindexer = Robot.getSpindexerInstance();
         
         get = new ControllerFunction(driver, operator);
 
@@ -75,7 +75,7 @@ public class Teleop {
             yPowerOffset = 0;
         });
 
-        // get.isPressed(driver.getAButton(),() -> Robot.setPose(new Pose2d(0,0, Rotation2d.fromDegrees(0))));
+        get.isPressed(driver.getAButton(),() -> Robot.setPose(new Pose2d(0,0, Rotation2d.fromDegrees(0))));
 
 
         get.isPressed(get.Up() && up, ()-> {adjustment = adjustment.plus(new Translation2d(0,2)); up = false; System.out.println(adjustment.toString());});

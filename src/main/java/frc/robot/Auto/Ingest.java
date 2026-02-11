@@ -1,4 +1,4 @@
-package frc.robot.AutoCommands;
+package frc.robot.Auto;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
@@ -23,13 +23,14 @@ public class Ingest extends Command {
 
     @Override
     public void initialize() {
-        _intake.setState(intakeState);
         _intakePivot.setState(pivotState);
     }
 
     @Override
     public void execute() {
-        // subsystems run themselves in periodic()
+        if(_intakePivot.inPos()){
+            _intake.setState(intakeState);
+        }
     }
 
     @Override
@@ -40,6 +41,6 @@ public class Ingest extends Command {
 
     @Override
     public boolean isFinished() {
-        return false; // keeps running until canceled
+        return false;
     }
 }

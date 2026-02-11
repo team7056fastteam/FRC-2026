@@ -5,8 +5,8 @@ import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 // import frc.robot.Common.FastSubsystemBase;
@@ -17,7 +17,9 @@ public class IntakePivot extends SubsystemBase {
     IntakePivotState state = IntakePivotState.Starting;
     SparkMax intakePivotMotor;
     SparkMaxConfig motorConfig;
-    private Timer timer = new Timer();
+    TrapezoidProfile mProfile;
+    TrapezoidProfile.State goal = new TrapezoidProfile.State();
+    TrapezoidProfile.State setpoint = new TrapezoidProfile.State();
 
     public IntakePivot(){
         intakePivotMotor = new SparkMax(IntakePivotConstants.IntakePivotMotorID, MotorType.kBrushless);
@@ -53,12 +55,10 @@ public class IntakePivot extends SubsystemBase {
         }
     }
 
-    // @Override
-    // public void stop() {
-    //     intakePivotMotor.stopMotor();
-    // }
+    public void stop() {
+        intakePivotMotor.stopMotor();
+    }
 
-    // @Override
     public void dashboard() {
         SmartDashboard.putNumber("Intake Pivot Pos", intakePivotMotor.getEncoder().getPosition());
         SmartDashboard.putNumber("Intake Pivot Current", intakePivotMotor.getOutputCurrent());
@@ -70,16 +70,27 @@ public class IntakePivot extends SubsystemBase {
     }
 
     public void togglePos(){
-        timer.start();
-        if(timer.get() > .2){
-            if(state == IntakePivotState.Down){
-                state = IntakePivotState.Up;
-            } else if(state == IntakePivotState.Up){
-                state = IntakePivotState.Down;
-            } else{
-                state = IntakePivotState.Up;
-            }
-            timer.reset();
+        if(state == IntakePivotState.Down){
+            state = IntakePivotState.Up;
+        } else if(state == IntakePivotState.Up){
+            state = IntakePivotState.Down;
+        } else{
+            state = IntakePivotState.Up;
+        }
+    }
+
+    public boolean inPos(){
+        switch (state) {
+            case Down:
+                if(Math.abs(intakePivotMotor.getAbsoluteEncoder().getPosition() - Units.degreesToRotations(90)) < Units.degreesToRotations(5)){
+                    return true;
+                } else return false;
+            case Up:
+                if(Math.abs(intakePivotMotor.getAbsoluteEncoder().getPosition() - Units.degreesToRotations(0)) < Units.degreesToRotations(5)){
+                    return true;
+                } else return false;
+            default:
+                return false;
         }
     }
 

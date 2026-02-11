@@ -114,9 +114,8 @@ public class Constants {
     }
 
     public static final class FieldConstants {
-        //TODO real hub pos
-        public static final Translation2d hubPos = new Translation2d(0,0);
-        public static final double hubHeight = 0;
+        public static final Translation2d hubPos = new Translation2d(4.625,4.03);
+        public static final double hubHeight = 1.83;
     }
 
 }

@@ -13,9 +13,10 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.AutoCommands.ExampleCommand;
-// import frc.robot.KurtLogger.logType;
-import frc.robot.Common.ExampleSubsystem;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.Auto.Ingest;
+import frc.robot.Auto.PathLoader;
+import frc.robot.Auto.ShootForTime;
 import frc.robot.Subsystems.Intake;
 import frc.robot.Subsystems.IntakePivot;
 import frc.robot.Subsystems.Kicker;
@@ -37,6 +38,8 @@ public class Robot extends TimedRobot {
   private static Spindexer _spindexer;
   private static Shooter _shooter;
   private static Kicker _kicker;
+  private PathLoader pathLoader;
+  private Command autonomousCommand;
 
 
 
@@ -50,18 +53,28 @@ public class Robot extends TimedRobot {
     _kicker = getKickerInstance();
     _spindexer = getSpindexerInstance();
     _shooter = getShooterInstance();
+    pathLoader = new PathLoader();
+    NamedCommands.registerCommand("ingest", new Ingest(Intake.IntakeState.Forward, IntakePivot.IntakePivotState.Down));
+    NamedCommands.registerCommand("unIngest", new Ingest(Intake.IntakeState.Idle, IntakePivot.IntakePivotState.Up));
+    NamedCommands.registerCommand("shootClose", new ShootForTime(Shooter.ShooterState.Close, 5.0));
+    NamedCommands.registerCommand("shootMid", new ShootForTime(Shooter.ShooterState.Mid, 5.0));
+    NamedCommands.registerCommand("shootFar", new ShootForTime(Shooter.ShooterState.Far, 5.0));
   }
 
   @Override
   public void robotPeriodic() {
     dashboard();
     _odometry.periodic();
-
+    CommandScheduler.getInstance().run();
     RobotDashboard();
   }
 
   @Override
   public void autonomousInit() {
+    autonomousCommand = pathLoader.getSelectedAuto();
+    if (autonomousCommand != null) {
+      autonomousCommand.schedule();
+    }
   }
 
   @Override
@@ -71,6 +84,9 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
+    if (autonomousCommand != null) {
+      autonomousCommand.cancel();
+    }
     _teleop.TeleopInit();
   }
 
@@ -83,6 +99,12 @@ public class Robot extends TimedRobot {
 
   @Override
   public void disabledInit() {
+    _intake.stop();
+    _intakePivot.stop();
+    _kicker.stop();
+    _shooter.stop();
+    _spindexer.stop();
+    _swerve.stop();
   }
 
   @Override
@@ -175,6 +197,10 @@ public class Robot extends TimedRobot {
       _odometry = new Odometry();
     }
     return _odometry;
+  }
+
+  public static void setPose(Pose2d pose2d) {
+    _odometry.resetPose(pose2d);
   }
 
 }

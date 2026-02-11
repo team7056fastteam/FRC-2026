@@ -5,7 +5,6 @@ import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -13,7 +12,6 @@ public class Spindexer extends SubsystemBase {
 
     SparkMax spindexerMotor;
     SparkMaxConfig motorConfig;
-    private Timer timer = new Timer();
 
     public enum SpindexerState{Idle, Forward, ForwardSlow}
     SpindexerState state = SpindexerState.Idle;
@@ -42,13 +40,10 @@ public class Spindexer extends SubsystemBase {
         }
     }
 
-    // @Override
-    // public void stop() {
-    //    logger = null;
-    //    spindexerMotor.stopMotor();
-    // }
+    public void stop() {
+       spindexerMotor.stopMotor();
+    }
 
-    // @Override
     public void dashboard() {
         SmartDashboard.putNumber("Spindexer Current", spindexerMotor.getOutputCurrent());
         SmartDashboard.putString("Spindexer State", state.toString());
@@ -59,17 +54,11 @@ public class Spindexer extends SubsystemBase {
     }
 
     public void toggleSpindexer(){
-        timer.start();
-        if(timer.get() > .2){
-          if(intendedState == SpindexerState.ForwardSlow){
-                intendedState = SpindexerState.Idle;
-            } else if(intendedState == SpindexerState.Idle){
-                intendedState = SpindexerState.ForwardSlow;
-            } else{
-                intendedState = SpindexerState.Idle;
+        if(intendedState == SpindexerState.ForwardSlow){
+            intendedState = SpindexerState.Idle;
+        } else {
+            intendedState = SpindexerState.ForwardSlow;
         }
-        timer.reset();
-     }
     }
 
     public void setToLastState(){

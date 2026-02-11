@@ -64,12 +64,10 @@ public class Shooter extends SubsystemBase{
         }
     }
 
-    // @Override
-    // public void stop() {
-    //     shooterMotor.stopMotor();
-    // }
+    public void stop() {
+        shooterMotor.stopMotor();
+    }
 
-    // @Override
     public void dashboard() {
         SmartDashboard.putNumber("Shooter RPM", shooterMotor.getEncoder().getVelocity());
         SmartDashboard.putNumber("Shooter Current", shooterMotor.getOutputCurrent());

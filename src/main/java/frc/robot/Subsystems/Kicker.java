@@ -51,12 +51,10 @@ public class Kicker extends SubsystemBase {
         }
     }
 
-    // @Override
-    // public void stop() {
-    //     kickerMotor.stopMotor();
-    // }
+    public void stop() {
+        kickerMotor.stopMotor();
+    }
 
-    // @Override
     public void dashboard() {
         SmartDashboard.putNumber("Kicker Current", kickerMotor.getOutputCurrent());
         SmartDashboard.putNumber("Kicker RPM", kickerMotor.getEncoder().getVelocity());
