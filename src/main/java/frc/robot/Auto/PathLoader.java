@@ -31,7 +31,6 @@ public class PathLoader {
             throw new RuntimeException("Failed to load RobotConfig", e);
         }
 
-        // Controller REQUIRED for 2026
         PPHolonomicDriveController controller =
                 new PPHolonomicDriveController(
                         new PIDConstants(5.0, 0.0, 0.0),
@@ -48,7 +47,7 @@ public class PathLoader {
                 odometry::getPose,                  // Supplier<Pose2d>
                 odometry::resetPose,                // Consumer<Pose2d>
                 swerve::getRobotRelativeSpeeds,     // Supplier<ChassisSpeeds>
-                swerve::drive,                      // BiConsumer<ChassisSpeeds, DriveFeedforwards>
+                swerve::drive,                      // Consumer<ChassisSpeeds>
                 controller,                         // PathFollowingController
                 robotConfig,
                 mirrorPath,

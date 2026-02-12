@@ -10,7 +10,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Common.FeedForwardValues;
 import frc.robot.Common.PIDValues;
-// import frc.robot.Common.FastSubsystemBase;
 import frc.robot.Constants.FieldConstants;
 
 import com.revrobotics.spark.SparkFlex;
@@ -53,13 +52,6 @@ public class Shooter extends SubsystemBase{
             .kS(ks);
         shooterMotor.configure(motorConfig, com.revrobotics.ResetMode.kNoResetSafeParameters, com.revrobotics.PersistMode.kNoPersistParameters);
     }
-
-    
-
-    // @Override
-    // public void Init(KurtLogger logger) {
-    //     this.logger = logger;
-    // }
 
     @Override
     public void periodic() {
@@ -115,7 +107,7 @@ public class Shooter extends SubsystemBase{
     double velocity =
         Math.sqrt(9.81 * horizontalDistance * horizontalDistance / denominator);
 
-    velocity *= ShooterConstants.VelocityMultiplier; // ← tuning knob
+    velocity *= ShooterConstants.VelocityMultiplier;
 
     double rpm =
         (velocity / (2 * Math.PI * ShooterConstants.ShooterWheelRadius)) * 60.0;

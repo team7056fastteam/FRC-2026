@@ -51,7 +51,6 @@ public class ShootForTime extends Command {
         _shooter.setState(Shooter.ShooterState.Idle);
         _spindexer.setToIntendedState(); // respects toggle behavior
         _kicker.setState(Kicker.KickerState.Idle);
-        timer.stop();
     }
 
     @Override

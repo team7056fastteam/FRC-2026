@@ -63,7 +63,6 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotPeriodic() {
-    dashboard();
     _odometry.periodic();
     CommandScheduler.getInstance().run();
     RobotDashboard();
@@ -93,7 +92,7 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     _teleop.Driver();
-    // _teleop.Operator();
+    _teleop.Operator();
     _teleop.Dashboard();
   }
 
@@ -113,6 +112,8 @@ public class Robot extends TimedRobot {
   }
 
   public void RobotDashboard(){
+    dashboard();
+    SmartDashboard.putNumber("Heading",_odometry.getHeading().getDegrees());
   }
 
 
@@ -141,12 +142,11 @@ public class Robot extends TimedRobot {
   }
 
   public void dashboard(){
-    // _intake.dashboard();
-    // _intakePivot.dashboard();
-    // _spindexer.dashboard();
-    // _kicker.dashboard();
-    // _shooter.dashboard();
-    SmartDashboard.putNumber("Heading",_odometry.getHeading().getDegrees());
+    _intake.dashboard();
+    _intakePivot.dashboard();
+    _spindexer.dashboard();
+    _kicker.dashboard();
+    _shooter.dashboard();
   }
 
   public static SwerveSubsystem getSwerveInstance(){

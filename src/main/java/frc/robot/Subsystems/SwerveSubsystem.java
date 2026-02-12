@@ -1,7 +1,6 @@
 package frc.robot.Subsystems;
 
 import com.pathplanner.lib.config.RobotConfig;
-import com.pathplanner.lib.util.DriveFeedforwards;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -109,44 +108,37 @@ public class SwerveSubsystem extends SubsystemBase{
     }
 
     public void feedSwerveSpeeds(ChassisSpeeds speeds){
-        if (state == SwerveState.Path_Following) {
-			if (Math.hypot(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond)
-					> Constants.DriveConstants.kTeleDriveMaxSpeedMetersPerSecond * .1) {
-                    state = SwerveState.TeleOp;
-			} else {
-				return;
-			}
+
+        // If in auto, just accept speeds
+        if(state == SwerveState.Path_Following){
+            this.inputSpeeds = speeds;
+            return;
         }
-        else if(state == SwerveState.Heading_Control){
+
+        // TeleOp override logic
+        if(state == SwerveState.Heading_Control){
             if (Math.abs(speeds.omegaRadiansPerSecond) > 1.0) {
-                    state = SwerveState.TeleOp;
-			} else {
-                // double x = speeds.vxMetersPerSecond;
-				// double y = speeds.vyMetersPerSecond;
-				// double theta = mHeadingController.calculate(Robot.getPose().getRotation().getRadians());
-                // this.inputSpeeds = new ChassisSpeeds(x,y,theta);
-				return;
-			}
+                state = SwerveState.TeleOp;
+            } else {
+                return;
+            }
         }
+
         else if(state == SwerveState.Lock_Wheels){
             if (Math.hypot(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond)
-					> Constants.DriveConstants.kTeleDriveMaxSpeedMetersPerSecond * .1) {
-                    state = SwerveState.TeleOp;
-			} else {
-				return;
-			}
+                > Constants.DriveConstants.kTeleDriveMaxSpeedMetersPerSecond * .1) {
+                state = SwerveState.TeleOp;
+            } else {
+                return;
+            }
         }
-        else if(state == SwerveState.Auto_Extra){
-        }
-        else if(state != SwerveState.TeleOp){
-            state = SwerveState.TeleOp;
-        }
+
         this.inputSpeeds = speeds;
     }
 
+
     public SwerveSubsystem() {
         runChassis(0, 0, 0);
-        // mController = new PurePursuitController();
         mHeadingController = new SwerveHeadingController();
         try{
       robotConfig = RobotConfig.fromGUISettings();
@@ -170,7 +162,6 @@ public class SwerveSubsystem extends SubsystemBase{
                 runChassis(inputSpeeds);
                 break;
             case Path_Following:
-                // updatePathFollower();
                 runChassis(inputSpeeds);
                 break;
             case Lock_Wheels:
@@ -199,9 +190,10 @@ public class SwerveSubsystem extends SubsystemBase{
         };
     }
 
-    public void drive(ChassisSpeeds speeds, DriveFeedforwards feedforwards) {
+    public void drive(ChassisSpeeds speeds) {
         // PathPlanner outputs ROBOT-relative speeds
-        runChassis(speeds);
+        state = SwerveState.Path_Following;
+        feedSwerveSpeeds(speeds);
     }
 
 

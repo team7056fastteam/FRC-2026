@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
 import frc.robot.Subsystems.Intake;
 import frc.robot.Subsystems.IntakePivot;
+import frc.robot.Subsystems.IntakePivot.IntakePivotState;
 
 public class Ingest extends Command {
 
@@ -28,7 +29,7 @@ public class Ingest extends Command {
 
     @Override
     public void execute() {
-        if(_intakePivot.inPos()){
+        if(_intakePivot.inPos() || pivotState == IntakePivot.IntakePivotState.Up){
             _intake.setState(intakeState);
         }
     }
@@ -36,7 +37,7 @@ public class Ingest extends Command {
     @Override
     public void end(boolean interrupted) {
         _intake.setState(Intake.IntakeState.Idle);
-        _intakePivot.setState(IntakePivot.IntakePivotState.Up);
+        _intakePivot.setState(IntakePivot.IntakePivotState.Idle);
     }
 
     @Override

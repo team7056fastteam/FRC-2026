@@ -90,7 +90,7 @@ public class ControllerFunction {
         return driver.getRawAxis(2) > 0.1;
     }
     /**Operator A Button*/
-    public boolean Extra2(){
+    public boolean Extra1(){
         return operator.getAButton();
     }
     /**Operator A Button Pressed */
@@ -102,7 +102,7 @@ public class ControllerFunction {
         return operator.getBButton();
     }
     /**Operator Y Button*/
-    public boolean Extra(){
+    public boolean Extra2(){
         return operator.getYButton();
     }
     /**Operator Y Button Pressed */
@@ -125,15 +125,11 @@ public class ControllerFunction {
     public boolean IngestSlow(){
         return operator.getRawAxis(2) > 0.1;
     }
-    /**Operator Left Trigger*/
-    public boolean RacketOne(){
-        return operator.getRawAxis(2) > 0.1;
-    }
     /**Operator Right Trigger*/
-    public boolean RacketTwo(){
+    public boolean Extra3(){
         return operator.getRawAxis(3) > 0.1;
     }
-    // /**Operator POV Up*/
+    /**Operator POV Up*/
     public boolean OverrideShortShot(){
         return operator.getPOV() == 0;
     }
@@ -150,28 +146,28 @@ public class ControllerFunction {
         return operator.getPOV() == 270;
     }
     /**Operator Stick Up*/
-    public boolean BallGrab2(){
+    public boolean Extra4(){
         return operator.getRawAxis(1) < -0.5;
     }
     /**Operator Stick Down*/
-    public boolean BallGrab1(){
+    public boolean Extra5(){
         return operator.getRawAxis(1) > 0.5;
     }
     /**Operator Stick Right*/
-    public boolean BallGround(){
+    public boolean Extra6(){
         return operator.getRawAxis(0) > 0.5;
     }
     /**Operator Right Trigger */
-    public boolean BallIntake(){
+    public boolean Extra7(){
         return operator.getRightStickButton();
     }
     /**Operator Right Stick Up*/
-    public boolean Climb(){
+    public boolean Extra8(){
         return operator.getRawAxis(5) < -0.1;
     }
 
     /**Operator Right Stick Down*/
-    public boolean ReallyClimb(){
+    public boolean Extra9(){
         return operator.getRawAxis(5) > 0.1;
     }
 

@@ -132,10 +132,6 @@ public class Teleop {
         get.isPressed(get.IntakePivotRehome(), ()-> _intakePivot.setState(IntakePivotState.Rehoming));
     }
 
-    // Translation2d convertWPITranslationToKurtTranslation(Translation2d initalTranslation){
-    //     return new Translation2d(Units.metersToInches(8.05 - initalTranslation.getY()), Units.metersToInches(initalTranslation.getX()));
-    // }
-
     public void Dashboard(){ 
         SmartDashboard.putBoolean("Driver Connected?", driver.isConnected());
         SmartDashboard.putBoolean("Operater Connected?", operator.isConnected());
