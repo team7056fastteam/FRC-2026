@@ -169,7 +169,8 @@ public class Teleop {
 
         double dx = hubX - robotPose.getX();
         double dy = hubY - robotPose.getY();
-
-        return new Rotation2d(Math.atan2(dy, dx));
+        Rotation2d hubAngle = new Rotation2d(Math.atan2(dy, dx));
+        //intake is front of the robot, shooter is 90 degree ofset
+        return hubAngle.plus(Rotation2d.fromDegrees(90)); 
     }
 }
