@@ -6,6 +6,7 @@ import com.revrobotics.spark.config.SparkFlexConfig;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Common.FeedForwardValues;
@@ -89,8 +90,12 @@ public class Shooter extends SubsystemBase{
     public double calculateRPM() {
     if (currentPose == null) return 0.0;
 
-    double horizontalDistance =
-        currentPose.getTranslation().getDistance(FieldConstants.hubPos);
+    double horizontalDistance = 
+        currentPose
+            .getTranslation()
+            .getDistance(
+                DriverStation.getAlliance().orElse(DriverStation.Alliance.Blue) == DriverStation.Alliance.Blue
+                ? FieldConstants.hubPosBlue : FieldConstants.hubPosRed);
 
     horizontalDistance = MathUtil.clamp(horizontalDistance, 0.5, 8.0);
 

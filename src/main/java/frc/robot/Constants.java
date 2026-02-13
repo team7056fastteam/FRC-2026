@@ -114,7 +114,8 @@ public class Constants {
     }
 
     public static final class FieldConstants {
-        public static final Translation2d hubPos = new Translation2d(4.625,4.03);
+        public static final Translation2d hubPosBlue = new Translation2d(4.625,4.03);
+        public static final Translation2d hubPosRed = new Translation2d(11.915, 4.03);
         public static final double hubHeight = 1.83;
     }
 

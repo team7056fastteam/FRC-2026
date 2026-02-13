@@ -1,9 +1,7 @@
-package frc.robot;
+package frc.robot; 
 
 import java.util.List;
 
-import edu.wpi.first.apriltag.AprilTagFieldLayout;
-import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -21,6 +19,7 @@ import frc.robot.Subsystems.Kicker.KickerState;
 import frc.robot.Subsystems.Shooter.ShooterState;
 import frc.robot.Subsystems.Spindexer.SpindexerState;
 import frc.robot.Subsystems.SwerveSubsystem.SwerveState;
+import frc.robot.Constants.FieldConstants;
 
 public class Teleop {
     SwerveSubsystem _drive;
@@ -34,106 +33,143 @@ public class Teleop {
     XboxController operator = new XboxController(1);
 
     ControllerFunction get;
-    double xT = 1, rT = 1, driveX, driveY, driveZ, z;
-
-    AprilTagFieldLayout kTagLayout = AprilTagFieldLayout.loadField(AprilTagFields.k2025ReefscapeWelded);
+    double xT = 1, rT = 1, driveX, driveY, driveZ;
 
     double xPowerOffset;
     double yPowerOffset;
-    
-    double kTagP = 0.1;
-    double poleOffset = 7;
-    double robotOffset = 17.5;
-    double maxTagPower = 2;
-    double closeMaxTagPower = 0.85;
-    double closeTagDist = 45;
+
     Translation2d adjustment = new Translation2d();
 
     Boolean up, down, right, left;
 
-    public void TeleopInit(){
+    public void TeleopInit() {
         _drive = Robot.getSwerveInstance();
         _intake = Robot.getIntakeInstance();
         _intakePivot = Robot.getIntakePivotInstance();
         _kicker = Robot.getKickerInstance();
         _shooter = Robot.getShooterInstance();
         _spindexer = Robot.getSpindexerInstance();
-        
+
         get = new ControllerFunction(driver, operator);
 
         _drive.setState(SwerveState.TeleOp);
     }
 
-    public void Driver(){
-        if(!driver.isConnected()){ return; }
+    public void Driver() {
+        if (!driver.isConnected()) return;
 
-        get.isPressed(get.speedAdjustment(),()-> {xT = 1.4;});
-        get.isNotPressed(get.speedAdjustment(),()-> {xT = 0.675;});
+        // turbo
+        get.isPressed(get.speedAdjustment(), () -> xT = 1.4);
+        get.isNotPressed(get.speedAdjustment(), () -> xT = 0.675);
 
-        get.isNotPressed(List.of(get.driverLeftTrigger(),get.driverRightTrigger()), ()-> {
+        // reset offsets
+        get.isNotPressed(List.of(get.driverLeftTrigger(), get.driverRightTrigger()), () -> {
             xPowerOffset = 0;
             yPowerOffset = 0;
         });
 
-        get.isPressed(driver.getAButton(),() -> Robot.setPose(new Pose2d(0,0, Rotation2d.fromDegrees(0))));
+        // reorient
+        get.isPressed(driver.getAButton(), () -> Robot.setPose(new Pose2d(0, 0, Rotation2d.fromDegrees(0))));
 
+        // manual adjust
+        get.isPressed(get.Up() && up, () -> { adjustment = adjustment.plus(new Translation2d(0, 2)); up = false; });
+        get.isPressed(get.Down() && down, () -> { adjustment = adjustment.plus(new Translation2d(0, -2)); down = false; });
+        get.isPressed(get.Right() && right, () -> { adjustment = adjustment.plus(new Translation2d(2, 0)); right = false; });
+        get.isPressed(get.Left() && left, () -> { adjustment = adjustment.plus(new Translation2d(-2, 0)); left = false; });
+        get.isNotPressed(get.Up(), () -> up = true);
+        get.isNotPressed(get.Down(), () -> down = true);
+        get.isNotPressed(get.Right(), () -> right = true);
+        get.isNotPressed(get.Left(), () -> left = true);
 
-        get.isPressed(get.Up() && up, ()-> {adjustment = adjustment.plus(new Translation2d(0,2)); up = false; System.out.println(adjustment.toString());});
-        get.isPressed(get.Down() && down, ()-> {adjustment = adjustment.plus(new Translation2d(0,-2)); down = false;System.out.println(adjustment.toString());});
-        get.isPressed(get.Right() && right, ()-> {adjustment = adjustment.plus(new Translation2d(2,0)); right = false;System.out.println(adjustment.toString());});
-        get.isPressed(get.Left() && left, ()-> {adjustment = adjustment.plus(new Translation2d(-2,0)); left = false;System.out.println(adjustment.toString());});
-        get.isNotPressed(get.Up(), ()-> {up = true;});
-        get.isNotPressed(get.Down(), ()-> {down = true;});
-        get.isNotPressed(get.Right(), ()-> {right = true;});
-        get.isNotPressed(get.Left(), ()-> {left = true;});
-
+        // joystick input
         driveX = get.driverX();
         driveY = get.driverY();
         driveZ = get.driverZ();
 
-        //apply deadband
+        // apply deadband
         driveX = Math.abs(driveX) > DriveConstants.kDeadband ? driveX : 0.0;
         driveY = Math.abs(driveY) > DriveConstants.kDeadband ? driveY : 0.0;
         driveZ = Math.abs(driveZ) > DriveConstants.kDeadband ? driveZ : 0.0;
 
-        //apply DriveConstants
-        driveX = driveX * DriveConstants.kTeleDriveMaxSpeedMetersPerSecond * xT;
-        driveY = driveY * DriveConstants.kTeleDriveMaxSpeedMetersPerSecond * xT;
-        driveZ = driveZ * DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond * rT;
+        // drive constants
+        driveX *= DriveConstants.kTeleDriveMaxSpeedMetersPerSecond * xT;
+        driveY *= DriveConstants.kTeleDriveMaxSpeedMetersPerSecond * xT;
+        driveZ *= DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond * rT;
 
-        if(DriverStation.getAlliance().get() == Alliance.Red){
+        // flip for red alliance
+        if (DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red) {
             driveX = -driveX;
             driveY = -driveY;
         }
 
-        _drive.feedSwerveSpeeds(ChassisSpeeds.fromFieldRelativeSpeeds(new ChassisSpeeds(driveX+xPowerOffset,driveY-yPowerOffset,driveZ), Robot.getGyroscopeRotation2d()));
+        // auto-orient to hub
+        get.isPressed(get.driverLeftTrigger(), () -> {
+            Rotation2d targetRot = getHubTargetRotation();
+            double currentAngle = Robot.getGyroscopeRotation2d().getRadians();
+            double error = targetRot.getRadians() - currentAngle;
+            error = Math.atan2(Math.sin(error), Math.cos(error)); // wrap [-pi, pi]
+
+            double kP = 2.0; // tunable
+            driveZ += error * kP;
+
+            double maxAngular = DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond;
+            driveZ = Math.max(-maxAngular, Math.min(driveZ, maxAngular));
+        });
+
+        // feed swerve
+        _drive.feedSwerveSpeeds(
+            ChassisSpeeds.fromFieldRelativeSpeeds(
+                new ChassisSpeeds(driveX + xPowerOffset, driveY - yPowerOffset, driveZ),
+                Robot.getGyroscopeRotation2d()
+            )
+        );
     }
 
-    public void Operator(){
-        if(!operator.isConnected()){ return; }
+    public void Operator() {
+        if (!operator.isConnected()) return;
 
-        get.isPressed(get.Ingest(), ()-> _intake.setState(IntakeState.Forward));
-        get.isPressed(get.Outgest(), ()-> _intake.setState(IntakeState.Backward));
-        get.isPressed(get.IngestSlow(), ()-> _intake.setState(IntakeState.ForwardSlow));
-        get.isNotPressed(List.of(get.Outgest(), get.Ingest(), get.IngestSlow()), ()-> _intake.setState(IntakeState.Idle));
+        get.isPressed(get.Ingest(), () -> _intake.setState(IntakeState.Forward));
+        get.isPressed(get.Outgest(), () -> _intake.setState(IntakeState.Backward));
+        get.isPressed(get.IngestSlow(), () -> _intake.setState(IntakeState.ForwardSlow));
+        get.isNotPressed(List.of(get.Outgest(), get.Ingest(), get.IngestSlow()), () -> _intake.setState(IntakeState.Idle));
 
-        get.isPressed(get.Shoot(), ()-> {_shooter.fire();_kicker.setState(KickerState.Firing);_spindexer.setState(SpindexerState.Forward);});
-        get.isNotPressed(get.Shoot(), ()-> {_spindexer.setToIntendedState();_kicker.setState(KickerState.Idle);_shooter.setState(ShooterState.Idle);});
+        get.isPressed(get.Shoot(), () -> {
+            _shooter.fire();
+            _kicker.setState(KickerState.Firing);
+            _spindexer.setState(SpindexerState.Forward);
+        });
+        get.isNotPressed(get.Shoot(), () -> {
+            _spindexer.setToIntendedState();
+            _kicker.setState(KickerState.Idle);
+            _shooter.setState(ShooterState.Idle);
+        });
 
-        get.isPressed(get.AutoTargeting(), ()-> _shooter.setIntendedState(ShooterState.Targeting));
-        get.isPressed(get.OverrideLongShot(), ()-> _shooter.setIntendedState(ShooterState.Far));
-        get.isPressed(get.OverrideMidShot(), ()-> _shooter.setIntendedState(ShooterState.Mid));
-        get.isPressed(get.OverrideShortShot(), ()-> _shooter.setIntendedState(ShooterState.Close));
+        get.isPressed(get.AutoTargeting(), () -> _shooter.setIntendedState(ShooterState.Targeting));
+        get.isPressed(get.OverrideLongShot(), () -> _shooter.setIntendedState(ShooterState.Far));
+        get.isPressed(get.OverrideMidShot(), () -> _shooter.setIntendedState(ShooterState.Mid));
+        get.isPressed(get.OverrideShortShot(), () -> _shooter.setIntendedState(ShooterState.Close));
 
-        get.isPressed(get.ToggleSpindexer(), ()-> _spindexer.toggleSpindexer());
-
-        get.isPressed(get.IntakePivotToggle(), ()-> _intakePivot.togglePos());
-
-        get.isPressed(get.IntakePivotRehome(), ()-> _intakePivot.setState(IntakePivotState.Rehoming));
+        get.isPressed(get.ToggleSpindexer(), () -> _spindexer.toggleSpindexer());
+        get.isPressed(get.IntakePivotToggle(), () -> _intakePivot.togglePos());
+        get.isPressed(get.IntakePivotRehome(), () -> _intakePivot.setState(IntakePivotState.Rehoming));
     }
 
-    public void Dashboard(){ 
+    public void Dashboard() {
         SmartDashboard.putBoolean("Driver Connected?", driver.isConnected());
-        SmartDashboard.putBoolean("Operater Connected?", operator.isConnected());
+        SmartDashboard.putBoolean("Operator Connected?", operator.isConnected());
+    }
+
+    // get rotation to hub
+    private Rotation2d getHubTargetRotation() {
+        Pose2d robotPose = Robot.getOdometryInstance().getPose();
+        double hubX = (DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Blue ?
+                       FieldConstants.hubPosBlue.getX() : FieldConstants.hubPosRed.getX());
+        double hubY = (DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Blue ?
+                       FieldConstants.hubPosBlue.getY() : FieldConstants.hubPosRed.getY());
+
+        double dx = hubX - robotPose.getX();
+        double dy = hubY - robotPose.getY();
+
+        return new Rotation2d(Math.atan2(dy, dx));
     }
 }

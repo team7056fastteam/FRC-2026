@@ -4,7 +4,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
 import frc.robot.Subsystems.Intake;
 import frc.robot.Subsystems.IntakePivot;
-import frc.robot.Subsystems.IntakePivot.IntakePivotState;
 
 public class Ingest extends Command {
 

@@ -20,6 +20,7 @@ import frc.robot.Auto.ShootForTime;
 import frc.robot.Subsystems.Intake;
 import frc.robot.Subsystems.IntakePivot;
 import frc.robot.Subsystems.Kicker;
+import frc.robot.Subsystems.LedSubsystem;
 import frc.robot.Subsystems.Shooter;
 import frc.robot.Subsystems.Spindexer;
 import frc.robot.Subsystems.SwerveSubsystem;
@@ -38,6 +39,7 @@ public class Robot extends TimedRobot {
   private static Spindexer _spindexer;
   private static Shooter _shooter;
   private static Kicker _kicker;
+  private static LedSubsystem _led;
   private PathLoader pathLoader;
   private Command autonomousCommand;
 
@@ -53,6 +55,7 @@ public class Robot extends TimedRobot {
     _kicker = getKickerInstance();
     _spindexer = getSpindexerInstance();
     _shooter = getShooterInstance();
+    _led = getLedInstance();
     pathLoader = new PathLoader();
     NamedCommands.registerCommand("ingest", new Ingest(Intake.IntakeState.Forward, IntakePivot.IntakePivotState.Down));
     NamedCommands.registerCommand("unIngest", new Ingest(Intake.IntakeState.Idle, IntakePivot.IntakePivotState.Up));
@@ -147,6 +150,7 @@ public class Robot extends TimedRobot {
     _spindexer.dashboard();
     _kicker.dashboard();
     _shooter.dashboard();
+    _led.dashboard();
   }
 
   public static SwerveSubsystem getSwerveInstance(){
@@ -190,6 +194,13 @@ public class Robot extends TimedRobot {
       _shooter = new Shooter();
     }
     return _shooter;
+  }
+
+  public static LedSubsystem getLedInstance(){
+    if(_led == null){
+      _led = new LedSubsystem();
+    }
+    return _led;
   }
 
   public static Odometry getOdometryInstance(){
