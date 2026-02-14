@@ -15,9 +15,9 @@ import frc.robot.Common.FeedForwardValues;
 import frc.robot.Common.PIDValues;
 
 public class Kicker extends SubsystemBase {
-    public enum KickerState{Idle, Holding, Firing, HoldAndFire}
-
+    public enum KickerState{Idle, Firing, HoldAndFire}
     KickerState state = KickerState.Idle;
+    KickerState intendedState = KickerState.HoldAndFire;
     CANrange fuelSensor;
     SparkMax kickerMotor;
     SparkMaxConfig motorConfig;
@@ -59,14 +59,6 @@ public class Kicker extends SubsystemBase {
             case Firing:
                 kickerMotor.getClosedLoopController().setSetpoint(KickerConstants.KickerFiringVelocity, ControlType.kVelocity);
                 break;
-            case Holding:
-                if(fuelSensor.getDistance().getValueAsDouble() < KickerConstants.FuelSensorRange){
-                    kickerMotor.stopMotor();
-                    state = KickerState.Idle;
-                } else {
-                    kickerMotor.getClosedLoopController().setSetpoint(KickerConstants.KickerHoldingVelocity, ControlType.kVelocity);
-                }
-                break;
             case Idle:
                 kickerMotor.stopMotor();
                 break;
@@ -98,6 +90,14 @@ public class Kicker extends SubsystemBase {
 
     public void setState(KickerState state){
         this.state = state;
+    }
+
+    public void setIntendedState(KickerState state){
+        intendedState = state;
+    }
+
+    public void setToIntendedState(){
+        state = intendedState;
     }
 
     public void setGains(FeedForwardValues feed){

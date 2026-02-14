@@ -19,7 +19,6 @@ public class Spindexer extends SubsystemBase {
 
     public enum SpindexerState{Idle, Forward, ForwardSlow}
     SpindexerState state = SpindexerState.Idle;
-    SpindexerState lastState;
     SpindexerState intendedState = SpindexerState.Idle;
 
     private double ks;
@@ -77,7 +76,6 @@ public class Spindexer extends SubsystemBase {
     }
 
     public void setState(SpindexerState state){
-        lastState = this.state;
         this.state = state;
     }
 
@@ -87,10 +85,6 @@ public class Spindexer extends SubsystemBase {
         } else {
             intendedState = SpindexerState.ForwardSlow;
         }
-    }
-
-    public void setToLastState(){
-        state = lastState;
     }
 
     public void setToIntendedState(){

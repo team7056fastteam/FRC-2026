@@ -135,7 +135,7 @@ public class Teleop {
 
         get.isPressed(get.Shoot(), () -> {
             _shooter.fire();
-            _kicker.setState(KickerState.Firing);
+            _kicker.setToIntendedState();
             _spindexer.setState(SpindexerState.Forward);
         });
         get.isNotPressed(get.Shoot(), () -> {
@@ -143,6 +143,21 @@ public class Teleop {
             _kicker.setState(KickerState.Idle);
             _shooter.setState(ShooterState.Idle);
         });
+
+        get.isPressed(get.Pass(), () -> {
+            _shooter.setState(ShooterState.Passing);
+            _kicker.setToIntendedState();
+            _spindexer.setState(SpindexerState.Forward);
+        });
+
+        get.isNotPressed(get.Pass(), () -> {
+            _shooter.setState(ShooterState.Idle);
+            _kicker.setState(KickerState.Idle);
+            _spindexer.setToIntendedState();
+        });
+
+        get.isPressed(get.FreeFire(), ()-> _kicker.setIntendedState(KickerState.Firing));
+        get.isPressed(get.HoldMode(), ()-> _kicker.setIntendedState(KickerState.HoldAndFire));
 
         get.isPressed(get.AutoTargeting(), () -> _shooter.setIntendedState(ShooterState.Targeting));
         get.isPressed(get.OverrideLongShot(), () -> _shooter.setIntendedState(ShooterState.Far));

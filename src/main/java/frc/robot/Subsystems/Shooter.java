@@ -18,7 +18,7 @@ import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 
 public class Shooter extends SubsystemBase{
-    public enum ShooterState{Idle, Targeting, Far, Close, Mid, Auto}
+    public enum ShooterState{Idle, Targeting, Far, Close, Mid, Passing}
     ShooterState intendedState = ShooterState.Targeting;
     ShooterState state = ShooterState.Idle;
     SparkFlex shooterMotor;
@@ -72,7 +72,7 @@ public class Shooter extends SubsystemBase{
             case Far:
                 shooterMotor.getClosedLoopController().setSetpoint(3900, ControlType.kVelocity);
                 break;
-            case Auto:
+            case Passing:
                 shooterMotor.getClosedLoopController().setSetpoint(0, ControlType.kVelocity);
         }
     }
