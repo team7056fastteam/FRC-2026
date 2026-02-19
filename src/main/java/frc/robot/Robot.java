@@ -5,6 +5,7 @@
 package frc.robot;
 
 import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.commands.PathPlannerAuto;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -14,12 +15,12 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.Auto.Ingest;
+// import frc.robot.Auto.Ingest;
 import frc.robot.Auto.PathLoader;
-import frc.robot.Auto.ShootForTime;
+// import frc.robot.Auto.ShootForTime;
 import frc.robot.Subsystems.Intake;
 import frc.robot.Subsystems.IntakePivot;
-import frc.robot.Subsystems.Kicker;
+// import frc.robot.Subsystems.Kicker;
 import frc.robot.Subsystems.LedSubsystem;
 import frc.robot.Subsystems.Shooter;
 import frc.robot.Subsystems.Spindexer;
@@ -34,12 +35,12 @@ public class Robot extends TimedRobot {
   private static Teleop _teleop;
   private static Odometry _odometry;
   private static SwerveSubsystem _swerve;
-  private static Intake _intake;
-  private static IntakePivot _intakePivot;
-  private static Spindexer _spindexer;
-  private static Shooter _shooter;
-  private static Kicker _kicker;
-  private static LedSubsystem _led;
+  // private static Intake _intake;
+  // private static IntakePivot _intakePivot;
+  // private static Spindexer _spindexer;
+  // private static Shooter _shooter;
+  // private static Kicker _kicker;
+  // private static LedSubsystem _led;
   private PathLoader pathLoader;
   private Command autonomousCommand;
 
@@ -50,18 +51,18 @@ public class Robot extends TimedRobot {
     _teleop = new Teleop();
     _swerve = getSwerveInstance();
     _odometry = getOdometryInstance();
-    _intake = getIntakeInstance();
-    _intakePivot = getIntakePivotInstance();
-    _kicker = getKickerInstance();
-    _spindexer = getSpindexerInstance();
-    _shooter = getShooterInstance();
-    _led = getLedInstance();
+    // _intake = getIntakeInstance();
+    // _intakePivot = getIntakePivotInstance();
+    // _kicker = getKickerInstance();
+    // _spindexer = getSpindexerInstance();
+    // _shooter = getShooterInstance();
+    // _led = getLedInstance();
     pathLoader = new PathLoader();
-    NamedCommands.registerCommand("ingest", new Ingest(Intake.IntakeState.Forward, IntakePivot.IntakePivotState.Down));
-    NamedCommands.registerCommand("unIngest", new Ingest(Intake.IntakeState.Idle, IntakePivot.IntakePivotState.Up));
-    NamedCommands.registerCommand("shootClose", new ShootForTime(Shooter.ShooterState.Close, 5.0));
-    NamedCommands.registerCommand("shootMid", new ShootForTime(Shooter.ShooterState.Mid, 5.0));
-    NamedCommands.registerCommand("shootFar", new ShootForTime(Shooter.ShooterState.Far, 5.0));
+    // NamedCommands.registerCommand("ingest", new Ingest(Intake.IntakeState.Forward, IntakePivot.IntakePivotState.Down));
+    // NamedCommands.registerCommand("unIngest", new Ingest(Intake.IntakeState.Idle, IntakePivot.IntakePivotState.Up));
+    // NamedCommands.registerCommand("shootClose", new ShootForTime(Shooter.ShooterState.Close, 5.0));
+    // NamedCommands.registerCommand("shootMid", new ShootForTime(Shooter.ShooterState.Mid, 5.0));
+    // NamedCommands.registerCommand("shootFar", new ShootForTime(Shooter.ShooterState.Far, 5.0));
   }
 
   @Override
@@ -101,22 +102,25 @@ public class Robot extends TimedRobot {
 
   @Override
   public void disabledInit() {
-    _intake.stop();
-    _intakePivot.stop();
-    _kicker.stop();
-    _shooter.stop();
-    _spindexer.stop();
+    // _intake.stop();
+    // _intakePivot.stop();
+    // _kicker.stop();
+    // _shooter.stop();
+    // _spindexer.stop();
     _swerve.stop();
   }
 
   @Override
   public void disabledPeriodic() {
-    
+    if(pathLoader.getSelectedAuto() instanceof PathPlannerAuto auto){
+      SmartDashboard.putString("Robot Starting Position", auto.getStartingPose().toString());
+    }
   }
 
   public void RobotDashboard(){
     dashboard();
-    SmartDashboard.putNumber("Heading",_odometry.getHeading().getDegrees());
+    SmartDashboard.putNumber("Heading",_odometry.getHeading().getDegrees() % 360);
+    SmartDashboard.putString("Robot Pose", _odometry.getPose().toString());
   }
 
 
@@ -131,7 +135,6 @@ public class Robot extends TimedRobot {
     return _odometry.getHeading();
   }
 
-
   public static void ModifyPoseFromSpeed(ChassisSpeeds speed){
     double vX = speed.vxMetersPerSecond;
     double vY = speed.vyMetersPerSecond;
@@ -145,12 +148,12 @@ public class Robot extends TimedRobot {
   }
 
   public void dashboard(){
-    _intake.dashboard();
-    _intakePivot.dashboard();
-    _spindexer.dashboard();
-    _kicker.dashboard();
-    _shooter.dashboard();
-    _led.dashboard();
+    // _intake.dashboard();
+    // _intakePivot.dashboard();
+    // _spindexer.dashboard();
+    // _kicker.dashboard();
+    // _shooter.dashboard();
+    // _led.dashboard();
   }
 
   public static SwerveSubsystem getSwerveInstance(){
@@ -161,47 +164,47 @@ public class Robot extends TimedRobot {
     return _swerve;
   }
 
-  public static Intake getIntakeInstance(){
-    if(_intake == null){
-      _intake = new Intake();
-    }
-    return _intake;
-  }
+  // public static Intake getIntakeInstance(){
+  //   if(_intake == null){
+  //     _intake = new Intake();
+  //   }
+  //   return _intake;
+  // }
 
-  public static IntakePivot getIntakePivotInstance(){
-    if(_intakePivot == null){
-      _intakePivot = new IntakePivot();
-    }
-    return _intakePivot;
-  }
+  // public static IntakePivot getIntakePivotInstance(){
+  //   if(_intakePivot == null){
+  //     _intakePivot = new IntakePivot();
+  //   }
+  //   return _intakePivot;
+  // }
 
-  public static Spindexer getSpindexerInstance(){
-    if(_spindexer == null){
-      _spindexer = new Spindexer();
-    }
-    return _spindexer;
-  }
+  // public static Spindexer getSpindexerInstance(){
+  //   if(_spindexer == null){
+  //     _spindexer = new Spindexer();
+  //   }
+  //   return _spindexer;
+  // }
 
-  public static Kicker getKickerInstance(){
-    if(_kicker == null){
-      _kicker = new Kicker();
-    }
-    return _kicker;
-  }
+  // public static Kicker getKickerInstance(){
+  //   if(_kicker == null){
+  //     _kicker = new Kicker();
+  //   }
+  //   return _kicker;
+  // }
 
-  public static Shooter getShooterInstance(){
-    if(_shooter == null){
-      _shooter = new Shooter();
-    }
-    return _shooter;
-  }
+  // public static Shooter getShooterInstance(){
+  //   if(_shooter == null){
+  //     _shooter = new Shooter();
+  //   }
+  //   return _shooter;
+  // }
 
-  public static LedSubsystem getLedInstance(){
-    if(_led == null){
-      _led = new LedSubsystem();
-    }
-    return _led;
-  }
+  // public static LedSubsystem getLedInstance(){
+  //   if(_led == null){
+  //     _led = new LedSubsystem();
+  //   }
+  //   return _led;
+  // }
 
   public static Odometry getOdometryInstance(){
     if(_odometry == null){

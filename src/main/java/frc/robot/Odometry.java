@@ -23,101 +23,116 @@ import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
+
 import frc.robot.Constants.DriveConstants;
 
 public class Odometry {
 
     private final Pigeon2 pigeon;
-
     private final SwerveDrivePoseEstimator poseEstimator;
 
     private final AprilTagVision cam0;
     private final AprilTagVision cam1;
 
-    // Camera-to-robot transforms
+    private static final int pigeonID = 62;
+
+    //TODO adjust acording to camera postitions
     public static final Transform3d kRobotToCam0 =
-            new Transform3d(
-                    new Translation3d(-0.23, 0.18, 0.34),
-                    new Rotation3d(0, Math.toRadians(7.5), Math.toRadians(180))
-            );
+        new Transform3d(
+            new Translation3d(-0.23, 0.18, 0.34),
+            new Rotation3d(0, Math.toRadians(7.5), Math.toRadians(180))
+        );
 
     public static final Transform3d kRobotToCam1 =
-            new Transform3d(
-                    new Translation3d(-0.20, -0.18, 0.34),
-                    new Rotation3d(0, Math.toRadians(7.5), Math.toRadians(180))
-            );
+        new Transform3d(
+            new Translation3d(-0.20, -0.18, 0.34),
+            new Rotation3d(0, Math.toRadians(7.5), Math.toRadians(180))
+        );
 
-    private static final int pigeonID = 62;
 
     public Odometry() {
 
         pigeon = new Pigeon2(pigeonID);
-        pigeon.reset();
 
         cam0 = new AprilTagVision("Camera0", kRobotToCam0);
         cam1 = new AprilTagVision("Camera1", kRobotToCam1);
 
-        // Initialize pose estimator with old code std devs
         poseEstimator =
-                new SwerveDrivePoseEstimator(
-                        DriveConstants.kDriveKinematics,
-                        pigeon.getRotation2d(),
-                        Robot.getSwerveInstance().getModulePositions(),
-                        new Pose2d(),
-                        VecBuilder.fill(0.05, 0.05, 1.0), // odometry std devs
-                        VecBuilder.fill(9.0, 9.0, 9.0)     // vision std devs default
-                );
+            new SwerveDrivePoseEstimator(
+                DriveConstants.kDriveKinematics,
+                pigeon.getRotation2d(),
+                Robot.getSwerveInstance().getModulePositions(),
+                new Pose2d(),
+
+                // Trust wheel odometry heavily
+                VecBuilder.fill(0.02, 0.02, 0.01),
+
+                // Trust vision moderately
+                VecBuilder.fill(2.0, 2.0, 4.0)
+            );
     }
 
     public void periodic() {
-        // Update odometry from module positions + gyro
-        SwerveModulePosition[] modulePositions = Robot.getSwerveInstance().getModulePositions();
-        poseEstimator.update(pigeon.getRotation2d(), modulePositions);
 
-        // Update vision measurements
-        cam0.updateCamera();
-        cam1.updateCamera();
+        SwerveModulePosition[] modulePositions =
+            Robot.getSwerveInstance().getModulePositions();
+
+        poseEstimator.update(
+            pigeon.getRotation2d(),
+            modulePositions
+        );
 
         applyVision(cam0);
         applyVision(cam1);
     }
 
     private void applyVision(AprilTagVision cam) {
-        Optional<EstimatedRobotPose> visionEstimate = cam.getEstimatedVisionPose();
+
+        Optional<EstimatedRobotPose> visionEstimate =
+            cam.getEstimatedVisionPose();
+
         if (visionEstimate.isEmpty()) return;
 
         EstimatedRobotPose est = visionEstimate.get();
         int tagCount = est.targetsUsed.size();
-
         if (tagCount == 0) return;
 
-        // Compute average distance to tags
         double avgDist = 0.0;
+
         for (var target : est.targetsUsed) {
-            avgDist += target.getBestCameraToTarget().getTranslation().getNorm();
+            avgDist +=
+                target.getBestCameraToTarget()
+                      .getTranslation()
+                      .getNorm();
         }
+
         avgDist /= tagCount;
 
-        // Determine vision std devs (3x1 matrix)
         Matrix<N3, N1> visionStdDevs;
+
         if (tagCount > 1) {
-            visionStdDevs = VecBuilder.fill(1.2, 1.2, 1.2);
+            visionStdDevs = VecBuilder.fill(0.5, 0.5, 1);
         } else {
-            visionStdDevs = VecBuilder.fill(9.0, 9.0, 9.0);
+            visionStdDevs = VecBuilder.fill(4.0, 4.0, 8.0);
         }
 
-        // Distance scaling (like old heuristic)
+        // Scale based on distance
         for (int i = 0; i < 3; i++) {
-            visionStdDevs.set(i, 0, visionStdDevs.get(i, 0) * (1 + (avgDist * avgDist / 30.0)));
+            visionStdDevs.set(
+                i,
+                0,
+                visionStdDevs.get(i, 0) *
+                (1 + (avgDist * avgDist / 30.0))
+            );
         }
 
-        // Add measurement to estimator
-        poseEstimator.addVisionMeasurement(est.estimatedPose.toPose2d(), est.timestampSeconds, visionStdDevs);
-    }
+        poseEstimator.addVisionMeasurement(
+            est.estimatedPose.toPose2d(),
+            est.timestampSeconds,
+            visionStdDevs
+        );
+   }
 
-    // ===============================
-    // ===== PUBLIC ACCESSORS ========
-    // ===============================
     public Pose2d getPose() {
         return poseEstimator.getEstimatedPosition();
     }
@@ -127,34 +142,50 @@ public class Odometry {
     }
 
     public void resetPose(Pose2d pose) {
-        SwerveModulePosition[] modulePositions = Robot.getSwerveInstance().getModulePositions();
-        poseEstimator.resetPosition(pigeon.getRotation2d(), modulePositions, pose);
+
+        // Match gyro to pose rotation
+        pigeon.setYaw(pose.getRotation().getDegrees());
+
+        poseEstimator.resetPosition(
+            pigeon.getRotation2d(),
+            Robot.getSwerveInstance().getModulePositions(),
+            pose
+        );
     }
 
     public boolean areCamerasConnected() {
         return cam0.isConnected() && cam1.isConnected();
     }
 
-    // ===============================
-    // ===== AprilTag Vision Class ===
-    // ===============================
     private static class AprilTagVision {
 
         private final PhotonCamera camera;
         private final PhotonPoseEstimator estimator;
 
         private final AprilTagFieldLayout tagLayout =
-                AprilTagFieldLayout.loadField(AprilTagFields.k2026RebuiltWelded);
+            AprilTagFieldLayout.loadField(
+                AprilTagFields.k2026RebuiltWelded
+            );
 
-        public AprilTagVision(String name, Transform3d robotToCam) {
+        public AprilTagVision(
+            String name,
+            Transform3d robotToCam
+        ) {
+
             camera = new PhotonCamera(name);
-            estimator = new PhotonPoseEstimator(tagLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, robotToCam);
-            estimator.setMultiTagFallbackStrategy(PoseStrategy.AVERAGE_BEST_TARGETS);
-            estimator.setTagModel(TargetModel.kAprilTag36h11);
-        }
 
-        public void updateCamera() {
-            // No buffer needed here; just latest result
+            estimator =
+                new PhotonPoseEstimator(
+                    tagLayout,
+                    PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR,
+                    robotToCam
+                );
+
+            estimator.setMultiTagFallbackStrategy(
+                PoseStrategy.AVERAGE_BEST_TARGETS
+            );
+
+            estimator.setTagModel(TargetModel.kAprilTag36h11);
         }
 
         public boolean isConnected() {
@@ -162,9 +193,15 @@ public class Odometry {
         }
 
         public Optional<EstimatedRobotPose> getEstimatedVisionPose() {
-            if (!camera.isConnected()) return Optional.empty();
+
+            if (!camera.isConnected())
+                return Optional.empty();
+
             var result = camera.getLatestResult();
-            if (!result.hasTargets()) return Optional.empty();
+
+            if (!result.hasTargets())
+                return Optional.empty();
+
             return estimator.update(result);
         }
     }

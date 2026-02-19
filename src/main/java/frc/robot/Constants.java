@@ -10,12 +10,12 @@ public class Constants {
         public static final double kWheelDiameterMeters = Units.inchesToMeters(4);
 
         //look these numbers up
-        public static final double kDriveMotorGearRatio = 1 / 5.14;
+        public static final double kDriveMotorGearRatio = 5.14;
         public static final double kTurningMotorGearRatio = 1 / 18.0;
 
         //these convert thoose numbers into positon and velocity
-        public static final double kDriveEncoderRot2Meter = kDriveMotorGearRatio * Math.PI * kWheelDiameterMeters;
-        public static final double kDriveEncoderRPM2MeterPerSec = kDriveEncoderRot2Meter / 60;
+        public static final double kDriveEncoderRot2Meter = (Math.PI * kWheelDiameterMeters) / kDriveMotorGearRatio;
+        public static final double kDriveEncoderRPM2MeterPerSec = kDriveEncoderRot2Meter / 60.0;
     }
     public static final class DriveConstants {
         //measure left to right wheel
@@ -92,25 +92,6 @@ public class Constants {
         //adjust this value if your robot is moving without you touching the sticks. the older controller the more this number typically is
         //you probally want to replace controllers after two seasons or if the stick drift is too high for preicous movement of robot
         public static final double kDeadband = 0.09;
-    }
-    public static final class AutoConstants {
-        public static final double kMaxSpeedMetersPerSecond = DriveConstants.kPhysicalMaxSpeedMetersPerSecond / 1.9;
-        public static final double kMaxAngularSpeedRadiansPerSecond = DriveConstants.kPhysicalMaxAngularSpeedRadiansPerSecond / 8;
-        public static final double kMaxAccelerationMetersPerSecondSquared = 2.5;
-        public static final double kMaxAngularAccelerationRadiansPerSecondSquared = Math.PI / 4;
-        public static final double kPXController = 0.07; //0.4
-        public static final double kPYController = 0.07; //0.4
-        public static final double kIXController = 0.000; //0.0125
-        public static final double kIYController = 0.000; //0.0125
-        
-        public static final double kPThetaController1 = 7;
-        public static final double kPThetaController = 2; //3
-        public static final double kPThetaController0 = 2;
-        public static final double kPTargetController = 0.075;
-        public static final double diagonalController = 0.0125;
-
-        public static final double kMaxSpeedInchesPerSecond = Units.metersToInches(kMaxSpeedMetersPerSecond);
-        public static final double kMaxAccelerationInchesPerSecondSquared = Units.metersToInches(kMaxAccelerationMetersPerSecondSquared);
     }
 
     public static final class FieldConstants {

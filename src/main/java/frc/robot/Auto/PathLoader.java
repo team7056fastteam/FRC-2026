@@ -33,8 +33,8 @@ public class PathLoader {
 
         PPHolonomicDriveController controller =
                 new PPHolonomicDriveController(
-                        new PIDConstants(5.0, 0.0, 0.0),
-                        new PIDConstants(5.0, 0.0, 0.0)
+                        new PIDConstants(3.0, 0.0, 0.08),
+                        new PIDConstants(5.0, 0.0, 0.3)
                 );
 
         BooleanSupplier mirrorPath =
@@ -64,6 +64,7 @@ public class PathLoader {
 
         // Put chooser on SmartDashboard
         SmartDashboard.putData("Auto Selector", autoChooser);
+        // SmartDashboard.putString("Starting Pos", AutoBuilder.);
     }
 
     public Command getSelectedAuto() {
