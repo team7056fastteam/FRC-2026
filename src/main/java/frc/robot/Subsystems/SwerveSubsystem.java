@@ -16,8 +16,6 @@ public class SwerveSubsystem extends SubsystemBase {
 
     private SwerveState state = SwerveState.Idle;
     private ChassisSpeeds inputSpeeds = new ChassisSpeeds(0, 0, 0);
-    private SwerveHeadingController mHeadingController;
-    private RobotConfig robotConfig;
 
     public enum SwerveState {
         Idle,
@@ -70,17 +68,11 @@ public class SwerveSubsystem extends SubsystemBase {
 
     public SwerveSubsystem() {
         runChassis(new ChassisSpeeds(0, 0, 0));
-        mHeadingController = new SwerveHeadingController();
-        try {
-            robotConfig = RobotConfig.fromGUISettings();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     public void runChassis(ChassisSpeeds speeds) {
 
-        // Kill tiny jitter speeds
+        // kill tiny jitter speeds
         double minLinear = 0.05;
         double minAngular = 0.05;
 
@@ -100,7 +92,7 @@ public class SwerveSubsystem extends SubsystemBase {
     }
 
     public void setModuleStates(SwerveModuleState[] desiredStates) {
-        // Max speed capping based on robot config
+        // max speed capping 
         SwerveDriveKinematics.desaturateWheelSpeeds(
             desiredStates,
             DriveConstants.kPhysicalMaxSpeedMetersPerSecond

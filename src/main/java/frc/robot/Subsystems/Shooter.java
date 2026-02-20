@@ -13,6 +13,8 @@ import frc.robot.Common.FeedForwardValues;
 import frc.robot.Common.PIDValues;
 import frc.robot.Constants.FieldConstants;
 
+import java.lang.annotation.Target;
+
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
@@ -24,6 +26,7 @@ public class Shooter extends SubsystemBase{
     SparkFlex shooterMotor;
     SparkFlexConfig motorConfig;
     Pose2d currentPose;
+    double targetRPM;
 
     private double ks;
     private double kg;
@@ -58,22 +61,28 @@ public class Shooter extends SubsystemBase{
     public void periodic() {
         switch (state) {
             case Idle:
+                targetRPM = 0;
                 shooterMotor.set(0);
                 break;
             case Targeting:
-                shooterMotor.getClosedLoopController().setSetpoint(calculateRPM(), ControlType.kVelocity);
+                targetRPM = calculateRPM();
+                shooterMotor.getClosedLoopController().setSetpoint(targetRPM, ControlType.kVelocity);
                 break;
             case Close:
-                shooterMotor.getClosedLoopController().setSetpoint(2850, ControlType.kVelocity);
+                targetRPM = 2850;
+                shooterMotor.getClosedLoopController().setSetpoint(targetRPM, ControlType.kVelocity);
                 break;
             case Mid:
+                targetRPM = 3475;
                 shooterMotor.getClosedLoopController().setSetpoint(3475, ControlType.kVelocity);
                 break;
             case Far:
+                targetRPM = 3900;
                 shooterMotor.getClosedLoopController().setSetpoint(3900, ControlType.kVelocity);
                 break;
             case Passing:
-                shooterMotor.getClosedLoopController().setSetpoint(0, ControlType.kVelocity);
+                targetRPM = 0;
+                shooterMotor.getClosedLoopController().setSetpoint(targetRPM, ControlType.kVelocity);
         }
     }
 
@@ -85,6 +94,7 @@ public class Shooter extends SubsystemBase{
         SmartDashboard.putNumber("Shooter RPM", shooterMotor.getEncoder().getVelocity());
         SmartDashboard.putNumber("Shooter Current", shooterMotor.getOutputCurrent());
         SmartDashboard.putString("Shooter State", state.toString());
+        SmartDashboard.putNumber("Shooter Target RPM", targetRPM);
     }
     
     public double calculateRPM() {

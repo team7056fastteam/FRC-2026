@@ -110,7 +110,7 @@ public class IntakePivot extends SubsystemBase {
         SmartDashboard.putNumber("Intake Pivot Pos", intakePivotMotor.getEncoder().getPosition());
         SmartDashboard.putNumber("Intake Pivot Current", intakePivotMotor.getOutputCurrent());
         SmartDashboard.putString("Intake Pivot State", state.toString());
-        SmartDashboard.putNumber("Intake Pivot RPM", intakePivotMotor.getEncoder().getPosition());
+        SmartDashboard.putNumber("Intake Pivot RPM", intakePivotMotor.getEncoder().getVelocity());
     }
 
     public void setState(IntakePivotState state){

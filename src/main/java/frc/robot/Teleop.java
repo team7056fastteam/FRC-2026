@@ -55,7 +55,7 @@ public class Teleop {
 
         _drive.setState(SwerveState.TeleOp);
 
-        //don't think you need this but it was breaking so...
+        //don't think you need this but it was breaking
         _drive.feedSwerveSpeeds(new ChassisSpeeds(0, 0, 0));
         _drive.setModuleStates(new SwerveModuleState[] {
             new SwerveModuleState(0, new Rotation2d(0)),
