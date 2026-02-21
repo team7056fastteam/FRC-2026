@@ -154,6 +154,7 @@ public class Robot extends TimedRobot {
     // _kicker.dashboard();
     // _shooter.dashboard();
     // _led.dashboard();
+    _swerve.dashboard();
   }
 
   public static SwerveSubsystem getSwerveInstance(){

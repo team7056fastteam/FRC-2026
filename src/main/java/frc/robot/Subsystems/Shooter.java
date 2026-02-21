@@ -9,11 +9,8 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Common.FeedForwardValues;
 import frc.robot.Common.PIDValues;
 import frc.robot.Constants.FieldConstants;
-
-import java.lang.annotation.Target;
 
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkBase.ControlType;
@@ -28,11 +25,6 @@ public class Shooter extends SubsystemBase{
     Pose2d currentPose;
     double targetRPM;
 
-    private double ks;
-    private double kg;
-    private double kv;
-    private double ka;
-
     private double kP;
     private double kI;
     private double kD;
@@ -42,7 +34,6 @@ public class Shooter extends SubsystemBase{
         motorConfig = new SparkFlexConfig();
         motorConfig.inverted(ShooterConstants.ReversedShooter)
             .idleMode(IdleMode.kCoast);
-        setGains(ShooterConstants.ShooterFF);
         setPids(ShooterConstants.ShooterPID);
         motorConfig.closedLoop
             .p(kP)
@@ -50,10 +41,7 @@ public class Shooter extends SubsystemBase{
             .d(kD)
             .outputRange(0, 1);
         motorConfig.closedLoop.feedForward
-            .kA(ka)
-            .kV(kv)
-            .kG(kg)
-            .kS(ks);
+            .kV(ShooterConstants.ShooterFF);
         shooterMotor.configure(motorConfig, com.revrobotics.ResetMode.kNoResetSafeParameters, com.revrobotics.PersistMode.kNoPersistParameters);
     }
 
@@ -158,13 +146,6 @@ public class Shooter extends SubsystemBase{
         return Math.abs(target - actual) < 100; // RPM tolerance
     }
 
-    public void setGains(FeedForwardValues feed){
-        this.ks = feed.getKS();
-        this.kg = feed.getKG();
-        this.kv = feed.getKV();
-        this.ka = feed.getKA();
-    }
-
     public void setPids(PIDValues pids){
         this.kP = pids.getP();
         this.kI = pids.getI();
@@ -172,14 +153,14 @@ public class Shooter extends SubsystemBase{
     }
 
     public static final class ShooterConstants{
-        //TODO Find Actual Constants
+        //TODO find constants!
         public static final int ShooterMotorID = 13;
         public static final boolean ReversedShooter = false;
-        public static final double ShooterExitHeight = Units.inchesToMeters(14.95);
-        public static final double ShooterExitAngle = Math.toRadians(40); //degrees not correct
+        public static final double ShooterExitHeight = Units.inchesToMeters(15.8);
+        public static final double ShooterExitAngle = Math.toRadians(77.3);
         public static final double ShooterWheelRadius = Units.inchesToMeters(2);
         public static final double VelocityMultiplier = 1.15;
         public static final PIDValues ShooterPID = new PIDValues(.0005, 0, .0001);
-        public static final FeedForwardValues ShooterFF = new FeedForwardValues(0.02, 0, (1.0 / 5676.0), 0);
+        public static final double ShooterFF = 1.0 / 5676.0;
     }
 }

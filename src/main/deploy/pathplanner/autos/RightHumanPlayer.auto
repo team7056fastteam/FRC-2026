@@ -7,13 +7,25 @@
         {
           "type": "path",
           "data": {
-            "pathName": "camerA"
+            "pathName": "RightHumanPlayer"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 5.0
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "camera2"
+            "pathName": "RightShoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "shootFar"
           }
         }
       ]

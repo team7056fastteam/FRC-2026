@@ -19,10 +19,10 @@ public class Constants {
     }
     public static final class DriveConstants {
         //measure left to right wheel
-        public static final double kTrackWidth = Units.inchesToMeters(19.5);
+        public static final double kTrackWidth = Units.inchesToMeters(17.5);
 
         //measure front to back wheel
-        public static final double kWheelBase = Units.inchesToMeters(21.5);
+        public static final double kWheelBase = Units.inchesToMeters(17.5);
 
         //should be same if you have a square robot which is typically what you want
 
@@ -45,8 +45,8 @@ public class Constants {
         public static final int kBackRightTurningMotorPort = 6;
 
         //if the wheels are turning forever they flip the corresponding value
-        public static final boolean kFrontLeftTurningMotorReversed = false;
-        public static final boolean kBackLeftTurningMotorReversed = false;
+        public static final boolean kFrontLeftTurningMotorReversed = false; 
+        public static final boolean kBackLeftTurningMotorReversed = false; 
         public static final boolean kFrontRightTurningMotorReversed = false;
         public static final boolean kBackRightTurningMotorReversed = false;
 
@@ -54,7 +54,7 @@ public class Constants {
         //if not they adjust this value
         public static final boolean kFrontLeftDriveMotorReversed = true;
         public static final boolean kBackLeftDriveMotorReversed = true;
-        public static final boolean kFrontRightDriveMotorReversed = true;
+        public static final boolean kFrontRightDriveMotorReversed = false;
         public static final boolean kBackRightDriveMotorReversed = false;
 
         //abs encoders ids

@@ -51,7 +51,6 @@ public class IntakePivot extends SubsystemBase {
             .kA(ka)
             .kS(ks)
             .kV(kv);
-
         mProfile = new TrapezoidProfile(new Constraints(IntakePivotConstants.IntakePivotMaxVelocity, IntakePivotConstants.IntakePivotMaxAcceleration));
         goal = new TrapezoidProfile.State(0.1, 0);
         setpoint = new TrapezoidProfile.State(intakePivotMotor.getEncoder().getPosition(), 0);

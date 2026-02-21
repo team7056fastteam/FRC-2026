@@ -11,7 +11,6 @@
 // import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 // import edu.wpi.first.wpilibj2.command.SubsystemBase;
 // import frc.robot.Robot;
-// import frc.robot.Common.FeedForwardValues;
 // import frc.robot.Common.PIDValues;
 
 // public class Kicker extends SubsystemBase {
@@ -21,10 +20,6 @@
 //     CANrange fuelSensor;
 //     SparkMax kickerMotor;
 //     SparkMaxConfig motorConfig;
-//     private double ks;
-//     private double kg;
-//     private double kv;
-//     private double ka;
 
 //     private double kP;
 //     private double kI;
@@ -38,17 +33,11 @@
 //         fuelSensor = new CANrange(KickerConstants.FuelSensorID);
 //         motorConfig.inverted(KickerConstants.ReversedKicker)
 //             .idleMode(IdleMode.kBrake);
-//         setGains(KickerConstants.KickerFF);
 //         setPids(KickerConstants.KickerPID);
 //         motorConfig.closedLoop
 //             .p(kP)
 //             .i(kI)
 //             .d(kD);
-//         motorConfig.closedLoop.feedForward
-//             .kA(ka)
-//             .kG(kg)
-//             .kV(kv)
-//             .kS(ks);
 //         kickerMotor.configure(motorConfig, com.revrobotics.ResetMode.kNoResetSafeParameters, com.revrobotics.PersistMode.kNoPersistParameters);
 //         _shooter = Robot.getShooterInstance();
 //     }
@@ -99,13 +88,6 @@
 //     public void setToIntendedState(){
 //         state = intendedState;
 //     }
-
-//     public void setGains(FeedForwardValues feed){
-//         this.ks = feed.getKS();
-//         this.kg = feed.getKG();
-//         this.kv = feed.getKV();
-//         this.ka = feed.getKA();
-//     }
     
 //     public void setPids(PIDValues pids){
 //         this.kP = pids.getP();
@@ -114,14 +96,13 @@
 //     }
 
 //     public static final class KickerConstants{
-//         //TODO contants
+//         //TODO find contants
 //         public static final int KickerMotorID = 12;
 //         public static final boolean ReversedKicker = false;
 //         public static final double KickerFiringVelocity = 4500;
 //         public static final int FuelSensorID = 0;
 //         public static final double KickerHoldingVelocity = 800;
 //         public static final PIDValues KickerPID = new PIDValues(0.00015, 0, 0);
-//         public static final FeedForwardValues KickerFF = new FeedForwardValues(0.02, 0, (1.0 / 5676.0), 0);
 //         public static final double FuelSensorRange = Units.inchesToMeters(2);
 //     }
 

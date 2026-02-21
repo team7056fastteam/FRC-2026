@@ -168,7 +168,7 @@ class LedSequence {
 }
 
 class LedConstants {
-    //TODO led constants
+    //TODO find constants
     public static final int redPin = 2;
     public static final int greenPin = 1;
     public static final int bluePin = 3;

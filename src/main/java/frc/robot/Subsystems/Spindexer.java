@@ -9,7 +9,6 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Common.FeedForwardValues;
 import frc.robot.Common.PIDValues;
 
 public class Spindexer extends SubsystemBase {
@@ -21,11 +20,6 @@ public class Spindexer extends SubsystemBase {
     SpindexerState state = SpindexerState.Idle;
     SpindexerState intendedState = SpindexerState.Idle;
 
-    private double ks;
-    private double kg;
-    private double kv;
-    private double ka;
-
     private double kP;
     private double kI;
     private double kD;
@@ -35,18 +29,12 @@ public class Spindexer extends SubsystemBase {
         motorConfig = new SparkMaxConfig();
         motorConfig.inverted(SpindexerConstants.ReversedSpindexer)
             .idleMode(IdleMode.kBrake);
-        setGains(SpindexerConstants.SpindexerFF);
         setPids(SpindexerConstants.SpindexerPID);
         motorConfig.closedLoop
             .p(kP)
             .i(kI)
             .d(kD)
             .outputRange(0, 1);
-        motorConfig.closedLoop.feedForward
-            .kA(ka)
-            .kG(kg)
-            .kS(ks)
-            .kV(kv);
         spindexerMotor.configure(motorConfig, com.revrobotics.ResetMode.kNoResetSafeParameters, com.revrobotics.PersistMode.kNoPersistParameters);
     }
 
@@ -91,13 +79,6 @@ public class Spindexer extends SubsystemBase {
         state = intendedState;
     }
 
-    public void setGains(FeedForwardValues feed){
-        this.ks = feed.getKS();
-        this.kg = feed.getKG();
-        this.kv = feed.getKV();
-        this.ka = feed.getKA();
-    }
-
     public void setPids(PIDValues pids){
         this.kP = pids.getP();
         this.kI = pids.getI();
@@ -105,7 +86,7 @@ public class Spindexer extends SubsystemBase {
     }
     
     public static final class SpindexerConstants{
-        // TODO Find Actual Constants
+        // TODO find constants
         public static final int SpindexerMotorID = 11;
         public static final boolean ReversedSpindexer = false;
 
@@ -113,7 +94,6 @@ public class Spindexer extends SubsystemBase {
         public static final double SpindexerForwardSlowVelocity = 400;
 
         public static final PIDValues SpindexerPID = new PIDValues(0.0002, 0, 0);
-        public static final FeedForwardValues SpindexerFF = new FeedForwardValues(0.02, 0, (1.0 / 5676.0), 0);
     }
 
 }

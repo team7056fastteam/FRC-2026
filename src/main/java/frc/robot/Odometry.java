@@ -64,10 +64,10 @@ public class Odometry {
                 Robot.getSwerveInstance().getModulePositions(),
                 new Pose2d(),
 
-                // Trust wheel odometry heavily
+                // wheel odometry trust std
                 VecBuilder.fill(0.02, 0.02, 0.01),
 
-                // Trust vision moderately
+                // vision trust std
                 VecBuilder.fill(2.0, 2.0, 4.0)
             );
     }
@@ -116,7 +116,7 @@ public class Odometry {
             visionStdDevs = VecBuilder.fill(4.0, 4.0, 8.0);
         }
 
-        // Scale based on distance
+        // scale based on distance
         for (int i = 0; i < 3; i++) {
             visionStdDevs.set(
                 i,
@@ -143,7 +143,7 @@ public class Odometry {
 
     public void resetPose(Pose2d pose) {
 
-        // Match gyro to pose rotation
+        // match gyro to pose rotation
         pigeon.setYaw(pose.getRotation().getDegrees());
 
         poseEstimator.resetPosition(
