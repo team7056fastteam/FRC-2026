@@ -10,7 +10,7 @@ public class Constants {
         public static final double kWheelDiameterMeters = Units.inchesToMeters(4);
 
         //look these numbers up
-        public static final double kDriveMotorGearRatio = 1 / 5.14;
+        public static final double kDriveMotorGearRatio = 1 / 5.452756;
         public static final double kTurningMotorGearRatio = 1 / 18.0;
 
         //these convert thoose numbers into positon and velocity
