@@ -10,11 +10,11 @@ public class Constants {
         public static final double kWheelDiameterMeters = Units.inchesToMeters(4);
 
         //look these numbers up
-        public static final double kDriveMotorGearRatio = 5.14;
+        public static final double kDriveMotorGearRatio = 1 / 5.14;
         public static final double kTurningMotorGearRatio = 1 / 18.0;
 
         //these convert thoose numbers into positon and velocity
-        public static final double kDriveEncoderRot2Meter = (Math.PI * kWheelDiameterMeters) / kDriveMotorGearRatio;
+        public static final double kDriveEncoderRot2Meter = (Math.PI * kWheelDiameterMeters) * kDriveMotorGearRatio;
         public static final double kDriveEncoderRPM2MeterPerSec = kDriveEncoderRot2Meter / 60.0;
     }
     public static final class DriveConstants {

@@ -21,6 +21,8 @@ import frc.robot.Subsystems.Shooter.ShooterState;
 import frc.robot.Subsystems.Spindexer.SpindexerState;
 import frc.robot.Subsystems.SwerveSubsystem.SwerveState;
 import frc.robot.Constants.FieldConstants;
+import frc.robot.Common.SwerveHeadingController;
+import frc.robot.Common.SwerveHeadingController.HeadingType;
 
 public class Teleop {
     SwerveSubsystem _drive;
@@ -38,10 +40,14 @@ public class Teleop {
 
     double xPowerOffset;
     double yPowerOffset;
+    double zPowerOffset;
 
     Translation2d adjustment = new Translation2d();
 
     Boolean up, down, right, left;
+
+    SwerveHeadingController headingController = new SwerveHeadingController();
+
 
     public void TeleopInit() {
         _drive = Robot.getSwerveInstance();
@@ -117,20 +123,29 @@ public class Teleop {
         get.isPressed(get.driverLeftTrigger(), () -> {
             Rotation2d targetRot = getHubTargetRotation();
             double currentAngle = Robot.getGyroscopeRotation2d().getRadians();
-            double error = targetRot.getRadians() - currentAngle;
-            error = Math.atan2(Math.sin(error), Math.cos(error)); // wrap [-pi, pi]
+            // double error = targetRot.getRadians() - currentAngle;
+            // error = Math.atan2(Math.sin(error), Math.cos(error)); // wrap [-pi, pi]
 
-            double kP = 2.0; // tunable
-            driveZ += error * kP;
+            // double kP = 2.0; // tunable
+            // driveZ += error * kP;
+
+            headingController.setState(HeadingType.SNAP);
+            headingController.setTarget(targetRot.getRadians());
+            double correction = headingController.calculate(currentAngle);
 
             double maxAngular = DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond;
-            driveZ = Math.max(-maxAngular, Math.min(driveZ, maxAngular));
+            zPowerOffset = Math.max(-maxAngular, Math.min(correction, maxAngular));
+        });
+
+        get.isNotPressed(get.driverLeftTrigger(), ()->{
+            zPowerOffset = 0;
+            headingController.setState(HeadingType.OFF);
         });
 
         // feed swerve
         _drive.feedSwerveSpeeds(
             ChassisSpeeds.fromFieldRelativeSpeeds(
-                new ChassisSpeeds(driveX + xPowerOffset, driveY - yPowerOffset, driveZ),
+                new ChassisSpeeds(driveX + xPowerOffset, driveY - yPowerOffset, driveZ + zPowerOffset),
                 Robot.getGyroscopeRotation2d()
             )
         );
@@ -197,6 +212,6 @@ public class Teleop {
         double dy = hubY - robotPose.getY();
         Rotation2d hubAngle = new Rotation2d(Math.atan2(dy, dx));
         //intake is front of the robot, shooter is 90 degree ofset
-        return hubAngle.plus(Rotation2d.fromDegrees(90)); 
+        return hubAngle.minus(Rotation2d.fromDegrees(90)); 
     }
 }

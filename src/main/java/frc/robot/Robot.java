@@ -12,6 +12,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -43,6 +44,7 @@ public class Robot extends TimedRobot {
   // private static LedSubsystem _led;
   private PathLoader pathLoader;
   private Command autonomousCommand;
+  private Field2d field;
 
 
 
@@ -58,6 +60,7 @@ public class Robot extends TimedRobot {
     // _shooter = getShooterInstance();
     // _led = getLedInstance();
     pathLoader = new PathLoader();
+    field = new Field2d();
     // NamedCommands.registerCommand("ingest", new Ingest(Intake.IntakeState.Forward, IntakePivot.IntakePivotState.Down));
     // NamedCommands.registerCommand("unIngest", new Ingest(Intake.IntakeState.Idle, IntakePivot.IntakePivotState.Up));
     // NamedCommands.registerCommand("shootClose", new ShootForTime(Shooter.ShooterState.Close, 5.0));
@@ -70,6 +73,7 @@ public class Robot extends TimedRobot {
     _odometry.periodic();
     CommandScheduler.getInstance().run();
     RobotDashboard();
+    field.setRobotPose(_odometry.getPose());
   }
 
   @Override
@@ -121,6 +125,7 @@ public class Robot extends TimedRobot {
     dashboard();
     SmartDashboard.putNumber("Heading",_odometry.getHeading().getDegrees() % 360);
     SmartDashboard.putString("Robot Pose", _odometry.getPose().toString());
+    SmartDashboard.putData("Field", field);
   }
 
 

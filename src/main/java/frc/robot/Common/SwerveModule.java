@@ -40,7 +40,7 @@ public class SwerveModule {
         driveMotor = new SparkMax(driveMotorId, MotorType.kBrushless);
         turningMotor = new SparkMax(turningMotorId, MotorType.kBrushless);
 
-        driveMotor.configure(driveMotorConfig.inverted(driveMotorReversed).apply(new EncoderConfig().velocityConversionFactor(ModuleConstants.kDriveEncoderRPM2MeterPerSec)),
+        driveMotor.configure(driveMotorConfig.inverted(driveMotorReversed).apply(new EncoderConfig().velocityConversionFactor(ModuleConstants.kDriveEncoderRPM2MeterPerSec).positionConversionFactor(ModuleConstants.kDriveEncoderRot2Meter)),
             com.revrobotics.ResetMode.kNoResetSafeParameters, com.revrobotics.PersistMode.kNoPersistParameters);
         turningMotor.configure(turningMotorConfig.inverted(turningMotorReversed),
             com.revrobotics.ResetMode.kNoResetSafeParameters, com.revrobotics.PersistMode.kNoPersistParameters);

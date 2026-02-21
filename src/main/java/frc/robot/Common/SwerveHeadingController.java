@@ -18,8 +18,8 @@ public class SwerveHeadingController {
         snapController = new PIDController(5, 0, 0.5);
         stabilizeController = new PIDController(3.5, 0, 0.5);
 
-        snapController.enableContinuousInput(0, 2*Math.PI);
-        stabilizeController.enableContinuousInput(0, 2*Math.PI);
+        snapController.enableContinuousInput(-Math.PI, Math.PI);
+        stabilizeController.enableContinuousInput(-Math.PI, Math.PI);
     }
 
     public void setTarget(double radians){
