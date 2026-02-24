@@ -159,7 +159,7 @@ public class IntakePivot extends SubsystemBase {
     }
 
     public static final class IntakePivotConstants{
-        //TODO Find Actual Constants
+        //TODO find constants
         public static final int IntakePivotMotorID = 9;
         public static final boolean ReversedIntakePivot = false;
         public static final double IntakePivotHomingVelocity = -.1;

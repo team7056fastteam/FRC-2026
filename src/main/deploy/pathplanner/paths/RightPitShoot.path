@@ -4,46 +4,32 @@
     {
       "anchor": {
         "x": 3.7,
-        "y": 2.1844
+        "y": 2.1147747747747747
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.131327973313227,
-        "y": 2.405063436192771
+        "x": 4.063643671011477,
+        "y": 2.266239915831783
       },
       "isLocked": false,
-      "linkedName": "humanPlayerStart"
+      "linkedName": null
     },
     {
       "anchor": {
-        "x": 0.3031081081081086,
-        "y": 0.6950337837837843
+        "x": 2.3254729729729733,
+        "y": 1.3180855855855862
       },
       "prevControl": {
-        "x": 0.07946509166036023,
-        "y": 0.5833028516559615
+        "x": 2.0827117058949303,
+        "y": 1.1980069820892816
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "wait"
+      "linkedName": "rightPitShoot"
     }
   ],
   "rotationTargets": [],
-  "constraintZones": [
-    {
-      "name": "Constraints Zone",
-      "minWaypointRelativePos": 0.748653500897666,
-      "maxWaypointRelativePos": 1.0,
-      "constraints": {
-        "maxVelocity": 0.8,
-        "maxAcceleration": 3.0,
-        "maxAngularVelocity": 600.0,
-        "maxAngularAcceleration": 720.0,
-        "nominalVoltage": 12.0,
-        "unlimited": false
-      }
-    }
-  ],
+  "constraintZones": [],
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
@@ -56,7 +42,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -90.0
+    "rotation": -44.243
   },
   "reversed": false,
   "folder": null,

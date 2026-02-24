@@ -4,13 +4,14 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
+import com.pathplanner.lib.util.FlippingUtil;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Twist2d;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -117,7 +118,17 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledPeriodic() {
     if(pathLoader.getSelectedAuto() instanceof PathPlannerAuto auto){
-      SmartDashboard.putString("Robot Starting Position", auto.getStartingPose().toString());
+
+      Pose2d startPose = auto.getStartingPose();
+
+      if(AutoBuilder.shouldFlip()){
+        startPose = FlippingUtil.flipFieldPose(startPose);
+      }
+
+      SmartDashboard.putNumber("Robot Starting X", Units.metersToInches(startPose.getX()));
+      SmartDashboard.putNumber("Robot Starting Y", Units.metersToInches(startPose.getY()));
+      SmartDashboard.putNumber("Robot Starting H", startPose.getRotation().getDegrees());
+      SmartDashboard.putString("Robot Starting Pose Meters", startPose.toString());
     }
   }
 
@@ -140,17 +151,6 @@ public class Robot extends TimedRobot {
     return _odometry.getHeading();
   }
 
-  public static void ModifyPoseFromSpeed(ChassisSpeeds speed){
-    double vX = speed.vxMetersPerSecond;
-    double vY = speed.vyMetersPerSecond;
-    double vH = speed.omegaRadiansPerSecond;
-    var twist = new Twist2d(vX,vY,vH/32);
-    Pose2d newPose = _odometry.getPose().exp(twist);
-    double angleChange = newPose.getRotation().getDegrees();
-    if(angleChange < 0){
-      angleChange = angleChange + 360;
-    }
-  }
 
   public void dashboard(){
     // _intake.dashboard();

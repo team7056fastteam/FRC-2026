@@ -8,42 +8,28 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.131327973313227,
-        "y": 2.405063436192771
+        "x": 4.210925149765763,
+        "y": 2.130131332850838
       },
       "isLocked": false,
       "linkedName": "humanPlayerStart"
     },
     {
       "anchor": {
-        "x": 0.3031081081081086,
-        "y": 0.6950337837837843
+        "x": 2.0292680180180183,
+        "y": 2.370123873873874
       },
       "prevControl": {
-        "x": 0.07946509166036023,
-        "y": 0.5833028516559615
+        "x": 1.7806594408288343,
+        "y": 2.3964634894361705
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "wait"
+      "linkedName": "humanPlayerShoot"
     }
   ],
   "rotationTargets": [],
-  "constraintZones": [
-    {
-      "name": "Constraints Zone",
-      "minWaypointRelativePos": 0.748653500897666,
-      "maxWaypointRelativePos": 1.0,
-      "constraints": {
-        "maxVelocity": 0.8,
-        "maxAcceleration": 3.0,
-        "maxAngularVelocity": 600.0,
-        "maxAngularAcceleration": 720.0,
-        "nominalVoltage": 12.0,
-        "unlimited": false
-      }
-    }
-  ],
+  "constraintZones": [],
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
@@ -56,7 +42,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -90.0
+    "rotation": -62.804
   },
   "reversed": false,
   "folder": null,

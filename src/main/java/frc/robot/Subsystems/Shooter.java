@@ -153,7 +153,7 @@ public class Shooter extends SubsystemBase{
     }
 
     public static final class ShooterConstants{
-        //TODO find constants!
+        //TODO find constants
         public static final int ShooterMotorID = 13;
         public static final boolean ReversedShooter = false;
         public static final double ShooterExitHeight = Units.inchesToMeters(15.8);

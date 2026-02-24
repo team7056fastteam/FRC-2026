@@ -69,20 +69,6 @@ public class SwerveSubsystem extends SubsystemBase {
     }
 
     public void runChassis(ChassisSpeeds speeds) {
-
-        // kill tiny jitter speeds
-        double minLinear = 0.05;
-        double minAngular = 0.05;
-
-        if (Math.abs(speeds.vxMetersPerSecond) < minLinear)
-            speeds.vxMetersPerSecond = 0;
-
-        if (Math.abs(speeds.vyMetersPerSecond) < minLinear)
-            speeds.vyMetersPerSecond = 0;
-
-        if (Math.abs(speeds.omegaRadiansPerSecond) < minAngular)
-            speeds.omegaRadiansPerSecond = 0;
-
         SwerveModuleState[] moduleStates =
             DriveConstants.kDriveKinematics.toSwerveModuleStates(speeds);
 
@@ -171,7 +157,7 @@ public class SwerveSubsystem extends SubsystemBase {
             backLeft.getPosition(),
             backRight.getPosition()
         };
-    }
+}
 
     public ChassisSpeeds getRobotRelativeSpeeds() {
         return DriveConstants.kDriveKinematics.toChassisSpeeds(

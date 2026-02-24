@@ -123,11 +123,6 @@ public class Teleop {
         get.isPressed(get.driverLeftTrigger(), () -> {
             Rotation2d targetRot = getHubTargetRotation();
             double currentAngle = Robot.getGyroscopeRotation2d().getRadians();
-            // double error = targetRot.getRadians() - currentAngle;
-            // error = Math.atan2(Math.sin(error), Math.cos(error)); // wrap [-pi, pi]
-
-            // double kP = 2.0; // tunable
-            // driveZ += error * kP;
 
             headingController.setState(HeadingType.SNAP);
             headingController.setTarget(targetRot.getRadians());
@@ -211,7 +206,7 @@ public class Teleop {
         double dx = hubX - robotPose.getX();
         double dy = hubY - robotPose.getY();
         Rotation2d hubAngle = new Rotation2d(Math.atan2(dy, dx));
-        //intake is front of the robot, shooter is 90 degree ofset
+        //intake is front of the robot, shooter is 90 degree offset
         return hubAngle.minus(Rotation2d.fromDegrees(90)); 
     }
 }

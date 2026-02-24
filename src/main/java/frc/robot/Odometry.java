@@ -21,6 +21,7 @@ import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 
@@ -36,19 +37,17 @@ public class Odometry {
 
     private static final int pigeonID = 62;
 
-    //TODO adjust acording to camera postitions
-    public static final Transform3d kRobotToCam0 =
+    public static final Transform3d kRobotToCam0 = 
         new Transform3d(
-            new Translation3d(-0.23, 0.18, 0.34),
-            new Rotation3d(0, Math.toRadians(7.5), Math.toRadians(180))
+            new Translation3d(Units.inchesToMeters(-11), Units.inchesToMeters(7), Units.inchesToMeters(11.5)),
+            new Rotation3d(0, Math.toRadians(-30), Math.toRadians(90))
         );
-
+    
     public static final Transform3d kRobotToCam1 =
         new Transform3d(
-            new Translation3d(-0.20, -0.18, 0.34),
-            new Rotation3d(0, Math.toRadians(7.5), Math.toRadians(180))
+            new Translation3d(Units.inchesToMeters(-10.75), Units.inchesToMeters(-7.25), Units.inchesToMeters(10)),
+            new Rotation3d(0, Math.toRadians(-30), Math.toRadians(90))
         );
-
 
     public Odometry() {
 
@@ -205,4 +204,5 @@ public class Odometry {
             return estimator.update(result);
         }
     }
+    
 }
