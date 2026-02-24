@@ -4,6 +4,7 @@ import java.util.List;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
@@ -16,6 +17,7 @@ import frc.robot.Constants.DriveConstants;
 import frc.robot.Subsystems.*;
 import frc.robot.Subsystems.Intake.IntakeState;
 import frc.robot.Subsystems.IntakePivot.IntakePivotState;
+import frc.robot.Subsystems.Shooter.ShooterConstants;
 // import frc.robot.Subsystems.Kicker.KickerState;
 import frc.robot.Subsystems.Shooter.ShooterState;
 import frc.robot.Subsystems.Spindexer.SpindexerState;
@@ -197,14 +199,21 @@ public class Teleop {
 
     // get rotation to hub
     private Rotation2d getHubTargetRotation() {
-        Pose2d robotPose = Robot.getOdometryInstance().getPose();
+        Pose2d shooterPose = Robot.getOdometryInstance()
+            .getPose()
+                .transformBy(
+                    new Transform2d(
+                        ShooterConstants.ShooterPoseOffsetX,
+                        ShooterConstants.ShooterPoseOffsetY,
+                        new Rotation2d()
+                    ));
         double hubX = (DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Blue ?
                        FieldConstants.hubPosBlue.getX() : FieldConstants.hubPosRed.getX());
         double hubY = (DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Blue ?
                        FieldConstants.hubPosBlue.getY() : FieldConstants.hubPosRed.getY());
 
-        double dx = hubX - robotPose.getX();
-        double dy = hubY - robotPose.getY();
+        double dx = hubX - (shooterPose.getX());
+        double dy = hubY - (shooterPose.getY());
         Rotation2d hubAngle = new Rotation2d(Math.atan2(dy, dx));
         //intake is front of the robot, shooter is 90 degree offset
         return hubAngle.minus(Rotation2d.fromDegrees(90)); 

@@ -7,13 +7,25 @@
         {
           "type": "path",
           "data": {
-            "pathName": "RightHumanPlayer"
+            "pathName": "RightPit"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "shootMid"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "RightHumanPlayerWait"
           }
         },
         {
           "type": "wait",
           "data": {
-            "waitTime": 3.0
+            "waitTime": 1.0
           }
         },
         {

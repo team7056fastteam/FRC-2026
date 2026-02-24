@@ -5,10 +5,14 @@ import com.revrobotics.spark.config.SparkFlexConfig;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Odometry;
+import frc.robot.Robot;
 import frc.robot.Common.PIDValues;
 import frc.robot.Constants.FieldConstants;
 
@@ -24,6 +28,7 @@ public class Shooter extends SubsystemBase{
     SparkFlexConfig motorConfig;
     Pose2d currentPose;
     double targetRPM;
+    Odometry _odometry = Robot.getOdometryInstance();
 
     private double kP;
     private double kI;
@@ -47,6 +52,7 @@ public class Shooter extends SubsystemBase{
 
     @Override
     public void periodic() {
+        currentPose = _odometry.getPose();
         switch (state) {
             case Idle:
                 targetRPM = 0;
@@ -87,9 +93,10 @@ public class Shooter extends SubsystemBase{
     
     public double calculateRPM() {
     if (currentPose == null) return 0.0;
-
+    Pose2d shooterPose = currentPose.transformBy(
+        new Transform2d(ShooterConstants.ShooterPoseOffsetX, ShooterConstants.ShooterPoseOffsetY, new Rotation2d()));
     double horizontalDistance = 
-        currentPose
+        shooterPose
             .getTranslation()
             .getDistance(
                 DriverStation.getAlliance().orElse(DriverStation.Alliance.Blue) == DriverStation.Alliance.Blue
@@ -117,12 +124,6 @@ public class Shooter extends SubsystemBase{
 
     return MathUtil.clamp(rpm, 0, 6000);
 }
-
-
-
-    public void poseIn(Pose2d currentPose){
-        this.currentPose = currentPose;
-    }
 
     public void setState(ShooterState state){
         this.state = state;
@@ -162,5 +163,7 @@ public class Shooter extends SubsystemBase{
         public static final double VelocityMultiplier = 1.15;
         public static final PIDValues ShooterPID = new PIDValues(.0005, 0, .0001);
         public static final double ShooterFF = 1.0 / 5676.0;
+        public static final double ShooterPoseOffsetX = 0;
+        public static final double ShooterPoseOffsetY = 0;
     }
 }

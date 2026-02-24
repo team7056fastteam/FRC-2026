@@ -80,16 +80,16 @@
     },
     {
       "anchor": {
-        "x": 2.437826576576577,
-        "y": 2.3803378378378386
+        "x": 2.0292680180180183,
+        "y": 2.370123873873874
       },
       "prevControl": {
-        "x": 2.4270161876905187,
-        "y": 1.8791985623228222
+        "x": 2.01845762913196,
+        "y": 1.8689845983588578
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "humanPlayerShoot"
     }
   ],
   "rotationTargets": [
@@ -150,7 +150,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -59.394
+    "rotation": -62.804
   },
   "reversed": false,
   "folder": null,

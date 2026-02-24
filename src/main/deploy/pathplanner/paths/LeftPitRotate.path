@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.638762880918189,
-        "y": 7.261421281018762
+        "x": 3.3567686092982103,
+        "y": 7.0986600021112745
       },
       "isLocked": false,
       "linkedName": "leftPitShoot"
@@ -20,8 +20,8 @@
         "y": 7.4041
       },
       "prevControl": {
-        "x": 2.7369795440451212,
-        "y": 7.324679064711506
+        "x": 3.0142001640705645,
+        "y": 7.333539231339993
       },
       "nextControl": null,
       "isLocked": false,

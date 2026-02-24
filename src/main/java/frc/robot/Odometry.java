@@ -39,14 +39,14 @@ public class Odometry {
 
     public static final Transform3d kRobotToCam0 = 
         new Transform3d(
-            new Translation3d(Units.inchesToMeters(-11), Units.inchesToMeters(7), Units.inchesToMeters(11.5)),
-            new Rotation3d(0, Math.toRadians(-30), Math.toRadians(90))
+            new Translation3d(Units.inchesToMeters(7), Units.inchesToMeters(11), Units.inchesToMeters(11.5)),
+            new Rotation3d(0, Math.toRadians(30), Math.toRadians(90))
         );
     
     public static final Transform3d kRobotToCam1 =
         new Transform3d(
-            new Translation3d(Units.inchesToMeters(-10.75), Units.inchesToMeters(-7.25), Units.inchesToMeters(10)),
-            new Rotation3d(0, Math.toRadians(-30), Math.toRadians(90))
+            new Translation3d(Units.inchesToMeters(-7.25), Units.inchesToMeters(10.75), Units.inchesToMeters(10)),
+            new Rotation3d(0, Math.toRadians(30), Math.toRadians(90))
         );
 
     public Odometry() {
