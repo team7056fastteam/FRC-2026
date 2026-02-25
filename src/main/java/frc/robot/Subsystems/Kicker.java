@@ -40,6 +40,10 @@
 //             .d(kD);
 //         kickerMotor.configure(motorConfig, com.revrobotics.ResetMode.kNoResetSafeParameters, com.revrobotics.PersistMode.kNoPersistParameters);
 //         _shooter = Robot.getShooterInstance();
+
+//         if(!fuelSensor.isConnected()){
+//             intendedState = KickerState.Firing;
+//         }
 //     }
 
 //     @Override
@@ -82,7 +86,9 @@
 //     }
 
 //     public void setIntendedState(KickerState state){
-//         intendedState = state;
+//         if(fuelSensor.isConnected() || state != KickerState.HoldAndFire){
+//             intendedState = state;
+//         }
 //     }
 
 //     public void setToIntendedState(){

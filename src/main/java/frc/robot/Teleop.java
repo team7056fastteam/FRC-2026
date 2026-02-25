@@ -160,11 +160,13 @@ public class Teleop {
         //     _shooter.fire();
         //     _kicker.setToIntendedState();
         //     _spindexer.setState(SpindexerState.Forward);
+        //     get.driverRumble();
         // });
         // get.isNotPressed(get.Shoot(), () -> {
         //     _spindexer.setToIntendedState();
         //     _kicker.setState(KickerState.Idle);
         //     _shooter.setState(ShooterState.Idle);
+        //     get.driverUnRumble();
         // });
 
         // get.isPressed(get.Pass(), () -> {
@@ -175,7 +177,7 @@ public class Teleop {
 
         // get.isNotPressed(get.Pass(), () -> {
         //     _shooter.setState(ShooterState.Idle);
-        //     // _kicker.setState(KickerState.Idle);
+        //     _kicker.setState(KickerState.Idle);
         //     _spindexer.setToIntendedState();
         // });
 
@@ -189,7 +191,7 @@ public class Teleop {
 
         // get.isPressed(get.ToggleSpindexer(), () -> _spindexer.toggleSpindexer());
         // get.isPressed(get.IntakePivotToggle(), () -> _intakePivot.togglePos());
-        // get.isPressed(get.IntakePivotRehome(), () -> _intakePivot.setState(IntakePivotState.Rehoming));
+        // get.isPressed(get.IntakePivotRehome(), () -> _intakePivot.rehome());
     }
 
     public void Dashboard() {
@@ -212,8 +214,8 @@ public class Teleop {
         double hubY = (DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Blue ?
                        FieldConstants.hubPosBlue.getY() : FieldConstants.hubPosRed.getY());
 
-        double dx = hubX - (shooterPose.getX());
-        double dy = hubY - (shooterPose.getY());
+        double dx = hubX - shooterPose.getX();
+        double dy = hubY - shooterPose.getY();
         Rotation2d hubAngle = new Rotation2d(Math.atan2(dy, dx));
         //intake is front of the robot, shooter is 90 degree offset
         return hubAngle.minus(Rotation2d.fromDegrees(90)); 

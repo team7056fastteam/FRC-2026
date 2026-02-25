@@ -11,12 +11,15 @@
 //     private final IntakePivot _intakePivot;
 //     private final Intake.IntakeState intakeState;
 //     private final IntakePivot.IntakePivotState pivotState;
+//     public enum PivotPositionState {Up, Down}
+//     private final PivotPositionState pivotPos;
 
-//     public Ingest(Intake.IntakeState intakeState, IntakePivot.IntakePivotState pivotState) {
+//     public Ingest(Intake.IntakeState intakeState, IntakePivot.IntakePivotState pivotState, PivotPositionState pivotPos ) {
 //         this._intake = Robot.getIntakeInstance();
 //         this._intakePivot = Robot.getIntakePivotInstance();
 //         this.intakeState = intakeState;
 //         this.pivotState = pivotState;
+//         this.pivotPos = pivotPos;
 
 //         addRequirements(_intake, _intakePivot);
 //     }
@@ -24,11 +27,19 @@
 //     @Override
 //     public void initialize() {
 //         _intakePivot.setState(pivotState);
+//         switch (pivotPos) {
+//             case Up:
+//                 _intakePivot.setIntakePivotUp();
+//                 break;
+//             case Down:
+//                 _intakePivot.setIntakePivotDown();
+//                 break;
+//         }
 //     }
 
 //     @Override
 //     public void execute() {
-//         if(_intakePivot.inPos() || pivotState == IntakePivot.IntakePivotState.Up){
+//         if(_intakePivot.inPos() || (pivotState == IntakePivot.IntakePivotState.Open && pivotPos == PivotPositionState.Up)){
 //             _intake.setState(intakeState);
 //         }
 //     }

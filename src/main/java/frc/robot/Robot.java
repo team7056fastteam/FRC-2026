@@ -11,6 +11,7 @@ import com.pathplanner.lib.util.FlippingUtil;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
@@ -27,6 +28,7 @@ import frc.robot.Subsystems.LedSubsystem;
 import frc.robot.Subsystems.Shooter;
 import frc.robot.Subsystems.Spindexer;
 import frc.robot.Subsystems.SwerveSubsystem;
+// import frc.robot.Auto.Ingest.PivotPositionState;
 
 /**
  * The methods in this class are called automatically corresponding to each mode, as described in
@@ -62,11 +64,7 @@ public class Robot extends TimedRobot {
     // _led = getLedInstance();
     pathLoader = new PathLoader();
     field = new Field2d();
-    // NamedCommands.registerCommand("ingest", new Ingest(Intake.IntakeState.Forward, IntakePivot.IntakePivotState.Down));
-    // NamedCommands.registerCommand("unIngest", new Ingest(Intake.IntakeState.Idle, IntakePivot.IntakePivotState.Up));
-    // NamedCommands.registerCommand("shootClose", new ShootForTime(Shooter.ShooterState.Close, 5.0));
-    // NamedCommands.registerCommand("shootMid", new ShootForTime(Shooter.ShooterState.Mid, 5.0));
-    // NamedCommands.registerCommand("shootFar", new ShootForTime(Shooter.ShooterState.Far, 5.0));
+    registerNamedCommands();
   }
 
   @Override
@@ -125,9 +123,11 @@ public class Robot extends TimedRobot {
         startPose = FlippingUtil.flipFieldPose(startPose);
       }
 
-      SmartDashboard.putNumber("Robot Starting X", Units.metersToInches(startPose.getX()));
-      SmartDashboard.putNumber("Robot Starting Y", Units.metersToInches(startPose.getY()));
-      SmartDashboard.putNumber("Robot Starting H", startPose.getRotation().getDegrees());
+      SmartDashboard.putString("Robot Starting Pose Inches", new Pose2d(
+        new Translation2d(Units.metersToInches(startPose.getX()), Units.metersToInches(startPose.getY())),
+        new Rotation2d(startPose.getRotation().getRadians()))
+            .toString()
+        );
       SmartDashboard.putString("Robot Starting Pose Meters", startPose.toString());
     }
   }
@@ -160,6 +160,14 @@ public class Robot extends TimedRobot {
     // _shooter.dashboard();
     // _led.dashboard();
     _swerve.dashboard();
+  }
+
+  public void registerNamedCommands(){
+    // NamedCommands.registerCommand("ingest", new Ingest(Intake.IntakeState.Forward, IntakePivot.IntakePivotState.Open, PivotPositionState.Down));
+    // NamedCommands.registerCommand("unIngest", new Ingest(Intake.IntakeState.Idle, IntakePivot.IntakePivotState.Open, PivotPositionState.Up));
+    // NamedCommands.registerCommand("shootClose", new ShootForTime(Shooter.ShooterState.Close, 5.0));
+    // NamedCommands.registerCommand("shootMid", new ShootForTime(Shooter.ShooterState.Mid, 5.0));
+    // NamedCommands.registerCommand("shootFar", new ShootForTime(Shooter.ShooterState.Far, 5.0));
   }
 
   public static SwerveSubsystem getSwerveInstance(){

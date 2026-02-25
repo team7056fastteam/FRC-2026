@@ -17,8 +17,7 @@ import frc.robot.Common.FeedForwardValues;
 import frc.robot.Common.PIDValues;
 
 public class IntakePivot extends SubsystemBase {
-    public enum IntakePivotState{Idle, Up, Down, Rehoming}
-
+    public enum IntakePivotState{Idle, Open, Rehoming}
     IntakePivotState state = IntakePivotState.Idle;
     SparkMax intakePivotMotor;
     SparkMaxConfig motorConfig;
@@ -26,6 +25,7 @@ public class IntakePivot extends SubsystemBase {
     TrapezoidProfile.State goal = new TrapezoidProfile.State();
     TrapezoidProfile.State setpoint = new TrapezoidProfile.State();
     Debouncer homeDebouncer;
+    boolean homingFlag = false;
     private double ks;
     private double kg;
     private double kv;
@@ -65,25 +65,23 @@ public class IntakePivot extends SubsystemBase {
             case Idle:
                 intakePivotMotor.set(0);
                 break;
-            case Up:
-                setPosition(Units.degreesToRotations(0));
-                setpoint = mProfile.calculate(0.02, setpoint, goal);
-                intakePivotMotor.getClosedLoopController().setSetpoint(setpoint.position, ControlType.kPosition);
-                break;
-            case Down:
-                setPosition(Units.degreesToRotations(90));
-                setpoint = mProfile.calculate(0.02, setpoint, goal);
-                intakePivotMotor.getClosedLoopController().setSetpoint(setpoint.position, ControlType.kPosition);
-                break;
             case Rehoming:
                 intakePivotMotor.set(IntakePivotConstants.IntakePivotHomingVelocity);
 
                 if(homeDebouncer.calculate(Math.abs(getVelocity()) < IntakePivotConstants.HomeVelocityThreshold)){
                     resetPosition();
                     setpoint = new TrapezoidProfile.State(intakePivotMotor.getEncoder().getPosition(), 0);
-                    setState(IntakePivotState.Down);
+                    setState(IntakePivotState.Open);
+                    setIntakePivotDown();
+                    homingFlag = false;
                 }
                 break;
+            case Open:
+                setpoint = mProfile.calculate(0.02, setpoint, goal);
+                intakePivotMotor.getClosedLoopController().setSetpoint(setpoint.position, ControlType.kPosition);
+                if(homingFlag){
+                    state = IntakePivotState.Rehoming;
+                }
         }
     }
 
@@ -116,33 +114,41 @@ public class IntakePivot extends SubsystemBase {
         this.state = state;
     }
 
+    public void setIntakePivotUp(){
+        setPosition(Units.degreesToRotations(0));
+    }
+
+    public void setIntakePivotDown(){
+        setPosition(Units.degreesToRotations(90));
+    }
+
     public void togglePos(){
-        if(state == IntakePivotState.Down){
-            state = IntakePivotState.Up;
-        } else if(state == IntakePivotState.Up){
-            state = IntakePivotState.Down;
-        } else{
-            state = IntakePivotState.Up;
+        if(state == IntakePivotState.Open){
+            if(isNear(goal.position, IntakePivotConstants.DownGoalState, 1e-4)){
+                setIntakePivotUp();
+            } else if(isNear(goal.position, IntakePivotConstants.UpGoalState, 1e-4)){
+                setIntakePivotDown();
+            }
         }
     }
 
-    public boolean inPos(){
-        switch (state) {
-            case Down:
-                if(Math.abs(intakePivotMotor.getEncoder().getPosition() - Units.degreesToRotations(90)) < Units.degreesToRotations(5)){
-                    return true;
-                } else return false;
-            case Up:
-                if(Math.abs(intakePivotMotor.getEncoder().getPosition() - Units.degreesToRotations(0)) < Units.degreesToRotations(5)){
-                    return true;
-                } else return false;
-            default:
-                return false;
-        }
+    public boolean inPos() {
+            return state == IntakePivotState.Open && Math.abs(
+                intakePivotMotor.getEncoder().getPosition() - goal.position
+            ) < Units.degreesToRotations(5);
     }
 
     public void resetPosition(){
         intakePivotMotor.getEncoder().setPosition(Units.degreesToRotations(90));
+    }
+
+    public void rehome(){
+        homingFlag = true;
+    }
+
+    //required due to java floating-point precision 
+    private boolean isNear(double a, double b, double tolerance) {
+        return Math.abs(a - b) < tolerance;
     }
 
     public void setGains(FeedForwardValues feed){
@@ -171,6 +177,8 @@ public class IntakePivot extends SubsystemBase {
         public static final FeedForwardValues IntakePivotFF = new FeedForwardValues(0.05, 0.20, 0,0);
         public static final double MinPosition = Units.degreesToRotations(0);
         public static final double MaxPosition = Units.degreesToRotations(90);
+        public static final double DownGoalState = Units.degreesToRotations(90);
+        public static final double UpGoalState = Units.degreesToRotations(0);
     }
     
 }

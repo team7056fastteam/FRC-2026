@@ -163,7 +163,7 @@ public class Shooter extends SubsystemBase{
         public static final double VelocityMultiplier = 1.15;
         public static final PIDValues ShooterPID = new PIDValues(.0005, 0, .0001);
         public static final double ShooterFF = 1.0 / 5676.0;
-        public static final double ShooterPoseOffsetX = 0;
+        public static final double ShooterPoseOffsetX = 0; //wpi is weird, x is forward positive, y is left positive
         public static final double ShooterPoseOffsetY = 0;
     }
 }

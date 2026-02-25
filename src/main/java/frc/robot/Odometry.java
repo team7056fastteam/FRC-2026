@@ -37,6 +37,7 @@ public class Odometry {
 
     private static final int pigeonID = 62;
 
+    //wpi is weird, x is forward positive, y is left positive
     public static final Transform3d kRobotToCam0 = 
         new Transform3d(
             new Translation3d(Units.inchesToMeters(7), Units.inchesToMeters(11), Units.inchesToMeters(11.5)),
@@ -53,6 +54,7 @@ public class Odometry {
 
         pigeon = new Pigeon2(pigeonID);
 
+        //the name has to be the exact same in PhotonVision
         cam0 = new AprilTagVision("Camera0", kRobotToCam0);
         cam1 = new AprilTagVision("Camera1", kRobotToCam1);
 
