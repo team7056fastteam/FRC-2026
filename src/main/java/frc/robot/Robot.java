@@ -22,7 +22,6 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Auto.PathLoader;
 // import frc.robot.Auto.ShootForTime;
 import frc.robot.Subsystems.Intake;
-import frc.robot.Subsystems.IntakePivot;
 // import frc.robot.Subsystems.Kicker;
 import frc.robot.Subsystems.LedSubsystem;
 import frc.robot.Subsystems.Shooter;
@@ -40,7 +39,6 @@ public class Robot extends TimedRobot {
   private static Odometry _odometry;
   private static SwerveSubsystem _swerve;
   // private static Intake _intake;
-  // private static IntakePivot _intakePivot;
   // private static Spindexer _spindexer;
   // private static Shooter _shooter;
   // private static Kicker _kicker;
@@ -57,7 +55,6 @@ public class Robot extends TimedRobot {
     _swerve = getSwerveInstance();
     _odometry = getOdometryInstance();
     // _intake = getIntakeInstance();
-    // _intakePivot = getIntakePivotInstance();
     // _kicker = getKickerInstance();
     // _spindexer = getSpindexerInstance();
     // _shooter = getShooterInstance();
@@ -106,7 +103,6 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledInit() {
     // _intake.stop();
-    // _intakePivot.stop();
     // _kicker.stop();
     // _shooter.stop();
     // _spindexer.stop();
@@ -154,7 +150,6 @@ public class Robot extends TimedRobot {
 
   public void dashboard(){
     // _intake.dashboard();
-    // _intakePivot.dashboard();
     // _spindexer.dashboard();
     // _kicker.dashboard();
     // _shooter.dashboard();
@@ -163,8 +158,8 @@ public class Robot extends TimedRobot {
   }
 
   public void registerNamedCommands(){
-    // NamedCommands.registerCommand("ingest", new Ingest(Intake.IntakeState.Forward, IntakePivot.IntakePivotState.Open, PivotPositionState.Down));
-    // NamedCommands.registerCommand("unIngest", new Ingest(Intake.IntakeState.Idle, IntakePivot.IntakePivotState.Open, PivotPositionState.Up));
+    // NamedCommands.registerCommand("ingest", new Ingest(Intake.IntakeState.Forward));
+    // NamedCommands.registerCommand("unIngest", new Ingest(Intake.IntakeState.Idle));
     // NamedCommands.registerCommand("shootClose", new ShootForTime(Shooter.ShooterState.Close, 5.0));
     // NamedCommands.registerCommand("shootMid", new ShootForTime(Shooter.ShooterState.Mid, 5.0));
     // NamedCommands.registerCommand("shootFar", new ShootForTime(Shooter.ShooterState.Far, 5.0));
@@ -183,13 +178,6 @@ public class Robot extends TimedRobot {
   //     _intake = new Intake();
   //   }
   //   return _intake;
-  // }
-
-  // public static IntakePivot getIntakePivotInstance(){
-  //   if(_intakePivot == null){
-  //     _intakePivot = new IntakePivot();
-  //   }
-  //   return _intakePivot;
   // }
 
   // public static Spindexer getSpindexerInstance(){

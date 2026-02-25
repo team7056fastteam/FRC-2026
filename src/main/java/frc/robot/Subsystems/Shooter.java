@@ -190,7 +190,7 @@ public class Shooter extends SubsystemBase{
     public static final class ShooterConstants{
         //TODO find constants
         public static final int ShooterMotorID = 13;
-        public static final boolean ReversedShooter = false;
+        public static final boolean ReversedShooter = true;
         public static final double ShooterExitHeight = Units.inchesToMeters(15.8);
         public static final double ShooterExitAngle = Math.toRadians(77.3);
         public static final double ShooterWheelRadius = Units.inchesToMeters(2);

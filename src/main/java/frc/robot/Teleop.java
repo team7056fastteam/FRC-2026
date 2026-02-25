@@ -16,7 +16,6 @@ import frc.robot.Common.ControllerFunction;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Subsystems.*;
 import frc.robot.Subsystems.Intake.IntakeState;
-import frc.robot.Subsystems.IntakePivot.IntakePivotState;
 import frc.robot.Subsystems.Shooter.ShooterConstants;
 // import frc.robot.Subsystems.Kicker.KickerState;
 import frc.robot.Subsystems.Shooter.ShooterState;
@@ -32,7 +31,6 @@ public class Teleop {
     // Spindexer _spindexer;
     // Kicker _kicker;
     // Shooter _shooter;
-    // IntakePivot _intakePivot;
 
     XboxController driver = new XboxController(0);
     XboxController operator = new XboxController(1);
@@ -54,7 +52,6 @@ public class Teleop {
     public void TeleopInit() {
         _drive = Robot.getSwerveInstance();
         // _intake = Robot.getIntakeInstance();
-        // _intakePivot = Robot.getIntakePivotInstance();
         // _kicker = Robot.getKickerInstance();
         // _shooter = Robot.getShooterInstance();
         // _spindexer = Robot.getSpindexerInstance();
@@ -190,8 +187,6 @@ public class Teleop {
         // get.isPressed(get.OverrideShortShot(), () -> _shooter.setIntendedState(ShooterState.Close));
 
         // get.isPressed(get.ToggleSpindexer(), () -> _spindexer.toggleSpindexer());
-        // get.isPressed(get.IntakePivotToggle(), () -> _intakePivot.togglePos());
-        // get.isPressed(get.IntakePivotRehome(), () -> _intakePivot.rehome());
     }
 
     public void Dashboard() {
