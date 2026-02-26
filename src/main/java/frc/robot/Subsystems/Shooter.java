@@ -90,40 +90,6 @@ public class Shooter extends SubsystemBase{
         SmartDashboard.putString("Shooter State", state.toString());
         SmartDashboard.putNumber("Shooter Target RPM", targetRPM);
     }
-    
-    public double PhysicsCalculateRPM() {
-        if (currentPose == null) return 0.0;
-        Pose2d shooterPose = currentPose.transformBy(
-            new Transform2d(ShooterConstants.ShooterPoseOffsetX, ShooterConstants.ShooterPoseOffsetY, new Rotation2d()));
-        double horizontalDistance = 
-            shooterPose
-                .getTranslation()
-                .getDistance(
-                    DriverStation.getAlliance().orElse(DriverStation.Alliance.Blue) == DriverStation.Alliance.Blue
-                    ? FieldConstants.hubPosBlue : FieldConstants.hubPosRed);
-
-        horizontalDistance = MathUtil.clamp(horizontalDistance, 0.5, 8.0);
-
-        double dz = FieldConstants.hubHeight - ShooterConstants.ShooterExitHeight;
-
-        double theta = ShooterConstants.ShooterExitAngle;
-
-        double denominator =
-            2 * Math.pow(Math.cos(theta), 2) *
-            (horizontalDistance * Math.tan(theta) - dz);
-
-        if (denominator <= 0) return 0.0;
-
-        double velocity =
-            Math.sqrt(9.81 * horizontalDistance * horizontalDistance / denominator);
-
-        velocity *= ShooterConstants.VelocityMultiplier;
-
-        double rpm =
-            (velocity / (2 * Math.PI * ShooterConstants.ShooterWheelRadius)) * 60.0;
-
-        return MathUtil.clamp(rpm, 0, 6000);
-    }
 
     public double calculateRPM() {
         if (currentPose == null) return 0.0;
@@ -152,9 +118,9 @@ public class Shooter extends SubsystemBase{
 
         // Quadratic regression (fits real-world data)
         double rpm =
-            0.047 * distanceInches * distanceInches +
-            14.9 * distanceInches +
-            2280;
+            0.1828 * distanceInches * distanceInches
+            - 17.592 * distanceInches
+            + 3243;
 
         return MathUtil.clamp(rpm, 0, 6000);
     }
@@ -191,10 +157,6 @@ public class Shooter extends SubsystemBase{
         //TODO find constants
         public static final int ShooterMotorID = 13;
         public static final boolean ReversedShooter = true;
-        public static final double ShooterExitHeight = Units.inchesToMeters(15.8);
-        public static final double ShooterExitAngle = Math.toRadians(77.3);
-        public static final double ShooterWheelRadius = Units.inchesToMeters(2);
-        public static final double VelocityMultiplier = 1.27;
         public static final PIDValues ShooterPID = new PIDValues(.0005, 0, .0001);
         public static final double ShooterFF = 1.0 / 5676.0;
         public static final double ShooterPoseOffsetX = 0; //wpi is weird, x is forward positive, y is left positive
