@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.0292680180180183,
-        "y": 2.370123873873874
+        "x": 2.9178828828828838,
+        "y": 1.134234234234235
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.27533369174278,
-        "y": 2.414301744062227
+        "x": 3.2433389588920774,
+        "y": 1.2612832516911412
       },
       "isLocked": false,
       "linkedName": "humanPlayerShoot"
@@ -20,8 +20,8 @@
         "y": 0.6950337837837843
       },
       "prevControl": {
-        "x": 0.06222637097999989,
-        "y": 0.6127987093040498
+        "x": -0.27577645904327697,
+        "y": 0.5761988405137112
       },
       "nextControl": null,
       "isLocked": false,
@@ -32,7 +32,7 @@
   "constraintZones": [
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 0.673249551166966,
+      "minWaypointRelativePos": 0.703770197486535,
       "maxWaypointRelativePos": 1.0,
       "constraints": {
         "maxVelocity": 0.8,
@@ -62,7 +62,7 @@
   "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -62.804
+    "rotation": -32.69
   },
   "useDefaultConstraints": true
 }
