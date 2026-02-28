@@ -67,18 +67,6 @@ public class Spindexer extends SubsystemBase {
         this.state = state;
     }
 
-    public void toggleSpindexer(){
-        if(intendedState == SpindexerState.ForwardSlow){
-            intendedState = SpindexerState.Idle;
-        } else {
-            intendedState = SpindexerState.ForwardSlow;
-        }
-    }
-
-    public void setToIntendedState(){
-        state = intendedState;
-    }
-
     public void setPids(PIDValues pids){
         this.kP = pids.getP();
         this.kI = pids.getI();
@@ -86,12 +74,11 @@ public class Spindexer extends SubsystemBase {
     }
     
     public static final class SpindexerConstants{
-        // TODO find constants
         public static final int SpindexerMotorID = 11;
-        public static final boolean ReversedSpindexer = false;
+        public static final boolean ReversedSpindexer = true;
 
-        public static final double SpindexerForwardVelocity = 800;
-        public static final double SpindexerForwardSlowVelocity = 400;
+        public static final double SpindexerForwardVelocity = 4000;
+        public static final double SpindexerForwardSlowVelocity = 500;
 
         public static final PIDValues SpindexerPID = new PIDValues(0.0002, 0, 0);
     }

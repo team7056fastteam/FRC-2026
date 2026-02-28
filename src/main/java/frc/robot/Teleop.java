@@ -28,9 +28,9 @@ import frc.robot.Common.SwerveHeadingController.HeadingType;
 public class Teleop {
     SwerveSubsystem _drive;
     // Intake _intake;
-    // Spindexer _spindexer;
+    Spindexer _spindexer;
     // Kicker _kicker;
-    // Shooter _shooter;
+    Shooter _shooter;
 
     XboxController driver = new XboxController(0);
     XboxController operator = new XboxController(1);
@@ -44,19 +44,23 @@ public class Teleop {
 
     Translation2d adjustment = new Translation2d();
 
-    Boolean up, down, right, left;
-
     SwerveHeadingController headingController = new SwerveHeadingController();
+
+    boolean slowSpindexer = false;
+
+    Alliance alliance;
 
 
     public void TeleopInit() {
         _drive = Robot.getSwerveInstance();
         // _intake = Robot.getIntakeInstance();
         // _kicker = Robot.getKickerInstance();
-        // _shooter = Robot.getShooterInstance();
-        // _spindexer = Robot.getSpindexerInstance();
+        _shooter = Robot.getShooterInstance();
+        _spindexer = Robot.getSpindexerInstance();
 
         get = new ControllerFunction(driver, operator);
+
+        alliance = DriverStation.getAlliance().orElse(Alliance.Blue);
 
         _drive.setState(SwerveState.TeleOp);
 
@@ -87,16 +91,6 @@ public class Teleop {
         // reorient
         get.isPressed(driver.getAButton(), () -> Robot.setPose(new Pose2d(0, 0, Rotation2d.fromDegrees(0))));
 
-        // manual adjust
-        get.isPressed(get.Up() && up, () -> { adjustment = adjustment.plus(new Translation2d(0, 2)); up = false; });
-        get.isPressed(get.Down() && down, () -> { adjustment = adjustment.plus(new Translation2d(0, -2)); down = false; });
-        get.isPressed(get.Right() && right, () -> { adjustment = adjustment.plus(new Translation2d(2, 0)); right = false; });
-        get.isPressed(get.Left() && left, () -> { adjustment = adjustment.plus(new Translation2d(-2, 0)); left = false; });
-        get.isNotPressed(get.Up(), () -> up = true);
-        get.isNotPressed(get.Down(), () -> down = true);
-        get.isNotPressed(get.Right(), () -> right = true);
-        get.isNotPressed(get.Left(), () -> left = true);
-
         // joystick input
         driveX = get.driverX();
         driveY = get.driverY();
@@ -113,7 +107,7 @@ public class Teleop {
         driveZ *= DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond * rT;
 
         // flip for red alliance
-        if (DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red) {
+        if (alliance == Alliance.Red) {
             driveX = -driveX;
             driveY = -driveY;
         }
@@ -153,40 +147,49 @@ public class Teleop {
         // get.isPressed(get.IngestSlow(), () -> _intake.setState(IntakeState.ForwardSlow));
         // get.isNotPressed(List.of(get.Outgest(), get.Ingest(), get.IngestSlow()), () -> _intake.setState(IntakeState.Idle));
 
-        // get.isPressed(get.Shoot(), () -> {
-        //     _shooter.fire();
-        //     _kicker.setToIntendedState();
-        //     _spindexer.setState(SpindexerState.Forward);
-        //     get.driverRumble();
-        // });
-        // get.isNotPressed(get.Shoot(), () -> {
-        //     _spindexer.setToIntendedState();
-        //     _kicker.setState(KickerState.Idle);
-        //     _shooter.setState(ShooterState.Idle);
-        //     get.driverUnRumble();
-        // });
+        get.isPressed(get.SpindexerSlow(), () -> slowSpindexer = true);
+        get.isNotPressed(get.SpindexerSlow(), () -> slowSpindexer = false);
 
-        // get.isPressed(get.Pass(), () -> {
-        //     _shooter.setState(ShooterState.Passing);
-        //     _kicker.setToIntendedState();
-        //     _spindexer.setState(SpindexerState.Forward);
-        // });
+        get.isPressed(get.Shoot(), () -> {
+            _shooter.fire();
+            // _kicker.setToIntendedState();
+            if(slowSpindexer){
+                _spindexer.setState(SpindexerState.ForwardSlow);
+            } else{
+                _spindexer.setState(SpindexerState.Forward);
+            } 
+            // get.driverRumble();
+        });
 
-        // get.isNotPressed(get.Pass(), () -> {
-        //     _shooter.setState(ShooterState.Idle);
-        //     _kicker.setState(KickerState.Idle);
-        //     _spindexer.setToIntendedState();
-        // });
+        get.isPressed(get.Pass(), () -> {
+            _shooter.setState(ShooterState.Passing);
+            // _kicker.setToIntendedState();
+            if(slowSpindexer){
+                _spindexer.setState(SpindexerState.ForwardSlow);
+            } else{
+                _spindexer.setState(SpindexerState.Forward);
+            } 
+            get.driverRumble();
+        });
+
+        get.isNotPressed(List.of(get.Pass(), get.Shoot(), get.SpindexerSlow()), () -> {
+            if(slowSpindexer){
+                _spindexer.setState(SpindexerState.ForwardSlow);
+            } else {
+                _spindexer.setState(SpindexerState.Idle);
+            }
+            // _kicker.setState(KickerState.Idle);
+            _shooter.setState(ShooterState.Idle);
+            // get.driverUnRumble();
+        });
 
         // get.isPressed(get.FreeFire(), ()-> _kicker.setIntendedState(KickerState.Firing));
         // get.isPressed(get.HoldMode(), ()-> _kicker.setIntendedState(KickerState.HoldAndFire));
 
-        // get.isPressed(get.AutoTargeting(), () -> _shooter.setIntendedState(ShooterState.Targeting));
-        // get.isPressed(get.OverrideLongShot(), () -> _shooter.setIntendedState(ShooterState.Far));
-        // get.isPressed(get.OverrideMidShot(), () -> _shooter.setIntendedState(ShooterState.Mid));
-        // get.isPressed(get.OverrideShortShot(), () -> _shooter.setIntendedState(ShooterState.Close));
-
-        // get.isPressed(get.ToggleSpindexer(), () -> _spindexer.toggleSpindexer());
+        get.isPressed(get.AutoTargeting(), () -> _shooter.setIntendedState(ShooterState.Targeting));
+        get.isPressed(get.OverrideLongShot(), () -> _shooter.setIntendedState(ShooterState.Far));
+        get.isPressed(get.OverrideMidShot(), () -> _shooter.setIntendedState(ShooterState.Mid));
+        get.isPressed(get.OverrideShortShot(), () -> _shooter.setIntendedState(ShooterState.Close));
     }
 
     public void Dashboard() {
@@ -204,9 +207,9 @@ public class Teleop {
                         ShooterConstants.ShooterPoseOffsetY,
                         new Rotation2d()
                     ));
-        double hubX = (DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Blue ?
+        double hubX = (alliance == Alliance.Blue ?
                        FieldConstants.hubPosBlue.getX() : FieldConstants.hubPosRed.getX());
-        double hubY = (DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Blue ?
+        double hubY = (alliance == Alliance.Blue ?
                        FieldConstants.hubPosBlue.getY() : FieldConstants.hubPosRed.getY());
 
         double dx = hubX - shooterPose.getX();

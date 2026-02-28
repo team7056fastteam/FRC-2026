@@ -39,8 +39,8 @@ public class Robot extends TimedRobot {
   private static Odometry _odometry;
   private static SwerveSubsystem _swerve;
   // private static Intake _intake;
-  // private static Spindexer _spindexer;
-  // private static Shooter _shooter;
+  private static Spindexer _spindexer;
+  private static Shooter _shooter;
   // private static Kicker _kicker;
   // private static LedSubsystem _led;
   private PathLoader pathLoader;
@@ -56,8 +56,8 @@ public class Robot extends TimedRobot {
     _odometry = getOdometryInstance();
     // _intake = getIntakeInstance();
     // _kicker = getKickerInstance();
-    // _spindexer = getSpindexerInstance();
-    // _shooter = getShooterInstance();
+    _spindexer = getSpindexerInstance();
+    _shooter = getShooterInstance();
     // _led = getLedInstance();
     pathLoader = new PathLoader();
     field = new Field2d();
@@ -104,8 +104,8 @@ public class Robot extends TimedRobot {
   public void disabledInit() {
     // _intake.stop();
     // _kicker.stop();
-    // _shooter.stop();
-    // _spindexer.stop();
+    _shooter.stop();
+    _spindexer.stop();
     _swerve.stop();
   }
 
@@ -150,9 +150,9 @@ public class Robot extends TimedRobot {
 
   public void dashboard(){
     // _intake.dashboard();
-    // _spindexer.dashboard();
+    _spindexer.dashboard();
     // _kicker.dashboard();
-    // _shooter.dashboard();
+    _shooter.dashboard();
     // _led.dashboard();
     _swerve.dashboard();
   }
@@ -180,12 +180,12 @@ public class Robot extends TimedRobot {
   //   return _intake;
   // }
 
-  // public static Spindexer getSpindexerInstance(){
-  //   if(_spindexer == null){
-  //     _spindexer = new Spindexer();
-  //   }
-  //   return _spindexer;
-  // }
+  public static Spindexer getSpindexerInstance(){
+    if(_spindexer == null){
+      _spindexer = new Spindexer();
+    }
+    return _spindexer;
+  }
 
   // public static Kicker getKickerInstance(){
   //   if(_kicker == null){
@@ -194,12 +194,12 @@ public class Robot extends TimedRobot {
   //   return _kicker;
   // }
 
-  // public static Shooter getShooterInstance(){
-  //   if(_shooter == null){
-  //     _shooter = new Shooter();
-  //   }
-  //   return _shooter;
-  // }
+  public static Shooter getShooterInstance(){
+    if(_shooter == null){
+      _shooter = new Shooter();
+    }
+    return _shooter;
+  }
 
   // public static LedSubsystem getLedInstance(){
   //   if(_led == null){

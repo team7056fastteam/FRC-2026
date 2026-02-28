@@ -133,8 +133,8 @@ public class Shooter extends SubsystemBase{
         state = intendedState;
     }
 
-    public void setIntendedState(ShooterState state){
-        intendedState = state;
+    public void setIntendedState(ShooterState shooterState){
+        intendedState = shooterState;
     }
 
     public double getOutputCurrent(){
@@ -154,12 +154,11 @@ public class Shooter extends SubsystemBase{
     }
 
     public static final class ShooterConstants{
-        //TODO find constants
         public static final int ShooterMotorID = 13;
         public static final boolean ReversedShooter = true;
         public static final PIDValues ShooterPID = new PIDValues(.0005, 0, .0001);
         public static final double ShooterFF = 1.0 / 5676.0;
-        public static final double ShooterPoseOffsetX = 0; //wpi is weird, x is forward positive, y is left positive
-        public static final double ShooterPoseOffsetY = 0;
+        public static final double ShooterPoseOffsetX = Units.inchesToMeters(-9); //wpi is weird, x is forward positive, y is left positive
+        public static final double ShooterPoseOffsetY = Units.inchesToMeters(7);
     }
 }

@@ -94,8 +94,8 @@ public class ControllerFunction {
         return operator.getBButton();
     }
     /**Operator Y Button Pressed */
-    public boolean ToggleSpindexer(){
-        return operator.getYButtonPressed();
+    public boolean SpindexerSlow(){
+        return operator.getYButton();
     }
     /**Operator X Button*/
     public boolean Pass(){
