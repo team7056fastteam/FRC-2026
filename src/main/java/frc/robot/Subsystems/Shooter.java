@@ -7,8 +7,11 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Odometry;
@@ -102,19 +105,32 @@ public class Shooter extends SubsystemBase{
             )
         );
 
-        double horizontalDistance =
-            shooterPose
-                .getTranslation()
-                .getDistance(
-                    DriverStation.getAlliance().orElse(DriverStation.Alliance.Blue)
-                        == DriverStation.Alliance.Blue
-                    ? FieldConstants.hubPosBlue
-                    : FieldConstants.hubPosRed
-                );
+        Translation2d hubPos = DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Blue ?
+                                    FieldConstants.hubPosBlue : FieldConstants.hubPosRed;
 
-        double distanceInches = Units.metersToInches(horizontalDistance);
+        Translation2d shooterTranslation = shooterPose.getTranslation();
 
-        distanceInches = MathUtil.clamp(distanceInches, 20.0, 160.0);
+        Translation2d toHub = hubPos.minus(shooterTranslation);
+
+        double horizontalDistance = toHub.getNorm();
+
+        ChassisSpeeds speeds = _odometry.getFieldRelativeSpeeds();
+        double vx = speeds.vxMetersPerSecond;
+        double vy = speeds.vyMetersPerSecond;
+
+        Translation2d velocity = new Translation2d(vx, vy);
+
+        //estimated flight time (if undershooting increase, if overshooting decrease)
+        double flightTime = (horizontalDistance * .1) + .3;
+
+        double radialVelocity =
+            (velocity.getX() * toHub.getX() +
+            velocity.getY() * toHub.getY())
+            / horizontalDistance;
+        
+        horizontalDistance += radialVelocity * flightTime;
+
+        double distanceInches = MathUtil.clamp(Units.metersToInches(horizontalDistance), 20, 160);
 
         // Quadratic regression (fits real-world data)
         double rpm =

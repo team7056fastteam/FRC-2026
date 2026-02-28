@@ -22,6 +22,7 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 
@@ -140,6 +141,10 @@ public class Odometry {
 
     public Rotation2d getHeading() {
         return pigeon.getRotation2d();
+    }
+
+    public ChassisSpeeds getFieldRelativeSpeeds(){
+        return ChassisSpeeds.fromRobotRelativeSpeeds(Robot.getSwerveInstance().getRobotRelativeSpeeds(), getHeading());
     }
 
     public void resetPose(Pose2d pose) {

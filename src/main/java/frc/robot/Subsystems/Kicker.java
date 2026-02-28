@@ -61,8 +61,7 @@ public class Kicker extends SubsystemBase {
                         kickerMotor.getClosedLoopController().setSetpoint(KickerConstants.KickerFiringVelocity, ControlType.kVelocity);
                     } else {
                         kickerMotor.stopMotor();
-                    }
-                    
+                    }   
                 } else {
                     kickerMotor.getClosedLoopController().setSetpoint(KickerConstants.KickerHoldingVelocity, ControlType.kVelocity);
                 }

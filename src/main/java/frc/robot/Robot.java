@@ -18,16 +18,15 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-// import frc.robot.Auto.Ingest;
+import frc.robot.Auto.Ingest;
 import frc.robot.Auto.PathLoader;
-// import frc.robot.Auto.ShootForTime;
+import frc.robot.Auto.ShootForTime;
 import frc.robot.Subsystems.Intake;
-// import frc.robot.Subsystems.Kicker;
+import frc.robot.Subsystems.Kicker;
 import frc.robot.Subsystems.LedSubsystem;
 import frc.robot.Subsystems.Shooter;
 import frc.robot.Subsystems.Spindexer;
 import frc.robot.Subsystems.SwerveSubsystem;
-// import frc.robot.Auto.Ingest.PivotPositionState;
 
 /**
  * The methods in this class are called automatically corresponding to each mode, as described in
@@ -38,10 +37,10 @@ public class Robot extends TimedRobot {
   private static Teleop _teleop;
   private static Odometry _odometry;
   private static SwerveSubsystem _swerve;
-  // private static Intake _intake;
+  private static Intake _intake;
   private static Spindexer _spindexer;
   private static Shooter _shooter;
-  // private static Kicker _kicker;
+  private static Kicker _kicker;
   // private static LedSubsystem _led;
   private PathLoader pathLoader;
   private Command autonomousCommand;
@@ -54,8 +53,8 @@ public class Robot extends TimedRobot {
     _teleop = new Teleop();
     _swerve = getSwerveInstance();
     _odometry = getOdometryInstance();
-    // _intake = getIntakeInstance();
-    // _kicker = getKickerInstance();
+    _intake = getIntakeInstance();
+    _kicker = getKickerInstance();
     _spindexer = getSpindexerInstance();
     _shooter = getShooterInstance();
     // _led = getLedInstance();
@@ -102,8 +101,8 @@ public class Robot extends TimedRobot {
 
   @Override
   public void disabledInit() {
-    // _intake.stop();
-    // _kicker.stop();
+    _intake.stop();
+    _kicker.stop();
     _shooter.stop();
     _spindexer.stop();
     _swerve.stop();
@@ -149,20 +148,20 @@ public class Robot extends TimedRobot {
 
 
   public void dashboard(){
-    // _intake.dashboard();
+    _intake.dashboard();
     _spindexer.dashboard();
-    // _kicker.dashboard();
+    _kicker.dashboard();
     _shooter.dashboard();
     // _led.dashboard();
     _swerve.dashboard();
   }
 
   public void registerNamedCommands(){
-    // NamedCommands.registerCommand("ingest", new Ingest(Intake.IntakeState.Forward));
-    // NamedCommands.registerCommand("unIngest", new Ingest(Intake.IntakeState.Idle));
-    // NamedCommands.registerCommand("shootClose", new ShootForTime(Shooter.ShooterState.Close, 5.0));
-    // NamedCommands.registerCommand("shootMid", new ShootForTime(Shooter.ShooterState.Mid, 5.0));
-    // NamedCommands.registerCommand("shootFar", new ShootForTime(Shooter.ShooterState.Far, 5.0));
+    NamedCommands.registerCommand("ingest", new Ingest(Intake.IntakeState.Forward));
+    NamedCommands.registerCommand("unIngest", new Ingest(Intake.IntakeState.Idle));
+    NamedCommands.registerCommand("shootClose", new ShootForTime(Shooter.ShooterState.Close, 5.0));
+    NamedCommands.registerCommand("shootMid", new ShootForTime(Shooter.ShooterState.Mid, 5.0));
+    NamedCommands.registerCommand("shootFar", new ShootForTime(Shooter.ShooterState.Far, 5.0));
   }
 
   public static SwerveSubsystem getSwerveInstance(){
@@ -173,12 +172,12 @@ public class Robot extends TimedRobot {
     return _swerve;
   }
 
-  // public static Intake getIntakeInstance(){
-  //   if(_intake == null){
-  //     _intake = new Intake();
-  //   }
-  //   return _intake;
-  // }
+  public static Intake getIntakeInstance(){
+    if(_intake == null){
+      _intake = new Intake();
+    }
+    return _intake;
+  }
 
   public static Spindexer getSpindexerInstance(){
     if(_spindexer == null){
@@ -187,12 +186,12 @@ public class Robot extends TimedRobot {
     return _spindexer;
   }
 
-  // public static Kicker getKickerInstance(){
-  //   if(_kicker == null){
-  //     _kicker = new Kicker();
-  //   }
-  //   return _kicker;
-  // }
+  public static Kicker getKickerInstance(){
+    if(_kicker == null){
+      _kicker = new Kicker();
+    }
+    return _kicker;
+  }
 
   public static Shooter getShooterInstance(){
     if(_shooter == null){

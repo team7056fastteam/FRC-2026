@@ -17,7 +17,7 @@ import frc.robot.Constants.DriveConstants;
 import frc.robot.Subsystems.*;
 import frc.robot.Subsystems.Intake.IntakeState;
 import frc.robot.Subsystems.Shooter.ShooterConstants;
-// import frc.robot.Subsystems.Kicker.KickerState;
+import frc.robot.Subsystems.Kicker.KickerState;
 import frc.robot.Subsystems.Shooter.ShooterState;
 import frc.robot.Subsystems.Spindexer.SpindexerState;
 import frc.robot.Subsystems.SwerveSubsystem.SwerveState;
@@ -27,9 +27,9 @@ import frc.robot.Common.SwerveHeadingController.HeadingType;
 
 public class Teleop {
     SwerveSubsystem _drive;
-    // Intake _intake;
+    Intake _intake;
     Spindexer _spindexer;
-    // Kicker _kicker;
+    Kicker _kicker;
     Shooter _shooter;
 
     XboxController driver = new XboxController(0);
@@ -53,8 +53,8 @@ public class Teleop {
 
     public void TeleopInit() {
         _drive = Robot.getSwerveInstance();
-        // _intake = Robot.getIntakeInstance();
-        // _kicker = Robot.getKickerInstance();
+        _intake = Robot.getIntakeInstance();
+        _kicker = Robot.getKickerInstance();
         _shooter = Robot.getShooterInstance();
         _spindexer = Robot.getSpindexerInstance();
 
@@ -142,28 +142,17 @@ public class Teleop {
     public void Operator() {
         if (!operator.isConnected()) return;
 
-        // get.isPressed(get.Ingest(), () -> _intake.setState(IntakeState.Forward));
-        // get.isPressed(get.Outgest(), () -> _intake.setState(IntakeState.Backward));
-        // get.isPressed(get.IngestSlow(), () -> _intake.setState(IntakeState.ForwardSlow));
-        // get.isNotPressed(List.of(get.Outgest(), get.Ingest(), get.IngestSlow()), () -> _intake.setState(IntakeState.Idle));
+        get.isPressed(get.Ingest(), () -> _intake.setState(IntakeState.Forward));
+        get.isPressed(get.Outgest(), () -> _intake.setState(IntakeState.Backward));
+        get.isPressed(get.IngestSlow(), () -> _intake.setState(IntakeState.ForwardSlow));
+        get.isNotPressed(List.of(get.Outgest(), get.Ingest(), get.IngestSlow()), () -> _intake.setState(IntakeState.Idle));
 
         get.isPressed(get.SpindexerSlow(), () -> slowSpindexer = true);
         get.isNotPressed(get.SpindexerSlow(), () -> slowSpindexer = false);
 
         get.isPressed(get.Shoot(), () -> {
             _shooter.fire();
-            // _kicker.setToIntendedState();
-            if(slowSpindexer){
-                _spindexer.setState(SpindexerState.ForwardSlow);
-            } else{
-                _spindexer.setState(SpindexerState.Forward);
-            } 
-            // get.driverRumble();
-        });
-
-        get.isPressed(get.Pass(), () -> {
-            _shooter.setState(ShooterState.Passing);
-            // _kicker.setToIntendedState();
+            _kicker.setToIntendedState();
             if(slowSpindexer){
                 _spindexer.setState(SpindexerState.ForwardSlow);
             } else{
@@ -172,19 +161,30 @@ public class Teleop {
             get.driverRumble();
         });
 
-        get.isNotPressed(List.of(get.Pass(), get.Shoot(), get.SpindexerSlow()), () -> {
+        get.isPressed(get.Pass(), () -> {
+            _shooter.setState(ShooterState.Passing);
+            _kicker.setToIntendedState();
+            if(slowSpindexer){
+                _spindexer.setState(SpindexerState.ForwardSlow);
+            } else{
+                _spindexer.setState(SpindexerState.Forward);
+            } 
+            get.driverRumble();
+        });
+
+        get.isNotPressed(List.of(get.Pass(), get.Shoot()), () -> {
+            _shooter.setState(ShooterState.Idle);
+            _kicker.setState(KickerState.Idle);
             if(slowSpindexer){
                 _spindexer.setState(SpindexerState.ForwardSlow);
             } else {
                 _spindexer.setState(SpindexerState.Idle);
             }
-            // _kicker.setState(KickerState.Idle);
-            _shooter.setState(ShooterState.Idle);
-            // get.driverUnRumble();
+            get.driverUnRumble();
         });
 
-        // get.isPressed(get.FreeFire(), ()-> _kicker.setIntendedState(KickerState.Firing));
-        // get.isPressed(get.HoldMode(), ()-> _kicker.setIntendedState(KickerState.HoldAndFire));
+        get.isPressed(get.FreeFire(), ()-> _kicker.setIntendedState(KickerState.Firing));
+        get.isPressed(get.HoldMode(), ()-> _kicker.setIntendedState(KickerState.HoldAndFire));
 
         get.isPressed(get.AutoTargeting(), () -> _shooter.setIntendedState(ShooterState.Targeting));
         get.isPressed(get.OverrideLongShot(), () -> _shooter.setIntendedState(ShooterState.Far));
@@ -207,15 +207,36 @@ public class Teleop {
                         ShooterConstants.ShooterPoseOffsetY,
                         new Rotation2d()
                     ));
-        double hubX = (alliance == Alliance.Blue ?
-                       FieldConstants.hubPosBlue.getX() : FieldConstants.hubPosRed.getX());
-        double hubY = (alliance == Alliance.Blue ?
-                       FieldConstants.hubPosBlue.getY() : FieldConstants.hubPosRed.getY());
 
-        double dx = hubX - shooterPose.getX();
-        double dy = hubY - shooterPose.getY();
-        Rotation2d hubAngle = new Rotation2d(Math.atan2(dy, dx));
+        Translation2d hubPos = (alliance == Alliance.Blue ?
+                        FieldConstants.hubPosBlue : FieldConstants.hubPosRed);
+
+        double distance = hubPos.minus(shooterPose.getTranslation()).getNorm();
+
+        ChassisSpeeds speeds = Robot.getOdometryInstance().getFieldRelativeSpeeds();
+
+        Translation2d linearVelocity = new Translation2d(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond);
+
+        double omega = speeds.omegaRadiansPerSecond;
+        double rx = ShooterConstants.ShooterPoseOffsetX;
+        double ry = ShooterConstants.ShooterPoseOffsetY;
+
+        Translation2d tangentialVelocity = new Translation2d(-omega * rx, omega * ry);
+
+        Translation2d velocity = linearVelocity.plus(tangentialVelocity);
+
+        //has to match calculateRPM()
+        double flightTime = (distance * .1) + .3;
+
+        Translation2d leadOffset = velocity.times(flightTime);
+
+        Translation2d compensatedHubPos = hubPos.minus(leadOffset);
+
+        Translation2d compensatedVector = compensatedHubPos.minus(shooterPose.getTranslation());
+
+        Rotation2d angleToHub = new Rotation2d(compensatedVector.getX(), compensatedVector.getY());
+
         //intake is front of the robot, shooter is 90 degree offset
-        return hubAngle.minus(Rotation2d.fromDegrees(90)); 
+        return angleToHub.minus(Rotation2d.fromDegrees(90)); 
     }
 }
