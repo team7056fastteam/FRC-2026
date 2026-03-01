@@ -3,7 +3,6 @@ package frc.robot.Subsystems;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkBase.ControlType;
-import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -24,14 +23,13 @@ public class Intake extends SubsystemBase {
     public Intake(){
         intakeMotor = new SparkMax(IntakeConstants.IntakeMotorID, MotorType.kBrushless);
         motorConfig = new SparkMaxConfig();
-        motorConfig.inverted(IntakeConstants.ReversedIntake)
-            .idleMode(IdleMode.kBrake);
+        motorConfig.inverted(IntakeConstants.ReversedIntake);
         setPids(IntakeConstants.IntakePID);
         motorConfig.closedLoop
             .p(kP)
             .i(kI)
             .d(kD);
-        intakeMotor.configure(motorConfig, com.revrobotics.ResetMode.kResetSafeParameters, com.revrobotics.PersistMode.kPersistParameters);
+        intakeMotor.configure(motorConfig, com.revrobotics.ResetMode.kNoResetSafeParameters, com.revrobotics.PersistMode.kNoPersistParameters);
     }
 
 
@@ -39,7 +37,8 @@ public class Intake extends SubsystemBase {
     public void periodic() {
         switch (state) {
             case Forward:
-                intakeMotor.getClosedLoopController().setSetpoint(IntakeConstants.IntakeForwardVelocity, ControlType.kVelocity);
+                //intakeMotor.getClosedLoopController().setSetpoint(IntakeConstants.IntakeForwardVelocity, ControlType.kVelocity);
+                intakeMotor.set(1);
                 break;
             case Idle:
                 intakeMotor.set(0);
@@ -81,7 +80,7 @@ public class Intake extends SubsystemBase {
         public static final double IntakeForwardVelocity = 4000;
         public static final double IntakeForwardSlowVelocity = 2000;
         public static final double IntakeBackwardVelocity = -2000;
-        public static final PIDValues IntakePID = new PIDValues(0.00015, 0, 0);
+        public static final PIDValues IntakePID = new PIDValues(0.001, 0, 0);
     }
 
 }

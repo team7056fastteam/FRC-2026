@@ -4,7 +4,6 @@ package frc.robot.Subsystems;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
-import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -27,8 +26,7 @@ public class Spindexer extends SubsystemBase {
     public Spindexer(){
         spindexerMotor = new SparkMax(SpindexerConstants.SpindexerMotorID, MotorType.kBrushless);
         motorConfig = new SparkMaxConfig();
-        motorConfig.inverted(SpindexerConstants.ReversedSpindexer)
-            .idleMode(IdleMode.kBrake);
+        motorConfig.inverted(SpindexerConstants.ReversedSpindexer);
         setPids(SpindexerConstants.SpindexerPID);
         motorConfig.closedLoop
             .p(kP)
