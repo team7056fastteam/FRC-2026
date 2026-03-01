@@ -4,8 +4,12 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Robot;
+import frc.robot.Constants.DriveConstants;
 
 public class Intake extends SubsystemBase {
     public enum IntakeState{Idle,Forward, ForwardSlow, Backward}
@@ -25,16 +29,26 @@ public class Intake extends SubsystemBase {
     public void periodic() {
         switch (state) {
             case Forward:
-                intakeMotor.set(1);
+                ChassisSpeeds speeds = Robot.getOdometryInstance().getFieldRelativeSpeeds();
+                double robotSpeed = Math.sqrt(
+                    (speeds.vxMetersPerSecond * speeds.vxMetersPerSecond) + 
+                    (speeds.vyMetersPerSecond * speeds.vyMetersPerSecond));
+                
+                double speedRatio = robotSpeed / DriveConstants.kPhysicalMaxSpeedMetersPerSecond;
+                speedRatio = MathUtil.clamp(Math.pow(speedRatio, 0.4), 0, 1);
+
+                double intakeSpeed = IntakeConstants.IntakeForwardSpeed - 
+                    (IntakeConstants.IntakeForwardSpeed - IntakeConstants.IntakeForwardMinSpeed) * speedRatio;
+                intakeMotor.set(intakeSpeed);
                 break;
             case Idle:
                 intakeMotor.set(0);
                 break;   
             case ForwardSlow:
-                intakeMotor.set(0.5);
+                intakeMotor.set(IntakeConstants.IntakeForwardSlowSpeed);
                 break;
             case Backward:
-                intakeMotor.set(-0.5);
+                intakeMotor.set(IntakeConstants.IntakeBackwardSpeed);
                 break;
         }
     }
@@ -57,6 +71,7 @@ public class Intake extends SubsystemBase {
         //TODO find constants
         public static final int IntakeMotorID = 10;
         public static final boolean ReversedIntake = false;
+        public static final double IntakeForwardMinSpeed = 0.7;
         public static final double IntakeForwardSpeed = 1.0;
         public static final double IntakeForwardSlowSpeed = 0.5;
         public static final double IntakeBackwardSpeed = -0.5;

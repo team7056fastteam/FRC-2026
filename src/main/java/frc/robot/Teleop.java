@@ -152,23 +152,27 @@ public class Teleop {
 
         get.isPressed(get.Shoot(), () -> {
             _shooter.fire();
-            _kicker.setToIntendedState();
-            if(slowSpindexer){
-                _spindexer.setState(SpindexerState.ForwardSlow);
-            } else{
-                _spindexer.setState(SpindexerState.Forward);
-            } 
+            if(_shooter.atSpeed()){
+                _kicker.setToIntendedState();
+                if(slowSpindexer){
+                    _spindexer.setState(SpindexerState.ForwardSlow);
+                } else{
+                    _spindexer.setState(SpindexerState.Forward);
+                } 
+            }
             get.driverRumble();
         });
 
         get.isPressed(get.Pass(), () -> {
             _shooter.setState(ShooterState.Passing);
-            _kicker.setToIntendedState();
-            if(slowSpindexer){
-                _spindexer.setState(SpindexerState.ForwardSlow);
-            } else{
-                _spindexer.setState(SpindexerState.Forward);
-            } 
+            if(_shooter.atSpeed()){
+                _kicker.setToIntendedState();
+                if(slowSpindexer){
+                    _spindexer.setState(SpindexerState.ForwardSlow);
+                } else{
+                    _spindexer.setState(SpindexerState.Forward);
+                } 
+            }
             get.driverRumble();
         });
 

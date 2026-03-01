@@ -101,7 +101,6 @@ public class Kicker extends SubsystemBase {
     }
 
     public static final class KickerConstants{
-        //TODO find contants
         public static final int KickerMotorID = 12;
         public static final boolean ReversedKicker = false;
         public static final double KickerFiringVelocity = 4500;
