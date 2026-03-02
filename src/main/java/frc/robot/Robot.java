@@ -23,7 +23,6 @@ import frc.robot.Auto.PathLoader;
 import frc.robot.Auto.ShootForTime;
 import frc.robot.Subsystems.Intake;
 import frc.robot.Subsystems.Kicker;
-// import frc.robot.Subsystems.LedSubsystem;
 import frc.robot.Subsystems.Shooter;
 import frc.robot.Subsystems.Spindexer;
 import frc.robot.Subsystems.SwerveSubsystem;
@@ -41,7 +40,6 @@ public class Robot extends TimedRobot {
   private static Spindexer _spindexer;
   private static Shooter _shooter;
   private static Kicker _kicker;
-  // private static LedSubsystem _led;
   private PathLoader pathLoader;
   private Command autonomousCommand;
   private Field2d field;
@@ -57,10 +55,9 @@ public class Robot extends TimedRobot {
     _kicker = getKickerInstance();
     _spindexer = getSpindexerInstance();
     _shooter = getShooterInstance();
-    // _led = getLedInstance();
+    registerNamedCommands();
     pathLoader = new PathLoader();
     field = new Field2d();
-    registerNamedCommands();
   }
 
   @Override
@@ -152,16 +149,15 @@ public class Robot extends TimedRobot {
     _spindexer.dashboard();
     _kicker.dashboard();
     _shooter.dashboard();
-    // _led.dashboard();
     _swerve.dashboard();
   }
 
   public void registerNamedCommands(){
     NamedCommands.registerCommand("ingest", new Ingest(Intake.IntakeState.Forward));
     NamedCommands.registerCommand("unIngest", new Ingest(Intake.IntakeState.Idle));
-    NamedCommands.registerCommand("shootClose", new ShootForTime(Shooter.ShooterState.Close, 5.0));
-    NamedCommands.registerCommand("shootMid", new ShootForTime(Shooter.ShooterState.Mid, 5.0));
-    NamedCommands.registerCommand("shootFar", new ShootForTime(Shooter.ShooterState.Far, 5.0));
+    NamedCommands.registerCommand("shootShort", new ShootForTime(Shooter.ShooterState.Targeting, 3.0));
+    NamedCommands.registerCommand("shootMid", new ShootForTime(Shooter.ShooterState.Targeting, 5.0));
+    NamedCommands.registerCommand("shootLong", new ShootForTime(Shooter.ShooterState.Targeting, 8.0));
   }
 
   public static SwerveSubsystem getSwerveInstance(){
@@ -199,13 +195,6 @@ public class Robot extends TimedRobot {
     }
     return _shooter;
   }
-
-  // public static LedSubsystem getLedInstance(){
-  //   if(_led == null){
-  //     _led = new LedSubsystem();
-  //   }
-  //   return _led;
-  // }
 
   public static Odometry getOdometryInstance(){
     if(_odometry == null){

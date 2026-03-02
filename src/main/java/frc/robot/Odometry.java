@@ -22,6 +22,7 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
@@ -133,6 +134,8 @@ public class Odometry {
             est.timestampSeconds,
             visionStdDevs
         );
+
+        SmartDashboard.putString(cam.camera.getName() + " pose", est.estimatedPose.toString());
    }
 
     public Pose2d getPose() {

@@ -5,6 +5,7 @@ import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -30,15 +31,13 @@ public class Intake extends SubsystemBase {
         switch (state) {
             case Forward:
                 ChassisSpeeds speeds = Robot.getOdometryInstance().getFieldRelativeSpeeds();
-                double robotSpeed = Math.sqrt(
-                    (speeds.vxMetersPerSecond * speeds.vxMetersPerSecond) + 
-                    (speeds.vyMetersPerSecond * speeds.vyMetersPerSecond));
-                
+                double robotSpeed = new Translation2d(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond).getNorm();
                 double speedRatio = robotSpeed / DriveConstants.kPhysicalMaxSpeedMetersPerSecond;
                 speedRatio = MathUtil.clamp(Math.pow(speedRatio, 0.4), 0, 1);
 
                 double intakeSpeed = IntakeConstants.IntakeForwardSpeed - 
                     (IntakeConstants.IntakeForwardSpeed - IntakeConstants.IntakeForwardMinSpeed) * speedRatio;
+                
                 intakeMotor.set(intakeSpeed);
                 break;
             case Idle:

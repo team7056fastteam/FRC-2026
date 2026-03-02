@@ -125,6 +125,30 @@ public class Teleop {
             zPowerOffset = Math.max(-maxAngular, Math.min(correction, maxAngular));
         });
 
+        get.isPressed(get.driverLeftTrigger(), () -> {
+            _shooter.fire();
+            if(_shooter.atSpeed()){
+                _kicker.setState(KickerState.Firing);
+                if(slowSpindexer){
+                    _spindexer.setState(SpindexerState.ForwardSlow);
+                } else{
+                    _spindexer.setState(SpindexerState.Forward);
+                } 
+            }
+            get.driverRumble();
+        });
+
+        get.isNotPressed(get.driverLeftTrigger(), () -> {
+            _shooter.setState(ShooterState.Idle);
+            _kicker.setState(KickerState.Idle);
+            if(slowSpindexer){
+                _spindexer.setState(SpindexerState.ForwardSlow);
+            } else {
+                _spindexer.setState(SpindexerState.Idle);
+            }
+            get.driverUnRumble();
+        });
+
         get.isNotPressed(get.driverLeftTrigger(), ()->{
             zPowerOffset = 0;
             headingController.setState(HeadingType.OFF);
@@ -153,7 +177,7 @@ public class Teleop {
         get.isPressed(get.Shoot(), () -> {
             _shooter.fire();
             if(_shooter.atSpeed()){
-                _kicker.setToIntendedState();
+                _kicker.setState(KickerState.Firing);
                 if(slowSpindexer){
                     _spindexer.setState(SpindexerState.ForwardSlow);
                 } else{
@@ -166,7 +190,7 @@ public class Teleop {
         get.isPressed(get.Pass(), () -> {
             _shooter.setState(ShooterState.Passing);
             if(_shooter.atSpeed()){
-                _kicker.setToIntendedState();
+                _kicker.setState(KickerState.Firing);
                 if(slowSpindexer){
                     _spindexer.setState(SpindexerState.ForwardSlow);
                 } else{
@@ -176,19 +200,16 @@ public class Teleop {
             get.driverRumble();
         });
 
-        get.isNotPressed(List.of(get.Pass(), get.Shoot()), () -> {
-            _shooter.setState(ShooterState.Idle);
-            _kicker.setState(KickerState.Idle);
-            if(slowSpindexer){
-                _spindexer.setState(SpindexerState.ForwardSlow);
-            } else {
-                _spindexer.setState(SpindexerState.Idle);
-            }
-            get.driverUnRumble();
-        });
-
-        get.isPressed(get.FreeFire(), ()-> _kicker.setIntendedState(KickerState.Firing));
-        get.isPressed(get.HoldMode(), ()-> _kicker.setIntendedState(KickerState.HoldAndFire));
+        // get.isNotPressed(List.of(get.Pass(), get.Shoot()), () -> {
+        //     _shooter.setState(ShooterState.Idle);
+        //     _kicker.setState(KickerState.Idle);
+        //     if(slowSpindexer){
+        //         _spindexer.setState(SpindexerState.ForwardSlow);
+        //     } else {
+        //         _spindexer.setState(SpindexerState.Idle);
+        //     }
+        //     get.driverUnRumble();
+        // });
 
         get.isPressed(get.AutoTargeting(), () -> _shooter.setIntendedState(ShooterState.Targeting));
         get.isPressed(get.OverrideLongShot(), () -> _shooter.setIntendedState(ShooterState.Far));
@@ -230,7 +251,7 @@ public class Teleop {
         Translation2d velocity = linearVelocity.plus(tangentialVelocity);
 
         //has to match calculateRPM()
-        double flightTime = (distance * .1) + .3;
+        double flightTime = (distance * ShooterConstants.FlightTimeSlope) + ShooterConstants.FlightTimeYInt;
 
         Translation2d leadOffset = velocity.times(flightTime);
 

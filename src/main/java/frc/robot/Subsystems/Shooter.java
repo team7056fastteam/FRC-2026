@@ -4,6 +4,8 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkFlexConfig;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.filter.Debouncer;
+import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
@@ -32,6 +34,7 @@ public class Shooter extends SubsystemBase{
     Pose2d currentPose;
     double targetRPM;
     Odometry _odometry = Robot.getOdometryInstance();
+    private final Debouncer atSpeedDebouncer = new Debouncer(.05, DebounceType.kRising);
 
     private double kP;
     private double kI;
@@ -70,12 +73,12 @@ public class Shooter extends SubsystemBase{
                 shooterMotor.getClosedLoopController().setSetpoint(targetRPM, ControlType.kVelocity);
                 break;
             case Mid:
-                targetRPM = 3475;
-                shooterMotor.getClosedLoopController().setSetpoint(3475, ControlType.kVelocity);
+                targetRPM = 3600;
+                shooterMotor.getClosedLoopController().setSetpoint(targetRPM, ControlType.kVelocity);
                 break;
             case Far:
-                targetRPM = 3900;
-                shooterMotor.getClosedLoopController().setSetpoint(3900, ControlType.kVelocity);
+                targetRPM = 4200;
+                shooterMotor.getClosedLoopController().setSetpoint(targetRPM, ControlType.kVelocity);
                 break;
             case Passing:
                 targetRPM = 0;
@@ -121,7 +124,7 @@ public class Shooter extends SubsystemBase{
         Translation2d velocity = new Translation2d(vx, vy);
 
         //estimated flight time (if undershooting increase, if overshooting decrease)
-        double flightTime = (horizontalDistance * .1) + .3;
+        double flightTime = (horizontalDistance * ShooterConstants.FlightTimeSlope) + ShooterConstants.FlightTimeYInt;
 
         double radialVelocity =
             (velocity.getX() * toHub.getX() +
@@ -134,9 +137,9 @@ public class Shooter extends SubsystemBase{
 
         // Quadratic regression (fits real-world data)
         double rpm =
-            0.1828 * distanceInches * distanceInches
-            - 17.592 * distanceInches
-            + 3243;
+            (0.07656 * distanceInches * distanceInches
+            - 0.1938 * distanceInches
+            + 2608.24) * 1.16;
 
         return MathUtil.clamp(rpm, 0, 6000);
     }
@@ -158,9 +161,12 @@ public class Shooter extends SubsystemBase{
     }
 
     public boolean atSpeed() {
-        double target = shooterMotor.getClosedLoopController().getSetpoint();
         double actual = shooterMotor.getEncoder().getVelocity();
-        return Math.abs(target - actual) < 100; // RPM tolerance
+
+        boolean validTarget = targetRPM > 500;
+        boolean withinTolerance = Math.abs(targetRPM - actual) < 50;
+        boolean debouncedValue = atSpeedDebouncer.calculate(withinTolerance);
+        return debouncedValue && validTarget;
     }
 
     public void setPids(PIDValues pids){
@@ -172,9 +178,11 @@ public class Shooter extends SubsystemBase{
     public static final class ShooterConstants{
         public static final int ShooterMotorID = 13;
         public static final boolean ReversedShooter = true;
-        public static final PIDValues ShooterPID = new PIDValues(.0005, 0, .0001);
+        public static final PIDValues ShooterPID = new PIDValues(.00042, 0, .0002);
         public static final double ShooterFF = 1.0 / 5676.0;
         public static final double ShooterPoseOffsetX = Units.inchesToMeters(-9); //wpi is weird, x is forward positive, y is left positive
         public static final double ShooterPoseOffsetY = Units.inchesToMeters(7);
+        public static final double FlightTimeSlope = .3;
+        public static final double FlightTimeYInt = .4;
     }
 }
