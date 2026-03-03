@@ -81,7 +81,7 @@ public class Shooter extends SubsystemBase{
                 shooterMotor.getClosedLoopController().setSetpoint(targetRPM, ControlType.kVelocity);
                 break;
             case Passing:
-                targetRPM = 0;
+                targetRPM = 3000;
                 shooterMotor.getClosedLoopController().setSetpoint(targetRPM, ControlType.kVelocity);
         }
     }

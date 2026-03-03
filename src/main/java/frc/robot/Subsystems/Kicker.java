@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
 
 public class Kicker extends SubsystemBase {
-    public enum KickerState{Idle, Firing}
+    public enum KickerState{Idle, Firing, Unstuckalate}
     KickerState state = KickerState.Idle;
     SparkMax kickerMotor;
     SparkMaxConfig motorConfig;
@@ -36,6 +36,8 @@ public class Kicker extends SubsystemBase {
             case Idle:
                 kickerMotor.stopMotor();
                 break;
+            case Unstuckalate:
+                kickerMotor.set(KickerConstants.KickerUnstuckalateVelocity);
         }
     }
 
@@ -47,7 +49,6 @@ public class Kicker extends SubsystemBase {
         SmartDashboard.putNumber("Kicker Current", kickerMotor.getOutputCurrent());
         SmartDashboard.putNumber("Kicker RPM", kickerMotor.getEncoder().getVelocity());
         SmartDashboard.putString("Kicker State", state.toString());
-        // SmartDashboard.putNumber("Fuel Sensor Distance", fuelSensor.getDistance().getValueAsDouble());
     }
 
     public void setState(KickerState state){
@@ -59,7 +60,7 @@ public class Kicker extends SubsystemBase {
         public static final boolean ReversedKicker = false;
         public static final double KickerFiringVelocity = 1.0;
         public static final int FuelSensorID = 0;
-        public static final double KickerHoldingVelocity = 0.2;
+        public static final double KickerUnstuckalateVelocity = -0.2;
         public static final double FuelSensorRange = Units.inchesToMeters(2);
     }
 

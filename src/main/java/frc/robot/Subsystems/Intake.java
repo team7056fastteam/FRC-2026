@@ -3,6 +3,7 @@ package frc.robot.Subsystems;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkMaxConfig;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -21,7 +22,8 @@ public class Intake extends SubsystemBase {
     public Intake(){
         intakeMotor = new SparkMax(IntakeConstants.IntakeMotorID, MotorType.kBrushless);
         motorConfig = new SparkMaxConfig();
-        motorConfig.inverted(IntakeConstants.ReversedIntake);
+        motorConfig.inverted(IntakeConstants.ReversedIntake)
+            .idleMode(IdleMode.kCoast);
         intakeMotor.configure(motorConfig, com.revrobotics.ResetMode.kNoResetSafeParameters, com.revrobotics.PersistMode.kNoPersistParameters);
     }
 
@@ -67,10 +69,9 @@ public class Intake extends SubsystemBase {
     }
     
     public static final class IntakeConstants{
-        //TODO find constants
         public static final int IntakeMotorID = 10;
         public static final boolean ReversedIntake = false;
-        public static final double IntakeForwardMinSpeed = 0.7;
+        public static final double IntakeForwardMinSpeed = 0.65;
         public static final double IntakeForwardSpeed = 1.0;
         public static final double IntakeForwardSlowSpeed = 0.5;
         public static final double IntakeBackwardSpeed = -0.5;

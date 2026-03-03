@@ -82,12 +82,6 @@ public class Teleop {
         get.isPressed(get.speedAdjustment(), () -> xT = 1.4);
         get.isNotPressed(get.speedAdjustment(), () -> xT = 0.675);
 
-        // reset offsets
-        get.isNotPressed(List.of(get.driverLeftTrigger(), get.driverRightTrigger()), () -> {
-            xPowerOffset = 0;
-            yPowerOffset = 0;
-        });
-
         // reorient
         get.isPressed(driver.getAButton(), () -> Robot.setPose(new Pose2d(0, 0, Rotation2d.fromDegrees(0))));
 
@@ -113,7 +107,7 @@ public class Teleop {
         }
 
         // auto-orient to hub
-        get.isPressed(get.driverLeftTrigger(), () -> {
+        get.isPressed(get.rotateToHub(), () -> {
             Rotation2d targetRot = getHubTargetRotation();
             double currentAngle = Robot.getGyroscopeRotation2d().getRadians();
 
@@ -125,31 +119,31 @@ public class Teleop {
             zPowerOffset = Math.max(-maxAngular, Math.min(correction, maxAngular));
         });
 
-        get.isPressed(get.driverLeftTrigger(), () -> {
-            _shooter.fire();
-            if(_shooter.atSpeed()){
-                _kicker.setState(KickerState.Firing);
-                if(slowSpindexer){
-                    _spindexer.setState(SpindexerState.ForwardSlow);
-                } else{
-                    _spindexer.setState(SpindexerState.Forward);
-                } 
-            }
-            get.driverRumble();
+        get.isPressed(get.passLeft(), () -> {
+            Rotation2d targetRot = getPassTargetRotation(true);
+            double currentAngle = Robot.getGyroscopeRotation2d().getRadians();
+
+            headingController.setState(HeadingType.SNAP);
+            headingController.setTarget(targetRot.getRadians());
+            double correction = headingController.calculate(currentAngle);
+
+            double maxAngular = DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond;
+            zPowerOffset = Math.max(-maxAngular, Math.min(correction, maxAngular));
         });
 
-        get.isNotPressed(get.driverLeftTrigger(), () -> {
-            _shooter.setState(ShooterState.Idle);
-            _kicker.setState(KickerState.Idle);
-            if(slowSpindexer){
-                _spindexer.setState(SpindexerState.ForwardSlow);
-            } else {
-                _spindexer.setState(SpindexerState.Idle);
-            }
-            get.driverUnRumble();
+        get.isPressed(get.passRight(), () -> {
+            Rotation2d targetRot = getPassTargetRotation(false);
+            double currentAngle = Robot.getGyroscopeRotation2d().getRadians();
+
+            headingController.setState(HeadingType.SNAP);
+            headingController.setTarget(targetRot.getRadians());
+            double correction = headingController.calculate(currentAngle);
+
+            double maxAngular = DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond;
+            zPowerOffset = Math.max(-maxAngular, Math.min(correction, maxAngular));
         });
 
-        get.isNotPressed(get.driverLeftTrigger(), ()->{
+        get.isNotPressed(List.of(get.rotateToHub(), get.passLeft(), get.passRight()), ()->{
             zPowerOffset = 0;
             headingController.setState(HeadingType.OFF);
         });
@@ -171,8 +165,12 @@ public class Teleop {
         get.isPressed(get.IngestSlow(), () -> _intake.setState(IntakeState.ForwardSlow));
         get.isNotPressed(List.of(get.Outgest(), get.Ingest(), get.IngestSlow()), () -> _intake.setState(IntakeState.Idle));
 
+        get.isPressed(get.UnstuckalateKicker(), () -> _kicker.setState(KickerState.Unstuckalate));
+
         get.isPressed(get.SpindexerSlow(), () -> slowSpindexer = true);
         get.isNotPressed(get.SpindexerSlow(), () -> slowSpindexer = false);
+
+        get.isPressed(get.RevShooter(), () -> _shooter.fire());        
 
         get.isPressed(get.Shoot(), () -> {
             _shooter.fire();
@@ -200,16 +198,17 @@ public class Teleop {
             get.driverRumble();
         });
 
-        // get.isNotPressed(List.of(get.Pass(), get.Shoot()), () -> {
-        //     _shooter.setState(ShooterState.Idle);
-        //     _kicker.setState(KickerState.Idle);
-        //     if(slowSpindexer){
-        //         _spindexer.setState(SpindexerState.ForwardSlow);
-        //     } else {
-        //         _spindexer.setState(SpindexerState.Idle);
-        //     }
-        //     get.driverUnRumble();
-        // });
+        get.isNotPressed(List.of(get.Pass(), get.Shoot()), () -> {
+            if(slowSpindexer){
+                _spindexer.setState(SpindexerState.ForwardSlow);
+            } else {
+                _spindexer.setState(SpindexerState.Idle);
+            }
+            get.driverUnRumble();
+        });
+
+        get.isNotPressed(List.of(get.Pass(), get.Shoot(), get.RevShooter()), () -> _shooter.setState(ShooterState.Idle));
+        get.isNotPressed(List.of(get.Pass(), get.Shoot(), get.UnstuckalateKicker()), () -> _kicker.setState(KickerState.Idle));
 
         get.isPressed(get.AutoTargeting(), () -> _shooter.setIntendedState(ShooterState.Targeting));
         get.isPressed(get.OverrideLongShot(), () -> _shooter.setIntendedState(ShooterState.Far));
@@ -242,26 +241,45 @@ public class Teleop {
 
         Translation2d linearVelocity = new Translation2d(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond);
 
-        double omega = speeds.omegaRadiansPerSecond;
-        double rx = ShooterConstants.ShooterPoseOffsetX;
-        double ry = ShooterConstants.ShooterPoseOffsetY;
-
-        Translation2d tangentialVelocity = new Translation2d(-omega * rx, omega * ry);
-
-        Translation2d velocity = linearVelocity.plus(tangentialVelocity);
-
         //has to match calculateRPM()
         double flightTime = (distance * ShooterConstants.FlightTimeSlope) + ShooterConstants.FlightTimeYInt;
 
-        Translation2d leadOffset = velocity.times(flightTime);
+        Translation2d leadOffset = linearVelocity.times(flightTime);
 
         Translation2d compensatedHubPos = hubPos.minus(leadOffset);
 
         Translation2d compensatedVector = compensatedHubPos.minus(shooterPose.getTranslation());
 
-        Rotation2d angleToHub = new Rotation2d(compensatedVector.getX(), compensatedVector.getY());
+        Rotation2d angleToHub = compensatedVector.getAngle();
 
         //intake is front of the robot, shooter is 90 degree offset
         return angleToHub.minus(Rotation2d.fromDegrees(90)); 
+    }
+
+    public Rotation2d getPassTargetRotation(boolean isLeft){
+        Pose2d shooterPose = Robot.getOdometryInstance()
+            .getPose()
+                .transformBy(
+                    new Transform2d(
+                        ShooterConstants.ShooterPoseOffsetX,
+                        ShooterConstants.ShooterPoseOffsetY,
+                        new Rotation2d()
+                    ));
+        
+        Translation2d passPos;
+
+        if (isLeft){
+            passPos = (alliance == Alliance.Blue ?
+                        FieldConstants.passLeftPosBlue : FieldConstants.passLeftPosRed);
+        } else {
+            passPos = (alliance == Alliance.Blue ?
+                        FieldConstants.passRightPosBlue : FieldConstants.passRightPosRed);
+        }
+
+        //use this to find angle of the vector
+        Translation2d toTarget = passPos.minus(shooterPose.getTranslation());
+
+        //shooter isn't front of the robot
+        return toTarget.getAngle().minus(Rotation2d.fromDegrees(90));
     }
 }

@@ -25,11 +25,11 @@ public class ControllerFunction {
         return driver.getRawAxis(4) * -1;
     }
     /**Driver Left Trigger*/
-    public boolean driverLeftTrigger(){
+    public boolean rotateToHub(){
         return driver.getRawAxis(2) > 0.1;
     }
     /**Driver Right Trigger*/
-    public boolean driverRightTrigger(){
+    public boolean passRight(){
         return driver.getRawAxis(3) > 0.1;
     }
 
@@ -61,6 +61,10 @@ public class ControllerFunction {
     public boolean speedAdjustment(){
         return driver.getLeftBumperButton();
     }
+    /**Driver Right Bumper */
+    public boolean passLeft(){
+        return driver.getRightBumperButton();
+    }
     /**Driver A Button*/
     public boolean Reset(){
         return driver.getAButton();
@@ -85,9 +89,9 @@ public class ControllerFunction {
     public boolean lockWheels(){
         return driver.getRawAxis(2) > 0.1;
     }
-    /**Operator A Button Pressed */
-    public boolean IntakePivotToggle(){
-        return operator.getAButtonPressed();
+    /**Operator A Button*/
+    public boolean RevShooter(){
+        return operator.getAButton();
     }
     /**Operator B Button*/
     public boolean Shoot(){
@@ -114,7 +118,7 @@ public class ControllerFunction {
         return operator.getRawAxis(2) > 0.1;
     }
     /**Operator Right Trigger*/
-    public boolean IntakePivotRehome(){
+    public boolean UnstuckalateKicker(){
         return operator.getRawAxis(3) > 0.1;
     }
     /**Operator POV Up*/
