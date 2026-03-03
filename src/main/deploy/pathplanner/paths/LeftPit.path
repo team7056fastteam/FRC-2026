@@ -144,20 +144,43 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "injest",
+      "name": "ingest",
       "waypointRelativePos": 0.9,
       "endWaypointRelativePos": null,
-      "command": null
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "ingest"
+        }
+      }
     },
     {
-      "name": "unInjest",
+      "name": "unIngest",
       "waypointRelativePos": 3.614003590664273,
       "endWaypointRelativePos": null,
-      "command": null
+      "command": {
+        "type": "sequential",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "unIngest"
+              }
+            },
+            {
+              "type": "named",
+              "data": {
+                "name": "unstuckBall"
+              }
+            }
+          ]
+        }
+      }
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 5.0,
+    "maxVelocity": 2.0,
     "maxAcceleration": 3.0,
     "maxAngularVelocity": 600.0,
     "maxAngularAcceleration": 720.0,

@@ -4,28 +4,44 @@
     {
       "anchor": {
         "x": 3.7,
-        "y": 6.608918918918919
+        "y": 2.1844
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.151918466024047,
-        "y": 6.472031569391723
+        "x": 3.7,
+        "y": 1.1844000000000001
+      },
+      "isLocked": false,
+      "linkedName": "humanPlayerStart"
+    },
+    {
+      "anchor": {
+        "x": 3.7,
+        "y": 0.6848198198198201
+      },
+      "prevControl": {
+        "x": 3.7,
+        "y": 0.4348198198198201
+      },
+      "nextControl": {
+        "x": 3.7,
+        "y": 1.7291139402667375
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 2.2744031531531532,
-        "y": 7.129831081081082
+        "x": 3.7,
+        "y": 2.1844
       },
       "prevControl": {
-        "x": 2.026233694630665,
-        "y": 7.197851931956143
+        "x": 3.7,
+        "y": 1.1844000000000001
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "leftPitShoot"
+      "linkedName": "humanPlayerStart"
     }
   ],
   "rotationTargets": [],
@@ -42,7 +58,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -146.036
+    "rotation": -90.0
   },
   "reversed": false,
   "folder": null,
@@ -50,5 +66,5 @@
     "velocity": 0,
     "rotation": -90.0
   },
-  "useDefaultConstraints": true
+  "useDefaultConstraints": false
 }

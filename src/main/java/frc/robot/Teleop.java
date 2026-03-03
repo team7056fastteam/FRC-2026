@@ -80,7 +80,10 @@ public class Teleop {
 
         // turbo
         get.isPressed(get.speedAdjustment(), () -> xT = 1.4);
-        get.isNotPressed(get.speedAdjustment(), () -> xT = 0.675);
+        //negative turbo
+        get.isPressed(get.negativeTurbo(), () -> xT = 0.45);
+        
+        get.isNotPressed(List.of(get.speedAdjustment(), get.negativeTurbo()), () -> xT = 0.675);
 
         // reorient
         get.isPressed(driver.getAButton(), () -> Robot.setPose(new Pose2d(0, 0, Rotation2d.fromDegrees(0))));
@@ -119,8 +122,8 @@ public class Teleop {
             zPowerOffset = Math.max(-maxAngular, Math.min(correction, maxAngular));
         });
 
-        get.isPressed(get.passLeft(), () -> {
-            Rotation2d targetRot = getPassTargetRotation(true);
+        get.isPressed(get.passRotate(), () -> {
+            Rotation2d targetRot = getPassTargetRotation();
             double currentAngle = Robot.getGyroscopeRotation2d().getRadians();
 
             headingController.setState(HeadingType.SNAP);
@@ -131,19 +134,7 @@ public class Teleop {
             zPowerOffset = Math.max(-maxAngular, Math.min(correction, maxAngular));
         });
 
-        get.isPressed(get.passRight(), () -> {
-            Rotation2d targetRot = getPassTargetRotation(false);
-            double currentAngle = Robot.getGyroscopeRotation2d().getRadians();
-
-            headingController.setState(HeadingType.SNAP);
-            headingController.setTarget(targetRot.getRadians());
-            double correction = headingController.calculate(currentAngle);
-
-            double maxAngular = DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond;
-            zPowerOffset = Math.max(-maxAngular, Math.min(correction, maxAngular));
-        });
-
-        get.isNotPressed(List.of(get.rotateToHub(), get.passLeft(), get.passRight()), ()->{
+        get.isNotPressed(List.of(get.rotateToHub(), get.passRotate()), ()->{
             zPowerOffset = 0;
             headingController.setState(HeadingType.OFF);
         });
@@ -256,7 +247,7 @@ public class Teleop {
         return angleToHub.minus(Rotation2d.fromDegrees(90)); 
     }
 
-    public Rotation2d getPassTargetRotation(boolean isLeft){
+    public Rotation2d getPassTargetRotation(){
         Pose2d shooterPose = Robot.getOdometryInstance()
             .getPose()
                 .transformBy(
@@ -268,7 +259,13 @@ public class Teleop {
         
         Translation2d passPos;
 
-        if (isLeft){
+        Translation2d passPosLeft = (alliance == Alliance.Blue ?
+                        FieldConstants.passLeftPosBlue : FieldConstants.passLeftPosRed);
+
+        Translation2d passPosRight = passPos = (alliance == Alliance.Blue ?
+                        FieldConstants.passRightPosBlue : FieldConstants.passRightPosRed);
+
+        if (shooterPose.getTranslation().getSquaredDistance(passPosRight) > shooterPose.getTranslation().getSquaredDistance(passPosLeft)){
             passPos = (alliance == Alliance.Blue ?
                         FieldConstants.passLeftPosBlue : FieldConstants.passLeftPosRed);
         } else {

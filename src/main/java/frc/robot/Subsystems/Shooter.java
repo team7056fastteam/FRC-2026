@@ -81,7 +81,7 @@ public class Shooter extends SubsystemBase{
                 shooterMotor.getClosedLoopController().setSetpoint(targetRPM, ControlType.kVelocity);
                 break;
             case Passing:
-                targetRPM = 3000;
+                targetRPM = calculatePassingRPM();
                 shooterMotor.getClosedLoopController().setSetpoint(targetRPM, ControlType.kVelocity);
         }
     }
@@ -135,6 +135,68 @@ public class Shooter extends SubsystemBase{
 
         double distanceInches = MathUtil.clamp(Units.metersToInches(horizontalDistance), 20, 160);
 
+        SmartDashboard.putNumber("Distance Inches", distanceInches);
+
+        // Quadratic regression (fits real-world data)
+        double rpm =
+            (0.07656 * distanceInches * distanceInches
+            - 0.1938 * distanceInches
+            + 2608.24) * 1.16;
+
+        return MathUtil.clamp(rpm, 0, 6000);
+    }
+
+    public double calculatePassingRPM() {
+        if (currentPose == null) return 0.0;
+
+        Pose2d shooterPose = currentPose.transformBy(
+            new Transform2d(
+                ShooterConstants.ShooterPoseOffsetX,
+                ShooterConstants.ShooterPoseOffsetY,
+                new Rotation2d()
+            )
+        );
+
+        Translation2d passPos;
+        
+        Translation2d passPosLeft = DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Blue ?
+                                        FieldConstants.passLeftPosBlue : FieldConstants.passLeftPosRed;
+        
+        Translation2d passPosRight = DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Blue ?
+                                        FieldConstants.passRightPosBlue : FieldConstants.passRightPosRed;
+
+        if (shooterPose.getTranslation().getSquaredDistance(passPosRight) > shooterPose.getTranslation().getSquaredDistance(passPosLeft)){
+            passPos = passPosLeft;
+        } else {
+            passPos = passPosRight;
+        }
+
+        Translation2d shooterTranslation = shooterPose.getTranslation();
+
+        Translation2d toHub = passPos.minus(shooterTranslation);
+
+        double horizontalDistance = toHub.getNorm();
+
+        ChassisSpeeds speeds = _odometry.getFieldRelativeSpeeds();
+        double vx = speeds.vxMetersPerSecond;
+        double vy = speeds.vyMetersPerSecond;
+
+        Translation2d velocity = new Translation2d(vx, vy);
+
+        //estimated flight time (if undershooting increase, if overshooting decrease)
+        double flightTime = (horizontalDistance * ShooterConstants.FlightTimeSlope) + ShooterConstants.FlightTimeYInt;
+
+        double radialVelocity =
+            (velocity.getX() * toHub.getX() +
+            velocity.getY() * toHub.getY())
+            / horizontalDistance;
+        
+        horizontalDistance += radialVelocity * flightTime;
+
+        double distanceInches = MathUtil.clamp(Units.metersToInches(horizontalDistance), 20, 160);
+
+        SmartDashboard.putNumber("Distance Inches", distanceInches);
+
         // Quadratic regression (fits real-world data)
         double rpm =
             (0.07656 * distanceInches * distanceInches
@@ -182,7 +244,7 @@ public class Shooter extends SubsystemBase{
         public static final double ShooterFF = 1.0 / 5676.0;
         public static final double ShooterPoseOffsetX = Units.inchesToMeters(-9); //wpi is weird, x is forward positive, y is left positive
         public static final double ShooterPoseOffsetY = Units.inchesToMeters(7);
-        public static final double FlightTimeSlope = .3;
-        public static final double FlightTimeYInt = .4;
+        public static final double FlightTimeSlope = .00479;
+        public static final double FlightTimeYInt = .89;
     }
 }

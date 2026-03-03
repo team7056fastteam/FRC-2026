@@ -25,12 +25,10 @@ public class Ingest extends Command {
     public void execute() {}
 
     @Override
-    public void end(boolean interrupted) {
-        _intake.setState(Intake.IntakeState.Idle);
-    }
+    public void end(boolean interrupted) {}
 
     @Override
     public boolean isFinished() {
-        return false;
+        return true;
     }
 }

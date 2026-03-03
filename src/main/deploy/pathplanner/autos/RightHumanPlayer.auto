@@ -7,6 +7,12 @@
         {
           "type": "path",
           "data": {
+            "pathName": "RightHumanPlayerIntakeDown"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
             "pathName": "RightHumanPlayer"
           }
         },

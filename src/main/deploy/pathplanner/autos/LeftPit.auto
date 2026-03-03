@@ -7,6 +7,12 @@
         {
           "type": "path",
           "data": {
+            "pathName": "LeftPitIntakeDown"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
             "pathName": "LeftPit"
           }
         },

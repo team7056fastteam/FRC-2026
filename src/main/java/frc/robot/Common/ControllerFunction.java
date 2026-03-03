@@ -29,7 +29,7 @@ public class ControllerFunction {
         return driver.getRawAxis(2) > 0.1;
     }
     /**Driver Right Trigger*/
-    public boolean passRight(){
+    public boolean passRotate(){
         return driver.getRawAxis(3) > 0.1;
     }
 
@@ -62,7 +62,7 @@ public class ControllerFunction {
         return driver.getLeftBumperButton();
     }
     /**Driver Right Bumper */
-    public boolean passLeft(){
+    public boolean negativeTurbo(){
         return driver.getRightBumperButton();
     }
     /**Driver A Button*/

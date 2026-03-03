@@ -4,28 +4,44 @@
     {
       "anchor": {
         "x": 3.7,
-        "y": 6.608918918918919
+        "y": 7.64052927927928
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.151918466024047,
-        "y": 6.472031569391723
+        "x": 3.7,
+        "y": 6.64052927927928
+      },
+      "isLocked": false,
+      "linkedName": "leftPitStart"
+    },
+    {
+      "anchor": {
+        "x": 3.7,
+        "y": 6.547635135135136
+      },
+      "prevControl": {
+        "x": 3.7,
+        "y": 7.138256434921036
+      },
+      "nextControl": {
+        "x": 3.7,
+        "y": 5.957013835349234
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 2.2744031531531532,
-        "y": 7.129831081081082
+        "x": 3.7,
+        "y": 7.64052927927928
       },
       "prevControl": {
-        "x": 2.026233694630665,
-        "y": 7.197851931956143
+        "x": 3.7,
+        "y": 6.64052927927928
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "leftPitShoot"
+      "linkedName": "leftPitStart"
     }
   ],
   "rotationTargets": [],
@@ -42,7 +58,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -146.036
+    "rotation": -90.0
   },
   "reversed": false,
   "folder": null,
@@ -50,5 +66,5 @@
     "velocity": 0,
     "rotation": -90.0
   },
-  "useDefaultConstraints": true
+  "useDefaultConstraints": false
 }

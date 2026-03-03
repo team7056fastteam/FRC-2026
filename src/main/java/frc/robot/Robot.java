@@ -21,6 +21,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Auto.Ingest;
 import frc.robot.Auto.PathLoader;
 import frc.robot.Auto.ShootForTime;
+import frc.robot.Auto.UnstuckBall;
 import frc.robot.Subsystems.Intake;
 import frc.robot.Subsystems.Kicker;
 import frc.robot.Subsystems.Shooter;
@@ -158,6 +159,7 @@ public class Robot extends TimedRobot {
     NamedCommands.registerCommand("shootShort", new ShootForTime(Shooter.ShooterState.Targeting, 3.0));
     NamedCommands.registerCommand("shootMid", new ShootForTime(Shooter.ShooterState.Targeting, 5.0));
     NamedCommands.registerCommand("shootLong", new ShootForTime(Shooter.ShooterState.Targeting, 8.0));
+    NamedCommands.registerCommand("unstuckBall", new UnstuckBall());
   }
 
   public static SwerveSubsystem getSwerveInstance(){

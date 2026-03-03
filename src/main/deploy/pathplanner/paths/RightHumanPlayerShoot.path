@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.210925149765763,
-        "y": 2.130131332850838
+        "x": 4.01276929889357,
+        "y": 2.122210547166037
       },
       "isLocked": false,
       "linkedName": "humanPlayerStart"
@@ -20,8 +20,8 @@
         "y": 1.134234234234235
       },
       "prevControl": {
-        "x": 2.6692743056937,
-        "y": 1.1605738497965314
+        "x": 2.672883254779766,
+        "y": 1.0844830309388993
       },
       "nextControl": null,
       "isLocked": false,
@@ -33,7 +33,7 @@
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 5.0,
+    "maxVelocity": 2.0,
     "maxAcceleration": 3.0,
     "maxAngularVelocity": 600.0,
     "maxAngularAcceleration": 720.0,
