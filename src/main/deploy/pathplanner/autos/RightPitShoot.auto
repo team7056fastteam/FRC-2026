@@ -13,7 +13,7 @@
         {
           "type": "named",
           "data": {
-            "name": "shootLong"
+            "name": "shootShort"
           }
         },
         {
@@ -31,7 +31,7 @@
         {
           "type": "named",
           "data": {
-            "name": "shootLong"
+            "name": "shootMid"
           }
         }
       ]

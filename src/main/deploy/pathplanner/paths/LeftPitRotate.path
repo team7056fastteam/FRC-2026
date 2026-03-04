@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.3567686092982103,
-        "y": 7.0986600021112745
+        "x": 3.527035014558773,
+        "y": 6.858223079363488
       },
       "isLocked": false,
       "linkedName": "leftPitShoot"
@@ -20,8 +20,8 @@
         "y": 7.64052927927928
       },
       "prevControl": {
-        "x": 3.0142001640705645,
-        "y": 7.569968510619273
+        "x": 3.1635664614715933,
+        "y": 7.467002870846399
       },
       "nextControl": null,
       "isLocked": false,
@@ -33,7 +33,7 @@
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 2.0,
+    "maxVelocity": 3.5,
     "maxAcceleration": 3.0,
     "maxAngularVelocity": 600.0,
     "maxAngularAcceleration": 720.0,
@@ -42,7 +42,7 @@
   },
   "goalEndState": {
     "velocity": 2.0,
-    "rotation": -90.0
+    "rotation": 0.0
   },
   "reversed": false,
   "folder": null,

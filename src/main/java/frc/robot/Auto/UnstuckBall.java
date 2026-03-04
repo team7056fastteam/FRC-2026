@@ -11,27 +11,15 @@ public class UnstuckBall extends SequentialCommandGroup {
     public UnstuckBall() {
         Intake intake = Robot.getIntakeInstance();
 
-        addCommands(
-            // 1
-            Commands.runOnce(() -> intake.setState(IntakeState.Backward), intake)
-                    .andThen(Commands.waitSeconds(0.15)),
-            Commands.runOnce(() -> intake.setState(IntakeState.Forward), intake)
-                    .andThen(Commands.waitSeconds(0.15)),
-
-            // 2
-            Commands.runOnce(() -> intake.setState(IntakeState.Backward), intake)
-                    .andThen(Commands.waitSeconds(0.15)),
-            Commands.runOnce(() -> intake.setState(IntakeState.Forward), intake)
-                    .andThen(Commands.waitSeconds(0.15)),
-
-            // 3
-            Commands.runOnce(() -> intake.setState(IntakeState.Backward), intake)
-                    .andThen(Commands.waitSeconds(0.15)),
-            Commands.runOnce(() -> intake.setState(IntakeState.Forward), intake)
-                    .andThen(Commands.waitSeconds(0.15)),
-
-            // End stopped
-            Commands.runOnce(() -> intake.setState(IntakeState.Idle), intake)
-        );
+        for (int i = 0; i < 5; i++) {
+            addCommands(
+                Commands.runOnce(() -> intake.setState(IntakeState.Backward), intake)
+                        .andThen(Commands.waitSeconds(0.15)),
+                Commands.runOnce(() -> intake.setState(IntakeState.Forward), intake)
+                        .andThen(Commands.waitSeconds(0.15))
+            );
+        }
+            
+        addCommands(Commands.runOnce(() -> intake.setState(IntakeState.Idle), intake));   
     }
 }

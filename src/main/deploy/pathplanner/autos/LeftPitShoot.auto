@@ -13,7 +13,7 @@
         {
           "type": "named",
           "data": {
-            "name": "shootLong"
+            "name": "shootShort"
           }
         },
         {
@@ -25,19 +25,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "LeftPitIntakeDown"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
             "pathName": "LeftPit"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "shootLong"
+            "name": "shootMid"
           }
         }
       ]
