@@ -42,7 +42,7 @@ public class Odometry {
     //wpi is weird, x is forward positive, y is left positive
     public static final Transform3d kRobotToCam0 = 
         new Transform3d(
-            new Translation3d(Units.inchesToMeters(7), Units.inchesToMeters(11), Units.inchesToMeters(11.5)),
+            new Translation3d(Units.inchesToMeters(1.5), Units.inchesToMeters(10), Units.inchesToMeters(8)),
             new Rotation3d(0, Math.toRadians(30), Math.toRadians(90))
         );
     
@@ -135,7 +135,7 @@ public class Odometry {
             visionStdDevs
         );
 
-        SmartDashboard.putString(cam.camera.getName() + " pose", est.estimatedPose.toString());
+        SmartDashboard.putString(cam.camera.getName() + " pose", est.estimatedPose.toPose2d().toString());
    }
 
     public Pose2d getPose() {

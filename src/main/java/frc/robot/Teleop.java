@@ -11,6 +11,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Common.ControllerFunction;
 import frc.robot.Constants.DriveConstants;
@@ -50,6 +51,8 @@ public class Teleop {
 
     Alliance alliance;
 
+    Timer timer = new Timer();
+
 
     public void TeleopInit() {
         _drive = Robot.getSwerveInstance();
@@ -80,8 +83,6 @@ public class Teleop {
 
         // turbo
         get.isPressed(get.speedAdjustment(), () -> xT = 1.4);
-        //negative turbo
-        get.isPressed(get.negativeTurbo(), () -> xT = 0.45);
         
         get.isNotPressed(List.of(get.speedAdjustment(), get.negativeTurbo()), () -> xT = 0.675);
 
@@ -102,6 +103,15 @@ public class Teleop {
         driveX *= DriveConstants.kTeleDriveMaxSpeedMetersPerSecond * xT;
         driveY *= DriveConstants.kTeleDriveMaxSpeedMetersPerSecond * xT;
         driveZ *= DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond * rT;
+
+        //negative turbo
+        get.isPressed(get.negativeTurbo(), () -> {
+            if(Math.abs(driveX) > DriveConstants.kDeadband || Math.abs(driveY) > DriveConstants.kDeadband){
+                double angle = Math.atan2(get.driverY(),get.driverX());
+                driveX = 0.2 * DriveConstants.kTeleDriveMaxSpeedMetersPerSecond * Math.cos(angle);
+                driveY = 0.2 * DriveConstants.kTeleDriveMaxSpeedMetersPerSecond * Math.sin(angle);
+            }
+        });
 
         // flip for red alliance
         if (alliance == Alliance.Red) {
@@ -154,14 +164,31 @@ public class Teleop {
         get.isPressed(get.Ingest(), () -> _intake.setState(IntakeState.Forward));
         get.isPressed(get.Outgest(), () -> _intake.setState(IntakeState.Backward));
         get.isPressed(get.IngestSlow(), () -> _intake.setState(IntakeState.ForwardSlow));
-        get.isNotPressed(List.of(get.Outgest(), get.Ingest(), get.IngestSlow()), () -> _intake.setState(IntakeState.Idle));
+        get.isNotPressed(List.of(get.Outgest(), get.Ingest(), get.IngestSlow(), get.Shoot()), () -> _intake.setState(IntakeState.Idle));
 
         get.isPressed(get.UnstuckalateKicker(), () -> _kicker.setState(KickerState.Unstuckalate));
 
         get.isPressed(get.SpindexerSlow(), () -> slowSpindexer = true);
         get.isNotPressed(get.SpindexerSlow(), () -> slowSpindexer = false);
 
-        get.isPressed(get.RevShooter(), () -> _shooter.fire());        
+        get.isPressed(get.RevShooter(), () -> _shooter.fire());       
+        
+        get.isPressed(get.Shoot(), () -> {
+            if(timer.get() < 0.3){
+                _intake.setState(IntakeState.ForwardSlow);
+            }
+            else if(timer.get() < 0.45){
+                _intake.setState(IntakeState.Backward);
+            }
+            else{
+                timer.reset();
+            }
+        });
+
+        get.isNotPressed(get.Shoot(), () -> {
+            timer.reset();
+            timer.start();
+        });
 
         get.isPressed(get.Shoot(), () -> {
             _shooter.fire();
