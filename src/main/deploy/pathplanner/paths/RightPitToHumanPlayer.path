@@ -3,16 +3,16 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.0487274774774782,
-        "y": 0.8176013513513523
+        "x": 2.6523198198198203,
+        "y": 0.7195483222470007
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.3102972533496937,
-        "y": 0.8198343063445199
+        "x": 2.902291159902049,
+        "y": 0.723333706969169
       },
       "isLocked": false,
-      "linkedName": "humanPlayerShoot"
+      "linkedName": "rightPitEnd"
     },
     {
       "anchor": {
@@ -20,20 +20,37 @@
         "y": 0.6950337837837843
       },
       "prevControl": {
-        "x": 0.052606022099066174,
-        "y": 0.6617832341804689
+        "x": -0.13763146032006746,
+        "y": 0.7092057718666999
       },
       "nextControl": null,
       "isLocked": false,
       "linkedName": "wait"
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.3270440251572334,
+      "rotationDegrees": -47.112
+    },
+    {
+      "waypointRelativePos": 0.4622641509433966,
+      "rotationDegrees": -52.094
+    },
+    {
+      "waypointRelativePos": 0.59433962264151,
+      "rotationDegrees": -57.065
+    },
+    {
+      "waypointRelativePos": 0.6823899371069165,
+      "rotationDegrees": -59.12200000000001
+    }
+  ],
   "constraintZones": [
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 0.703770197486535,
-      "maxWaypointRelativePos": 1.0,
+      "minWaypointRelativePos": 0.0,
+      "maxWaypointRelativePos": 0.6965888689407541,
       "constraints": {
         "maxVelocity": 0.5,
         "maxAcceleration": 3.0,
@@ -45,7 +62,19 @@
     }
   ],
   "pointTowardsZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "shootMid",
+      "waypointRelativePos": 0.0,
+      "endWaypointRelativePos": 0.6840215439856369,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "shootMid"
+        }
+      }
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 3.5,
     "maxAcceleration": 3.0,
@@ -61,8 +90,8 @@
   "reversed": false,
   "folder": null,
   "idealStartingState": {
-    "velocity": 0,
-    "rotation": -51.32
+    "velocity": 0.5,
+    "rotation": -39.659
   },
   "useDefaultConstraints": true
 }

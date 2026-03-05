@@ -7,12 +7,6 @@
         {
           "type": "path",
           "data": {
-            "pathName": "RightHumanPlayerIntakeDown"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
             "pathName": "RightHumanPlayerShoot"
           }
         },
@@ -25,13 +19,19 @@
         {
           "type": "path",
           "data": {
+            "pathName": "RightHumanPlayerIntakeDown"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
             "pathName": "RightHumanPlayerWait"
           }
         },
         {
           "type": "wait",
           "data": {
-            "waitTime": 3.0
+            "waitTime": 2.5
           }
         },
         {

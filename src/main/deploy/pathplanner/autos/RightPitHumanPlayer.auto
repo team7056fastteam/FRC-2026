@@ -7,19 +7,31 @@
         {
           "type": "path",
           "data": {
-            "pathName": "RightPit"
+            "pathName": "RightPitShoot"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "shootMid"
+            "name": "shootShort"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "RightHumanPlayerWait"
+            "pathName": "RightPitRotate"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "RightPitContinue"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "RightPitToHumanPlayer"
           }
         },
         {

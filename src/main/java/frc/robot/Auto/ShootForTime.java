@@ -2,6 +2,7 @@ package frc.robot.Auto;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Robot;
 import frc.robot.Subsystems.Kicker;
 import frc.robot.Subsystems.Shooter;
@@ -14,15 +15,17 @@ public class ShootForTime extends Command {
     private final Kicker _kicker;
     private final Shooter.ShooterState shooterState;
     private final double durationSeconds;
+    private final boolean unstuckBall;
 
     private final Timer timer = new Timer();
 
-    public ShootForTime(Shooter.ShooterState shooterState, double durationSeconds) {
+    public ShootForTime(Shooter.ShooterState shooterState, double durationSeconds, boolean unstuckBall) {
         this._shooter = Robot.getShooterInstance();
         this._spindexer = Robot.getSpindexerInstance();
         this._kicker = Robot.getKickerInstance();
         this.shooterState = shooterState;
         this.durationSeconds = durationSeconds;
+        this.unstuckBall = unstuckBall;
 
         addRequirements(_shooter, _spindexer, _kicker);
     }
@@ -35,6 +38,9 @@ public class ShootForTime extends Command {
 
         timer.reset();
         timer.start();
+        if(unstuckBall){
+            CommandScheduler.getInstance().schedule(new UnstuckBall());
+        }
     }
 
     @Override
