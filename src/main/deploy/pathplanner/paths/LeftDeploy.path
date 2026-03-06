@@ -8,24 +8,24 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.7646734234234236,
-        "y": 6.4148536036036035
+        "x": 3.0200225225225226,
+        "y": 6.547635135135136
       },
       "isLocked": false,
-      "linkedName": "leftPitShoot"
+      "linkedName": null
     },
     {
       "anchor": {
-        "x": 3.7,
+        "x": 2.5,
         "y": 7.1
       },
       "prevControl": {
-        "x": 2.9280968468468473,
-        "y": 6.923896396396396
+        "x": 3.1162509681223987,
+        "y": 7.1
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "leftPitStart"
+      "linkedName": "LeftDeploy"
     }
   ],
   "rotationTargets": [],
@@ -41,7 +41,7 @@
     "unlimited": false
   },
   "goalEndState": {
-    "velocity": 1.5,
+    "velocity": 0.5,
     "rotation": 180.0
   },
   "reversed": false,

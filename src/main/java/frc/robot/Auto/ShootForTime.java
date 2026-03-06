@@ -3,6 +3,8 @@ package frc.robot.Auto;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
+import frc.robot.Subsystems.Intake;
+import frc.robot.Subsystems.Intake.IntakeState;
 import frc.robot.Subsystems.Kicker;
 import frc.robot.Subsystems.Shooter;
 import frc.robot.Subsystems.Spindexer;
@@ -12,6 +14,7 @@ public class ShootForTime extends Command {
     private final Shooter _shooter;
     private final Spindexer _spindexer;
     private final Kicker _kicker;
+    private final Intake _intake;
     private final Shooter.ShooterState shooterState;
     private final double durationSeconds;
     private final boolean spinup;
@@ -23,11 +26,12 @@ public class ShootForTime extends Command {
         this._shooter = Robot.getShooterInstance();
         this._spindexer = Robot.getSpindexerInstance();
         this._kicker = Robot.getKickerInstance();
+        this._intake = Robot.getIntakeInstance();
         this.shooterState = shooterState;
         this.durationSeconds = durationSeconds;
         this.spinup = spinup;
 
-        addRequirements(_shooter, _spindexer, _kicker);
+        addRequirements(_shooter, _spindexer, _kicker, _intake);
     }
 
     @Override
@@ -47,6 +51,16 @@ public class ShootForTime extends Command {
         // Only run spindexer and kicker if shooter is at speed
         if (_shooter.atSpeed() && !spinup) {
             _spindexer.setState(Spindexer.SpindexerState.Forward);
+            if(intakeTimer.get() < 0.3){
+                _intake.setState(IntakeState.ForwardSlow);
+            }
+            else if(intakeTimer.get() < 0.45){
+                _intake.setState(IntakeState.Backward);
+            }
+            else{
+                intakeTimer.reset();
+                intakeTimer.start();
+            }
             _kicker.setState(Kicker.KickerState.Firing);
         }
     }
@@ -56,6 +70,7 @@ public class ShootForTime extends Command {
         _shooter.setState(Shooter.ShooterState.Idle);
         _spindexer.setState(Spindexer.SpindexerState.Idle);
         _kicker.setState(Kicker.KickerState.Idle);
+        _intake.setState(IntakeState.Idle);
     }
 
     @Override

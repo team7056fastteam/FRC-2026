@@ -130,12 +130,17 @@ public class Teleop {
             }
         });
 
-        get.isPressed(get.alignFront(), () -> targetRot = Rotation2d.fromDegrees(0));
-        get.isPressed(get.alignRight(), () -> targetRot = Rotation2d.fromDegrees(-90));
-        get.isPressed(get.alignBack(), () -> targetRot = Rotation2d.fromDegrees(180));
-        get.isPressed(get.alignFront(), () -> targetRot = Rotation2d.fromDegrees(90));
+        get.isPressed(get.alignFront() && alliance == Alliance.Blue, () -> targetRot = Rotation2d.fromDegrees(0));
+        get.isPressed(get.alignRight() && alliance == Alliance.Blue, () -> targetRot = Rotation2d.fromDegrees(-90));
+        get.isPressed(get.alignBack() && alliance == Alliance.Blue, () -> targetRot = Rotation2d.fromDegrees(180));
+        get.isPressed(get.alignLeft() && alliance == Alliance.Blue, () -> targetRot = Rotation2d.fromDegrees(90));
 
-        get.isPressed(get.alignBack() || get.alignFront() || get.alignRight() || get.alignRight() || get.autoOrient(), () -> {
+        get.isPressed(get.alignFront() && alliance == Alliance.Red, () -> targetRot = Rotation2d.fromDegrees(180));
+        get.isPressed(get.alignRight() && alliance == Alliance.Red, () -> targetRot = Rotation2d.fromDegrees(90));
+        get.isPressed(get.alignBack() && alliance == Alliance.Red, () -> targetRot = Rotation2d.fromDegrees(0));
+        get.isPressed(get.alignLeft() && alliance == Alliance.Red, () -> targetRot = Rotation2d.fromDegrees(-90));
+
+        get.isPressed(get.alignBack() || get.alignFront() || get.alignRight() || get.alignLeft() || get.autoOrient(), () -> {
             double currentAngle = Robot.getGyroscopeRotation2d().getRadians();
 
             headingController.setState(HeadingType.SNAP);
@@ -314,7 +319,7 @@ public class Teleop {
             if (_odometry.getPose().getX() > FieldConstants.hubPosBlue.getX()) {
                 return true;
             } else return false;
-        } else if(_odometry.getPose().getX() < FieldConstants.hubPosRed.getX()){
+        } else if(_odometry.getPose().getX() > FieldConstants.hubPosRed.getX()){
             return true;
         } return false;
     }

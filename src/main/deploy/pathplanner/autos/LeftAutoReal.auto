@@ -1,0 +1,56 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "sequential",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "LeftPitShoot"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "shootShort"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "LeftDeploy"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "LeftDeployPt2"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "LeftPitGunsOut"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "shootMid"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": null,
+  "choreoAuto": false
+}

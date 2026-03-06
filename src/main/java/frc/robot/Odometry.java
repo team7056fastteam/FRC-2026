@@ -68,7 +68,7 @@ public class Odometry {
                 new Pose2d(),
 
                 // wheel odometry trust std
-                VecBuilder.fill(0.02, 0.02, 0.01),
+                VecBuilder.fill(0.001, 0.001, 0.001),
 
                 // vision trust std
                 VecBuilder.fill(2.0, 2.0, 4.0)

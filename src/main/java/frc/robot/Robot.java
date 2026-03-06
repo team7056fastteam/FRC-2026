@@ -155,7 +155,7 @@ public class Robot extends TimedRobot {
   public void registerNamedCommands(){
     NamedCommands.registerCommand("ingest", new Ingest(Intake.IntakeState.Forward));
     NamedCommands.registerCommand("unIngest", new Ingest(Intake.IntakeState.Idle));
-    NamedCommands.registerCommand("shootShort", new ShootForTime(Shooter.ShooterState.Targeting, 4.0, false));
+    NamedCommands.registerCommand("shootShort", new ShootForTime(Shooter.ShooterState.Targeting, 3.0, false));
     NamedCommands.registerCommand("shootMid", new ShootForTime(Shooter.ShooterState.Targeting, 6.0, false));
     NamedCommands.registerCommand("shootLong", new ShootForTime(Shooter.ShooterState.Targeting, 8.0, false));
     NamedCommands.registerCommand("spinup", new ShootForTime(Shooter.ShooterState.Targeting, 3, true));
