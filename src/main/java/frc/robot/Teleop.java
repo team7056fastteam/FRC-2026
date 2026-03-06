@@ -32,6 +32,7 @@ public class Teleop {
     Spindexer _spindexer;
     Kicker _kicker;
     Shooter _shooter;
+    Odometry _odometry;
 
     XboxController driver = new XboxController(0);
     XboxController operator = new XboxController(1);
@@ -60,6 +61,7 @@ public class Teleop {
         _kicker = Robot.getKickerInstance();
         _shooter = Robot.getShooterInstance();
         _spindexer = Robot.getSpindexerInstance();
+        _odometry = Robot.getOdometryInstance();
 
         get = new ControllerFunction(driver, operator);
 
@@ -120,8 +122,13 @@ public class Teleop {
         }
 
         // auto-orient to hub
-        get.isPressed(get.rotateToHub(), () -> {
-            Rotation2d targetRot = getHubTargetRotation();
+        get.isPressed(get.autoOrient(), () -> {
+            Rotation2d targetRot;
+            if(pastHub()){
+                targetRot = getHubTargetRotation();
+            } else {
+                targetRot = getPassTargetRotation();
+            }
             double currentAngle = Robot.getGyroscopeRotation2d().getRadians();
 
             headingController.setState(HeadingType.SNAP);
@@ -132,19 +139,7 @@ public class Teleop {
             zPowerOffset = Math.max(-maxAngular, Math.min(correction, maxAngular));
         });
 
-        get.isPressed(get.passRotate(), () -> {
-            Rotation2d targetRot = getPassTargetRotation();
-            double currentAngle = Robot.getGyroscopeRotation2d().getRadians();
-
-            headingController.setState(HeadingType.SNAP);
-            headingController.setTarget(targetRot.getRadians());
-            double correction = headingController.calculate(currentAngle);
-
-            double maxAngular = DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond;
-            zPowerOffset = Math.max(-maxAngular, Math.min(correction, maxAngular));
-        });
-
-        get.isNotPressed(List.of(get.rotateToHub(), get.passRotate()), ()->{
+        get.isNotPressed(get.autoOrient(), ()->{
             zPowerOffset = 0;
             headingController.setState(HeadingType.OFF);
         });
@@ -241,7 +236,7 @@ public class Teleop {
 
     // get rotation to hub
     private Rotation2d getHubTargetRotation() {
-        Pose2d shooterPose = Robot.getOdometryInstance()
+        Pose2d shooterPose = _odometry
             .getPose()
                 .transformBy(
                     new Transform2d(
@@ -275,7 +270,7 @@ public class Teleop {
     }
 
     public Rotation2d getPassTargetRotation(){
-        Pose2d shooterPose = Robot.getOdometryInstance()
+        Pose2d shooterPose = _odometry
             .getPose()
                 .transformBy(
                     new Transform2d(
@@ -289,7 +284,7 @@ public class Teleop {
         Translation2d passPosLeft = (alliance == Alliance.Blue ?
                         FieldConstants.passLeftPosBlue : FieldConstants.passLeftPosRed);
 
-        Translation2d passPosRight = passPos = (alliance == Alliance.Blue ?
+        Translation2d passPosRight = (alliance == Alliance.Blue ?
                         FieldConstants.passRightPosBlue : FieldConstants.passRightPosRed);
 
         if (shooterPose.getTranslation().getSquaredDistance(passPosRight) > shooterPose.getTranslation().getSquaredDistance(passPosLeft)){
@@ -305,5 +300,15 @@ public class Teleop {
 
         //shooter isn't front of the robot
         return toTarget.getAngle().minus(Rotation2d.fromDegrees(90));
+    }
+
+    public boolean pastHub(){
+        if(alliance == Alliance.Blue){
+            if (_odometry.getPose().getX() > FieldConstants.hubPosBlue.getX()) {
+                return true;
+            } else return false;
+        } else if(_odometry.getPose().getX() < FieldConstants.hubPosRed.getX()){
+            return true;
+        } return false;
     }
 }

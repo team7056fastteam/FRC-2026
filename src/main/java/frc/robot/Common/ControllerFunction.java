@@ -25,7 +25,7 @@ public class ControllerFunction {
         return driver.getRawAxis(4) * -1;
     }
     /**Driver Left Trigger*/
-    public boolean rotateToHub(){
+    public boolean autoOrient(){
         return driver.getRawAxis(2) > 0.1;
     }
     /**Driver Right Trigger*/
