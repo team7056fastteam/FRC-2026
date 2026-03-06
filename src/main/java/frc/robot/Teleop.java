@@ -44,7 +44,7 @@ public class Teleop {
     double yPowerOffset;
     double zPowerOffset;
 
-    Translation2d adjustment = new Translation2d();
+    Rotation2d targetRot;
 
     SwerveHeadingController headingController = new SwerveHeadingController();
 
@@ -89,7 +89,7 @@ public class Teleop {
         get.isNotPressed(List.of(get.speedAdjustment(), get.negativeTurbo()), () -> xT = 0.675);
 
         // reorient
-        get.isPressed(driver.getAButton(), () -> Robot.setPose(new Pose2d(0, 0, Rotation2d.fromDegrees(0))));
+        get.isPressed(get.Reset(), () -> Robot.setPose(new Pose2d(0, 0, Rotation2d.fromDegrees(0))));
 
         // joystick input
         driveX = get.driverX();
@@ -123,12 +123,19 @@ public class Teleop {
 
         // auto-orient to hub
         get.isPressed(get.autoOrient(), () -> {
-            Rotation2d targetRot;
             if(pastHub()){
                 targetRot = getHubTargetRotation();
             } else {
                 targetRot = getPassTargetRotation();
             }
+        });
+
+        get.isPressed(get.alignFront(), () -> targetRot = Rotation2d.fromDegrees(0));
+        get.isPressed(get.alignRight(), () -> targetRot = Rotation2d.fromDegrees(-90));
+        get.isPressed(get.alignBack(), () -> targetRot = Rotation2d.fromDegrees(180));
+        get.isPressed(get.alignFront(), () -> targetRot = Rotation2d.fromDegrees(90));
+
+        get.isPressed(get.alignBack() || get.alignFront() || get.alignRight() || get.alignRight() || get.autoOrient(), () -> {
             double currentAngle = Robot.getGyroscopeRotation2d().getRadians();
 
             headingController.setState(HeadingType.SNAP);
@@ -139,7 +146,7 @@ public class Teleop {
             zPowerOffset = Math.max(-maxAngular, Math.min(correction, maxAngular));
         });
 
-        get.isNotPressed(get.autoOrient(), ()->{
+        get.isNotPressed(List.of(get.autoOrient(), get.alignBack(), get.alignFront(), get.alignLeft(), get.alignRight()), ()->{
             zPowerOffset = 0;
             headingController.setState(HeadingType.OFF);
         });

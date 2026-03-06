@@ -203,20 +203,25 @@
               "data": {
                 "name": "unIngest"
               }
-            },
-            {
-              "type": "named",
-              "data": {
-                "name": "unstuckBall"
-              }
             }
           ]
+        }
+      }
+    },
+    {
+      "name": "spinup",
+      "waypointRelativePos": 6.247755834829447,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "spinup"
         }
       }
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 3.5,
+    "maxVelocity": 3.0,
     "maxAcceleration": 3.0,
     "maxAngularVelocity": 600.0,
     "maxAngularAcceleration": 720.0,

@@ -29,7 +29,7 @@ public class ControllerFunction {
         return driver.getRawAxis(2) > 0.1;
     }
     /**Driver Right Trigger*/
-    public boolean passRotate(){
+    public boolean speedAdjustment(){
         return driver.getRawAxis(3) > 0.1;
     }
 
@@ -57,17 +57,33 @@ public class ControllerFunction {
         }
         mf.f();
     }
+    /**Driver Y Button*/
+    public boolean alignFront(){
+        return driver.getYButton();
+    }
+    /**Driver B Button*/
+    public boolean alignRight(){
+        return driver.getBButton();
+    }
+    /**Driver A Button*/
+    public boolean alignBack(){
+        return driver.getAButton();
+    }
+    /**Driver X Button*/
+    public boolean alignLeft(){
+        return driver.getXButton();
+    }
     /**Driver Left Bumper*/
-    public boolean speedAdjustment(){
+    public boolean LeftBumper(){
         return driver.getLeftBumperButton();
     }
     /**Driver Right Bumper */
     public boolean negativeTurbo(){
         return driver.getRightBumperButton();
     }
-    /**Driver A Button*/
+    /**Driver D-Pad Any*/
     public boolean Reset(){
-        return driver.getAButton();
+        return Up() || Down() || Right() || Left();
     }
     /**Driver D-Pad Up */
     public boolean Up(){

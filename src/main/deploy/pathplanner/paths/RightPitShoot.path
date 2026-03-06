@@ -4,24 +4,24 @@
     {
       "anchor": {
         "x": 3.7043581081081083,
-        "y": 0.5111824324324334
+        "y": 1.9717792792792794
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.9426388852968515,
-        "y": 0.5995043992724501
+        "x": 3.938869981525328,
+        "y": 2.058405956615686
       },
       "isLocked": false,
-      "linkedName": "rightPitShoot"
+      "linkedName": null
     },
     {
       "anchor": {
-        "x": 3.7043581081081083,
-        "y": 0.5111824324324334
+        "x": 3.489864864864865,
+        "y": 1.9717792792792794
       },
       "prevControl": {
-        "x": 3.429331214650457,
-        "y": 0.40937015245478087
+        "x": 3.2145964827172544,
+        "y": 1.8914201469014427
       },
       "nextControl": null,
       "isLocked": false,
@@ -31,9 +31,21 @@
   "rotationTargets": [],
   "constraintZones": [],
   "pointTowardsZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "spinup",
+      "waypointRelativePos": 0,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "spinup"
+        }
+      }
+    }
+  ],
   "globalConstraints": {
-    "maxVelocity": 3.5,
+    "maxVelocity": 3.0,
     "maxAcceleration": 3.0,
     "maxAngularVelocity": 600.0,
     "maxAngularAcceleration": 720.0,
@@ -42,13 +54,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -15.724999999999994
+    "rotation": -33.848
   },
   "reversed": false,
   "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -15.724999999999994
+    "rotation": 0.0
   },
   "useDefaultConstraints": true
 }

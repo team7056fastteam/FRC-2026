@@ -25,19 +25,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "RightPit"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "shootMid"
+            "pathName": "RightPitContinue"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "RightPitToHumanPlayerFast"
+            "pathName": "RightPitToHumanPlayer"
           }
         },
         {

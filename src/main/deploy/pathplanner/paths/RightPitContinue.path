@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.7,
-        "y": 0.42947072072072157
+        "x": 3.6941441441441443,
+        "y": 0.6133220720720727
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.4538761109534,
-        "y": 0.42947072072072157
+        "x": 4.4480202550975445,
+        "y": 0.6133220720720727
       },
       "isLocked": false,
       "linkedName": "rightPitStart"
@@ -128,12 +128,12 @@
     },
     {
       "anchor": {
-        "x": 2.6523198198198203,
-        "y": 0.7195483222470007
+        "x": 3.0404504504504506,
+        "y": 1.9104954954954962
       },
       "prevControl": {
-        "x": 3.109531842918746,
-        "y": 0.667523993892233
+        "x": 3.497662473549376,
+        "y": 1.8584711671407286
       },
       "nextControl": null,
       "isLocked": false,
@@ -203,20 +203,25 @@
               "data": {
                 "name": "unIngest"
               }
-            },
-            {
-              "type": "named",
-              "data": {
-                "name": "unstuckBall"
-              }
             }
           ]
+        }
+      }
+    },
+    {
+      "name": "spinup",
+      "waypointRelativePos": 6.362657091561934,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "spinup"
         }
       }
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 3.5,
+    "maxVelocity": 3.0,
     "maxAcceleration": 3.0,
     "maxAngularVelocity": 600.0,
     "maxAngularAcceleration": 720.0,
@@ -225,7 +230,7 @@
   },
   "goalEndState": {
     "velocity": 0.5,
-    "rotation": -39.659
+    "rotation": -41.257
   },
   "reversed": false,
   "folder": null,
