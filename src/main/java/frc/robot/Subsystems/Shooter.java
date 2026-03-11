@@ -201,7 +201,7 @@ public class Shooter extends SubsystemBase{
         double rpm =
             (0.07656 * distanceInches * distanceInches
             - 0.1938 * distanceInches
-            + 2608.24) * 1.16;
+            + 2608.24) * 1.14;
 
         return MathUtil.clamp(rpm, 0, 6000);
     }

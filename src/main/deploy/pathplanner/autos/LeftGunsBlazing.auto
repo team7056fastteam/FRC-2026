@@ -15,6 +15,18 @@
           "data": {
             "name": "shootMid"
           }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "LeftPitRotate"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "LeftPitGunsOut"
+          }
         }
       ]
     }

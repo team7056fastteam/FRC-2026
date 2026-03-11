@@ -22,6 +22,8 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
@@ -42,7 +44,7 @@ public class Odometry {
     //wpi is weird, x is forward positive, y is left positive
     public static final Transform3d kRobotToCam0 = 
         new Transform3d(
-            new Translation3d(Units.inchesToMeters(1.5), Units.inchesToMeters(10), Units.inchesToMeters(8)),
+            new Translation3d(Units.inchesToMeters(2.75), Units.inchesToMeters(9.5), Units.inchesToMeters(8)),
             new Rotation3d(0, Math.toRadians(30), Math.toRadians(90))
         );
     
@@ -68,10 +70,10 @@ public class Odometry {
                 new Pose2d(),
 
                 // wheel odometry trust std
-                VecBuilder.fill(0.001, 0.001, 0.001),
+                VecBuilder.fill(0.01, 0.01, 4.0),
 
                 // vision trust std
-                VecBuilder.fill(2.0, 2.0, 4.0)
+                VecBuilder.fill(1.5, 1.5, 2.0)
             );
     }
 
@@ -79,7 +81,6 @@ public class Odometry {
 
         SwerveModulePosition[] modulePositions =
             Robot.getSwerveInstance().getModulePositions();
-
         poseEstimator.update(
             pigeon.getRotation2d(),
             modulePositions
@@ -129,6 +130,7 @@ public class Odometry {
             );
         }
 
+        
         poseEstimator.addVisionMeasurement(
             est.estimatedPose.toPose2d(),
             est.timestampSeconds,
@@ -139,7 +141,23 @@ public class Odometry {
    }
 
     public Pose2d getPose() {
-        return poseEstimator.getEstimatedPosition();
+        return new Pose2d(poseEstimator.getEstimatedPosition().getTranslation(), pigeon.getRotation2d());
+    }
+
+
+    public void zeroPigeon(){
+        Alliance alliance = DriverStation.getAlliance().orElse(Alliance.Blue);
+        if(alliance == Alliance.Blue){
+            pigeon.reset();
+            poseEstimator.resetPosition(Rotation2d.fromDegrees(0), 
+            Robot.getSwerveInstance().getModulePositions(),
+            new Pose2d(poseEstimator.getEstimatedPosition().getTranslation(), Rotation2d.fromDegrees(0)));
+        } else {
+            pigeon.setYaw(180);
+            poseEstimator.resetPosition(Rotation2d.fromDegrees(180), 
+            Robot.getSwerveInstance().getModulePositions(),
+            new Pose2d(poseEstimator.getEstimatedPosition().getTranslation(), Rotation2d.fromDegrees(180)));
+        }
     }
 
     public Rotation2d getHeading() {
@@ -151,15 +169,14 @@ public class Odometry {
     }
 
     public void resetPose(Pose2d pose) {
-
-        // match gyro to pose rotation
         pigeon.setYaw(pose.getRotation().getDegrees());
+        poseEstimator.resetPosition(pose.getRotation(),
+        Robot.getSwerveInstance().getModulePositions(),
+        pose);
+    }
 
-        poseEstimator.resetPosition(
-            pigeon.getRotation2d(),
-            Robot.getSwerveInstance().getModulePositions(),
-            pose
-        );
+    public void setPigeonAngle(double rot){
+        pigeon.setYaw(rot);
     }
 
     public boolean areCamerasConnected() {

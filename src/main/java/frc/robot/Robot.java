@@ -121,7 +121,9 @@ public class Robot extends TimedRobot {
             .toString()
         );
       SmartDashboard.putString("Robot Starting Pose Meters", startPose.toString());
+      _odometry.setPigeonAngle(startPose.getRotation().getDegrees());
     }
+    
   }
 
   public void RobotDashboard(){

@@ -89,7 +89,7 @@ public class Teleop {
         get.isNotPressed(List.of(get.speedAdjustment(), get.negativeTurbo()), () -> xT = 0.675);
 
         // reorient
-        get.isPressed(get.Reset(), () -> Robot.setPose(new Pose2d(0, 0, Rotation2d.fromDegrees(0))));
+        get.isPressed(get.Reset(), () -> _odometry.zeroPigeon());
 
         // joystick input
         driveX = get.driverX();
@@ -106,6 +106,11 @@ public class Teleop {
         driveY *= DriveConstants.kTeleDriveMaxSpeedMetersPerSecond * xT;
         driveZ *= DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond * rT;
 
+            if(alliance == Alliance.Red){
+                driveX = -driveX;
+                driveY = -driveY;
+            }
+
         //negative turbo
         get.isPressed(get.negativeTurbo(), () -> {
             if(Math.abs(driveX) > DriveConstants.kDeadband || Math.abs(driveY) > DriveConstants.kDeadband){
@@ -114,12 +119,6 @@ public class Teleop {
                 driveY = 0.2 * DriveConstants.kTeleDriveMaxSpeedMetersPerSecond * Math.sin(angle);
             }
         });
-
-        // flip for red alliance
-        if (alliance == Alliance.Red) {
-            driveX = -driveX;
-            driveY = -driveY;
-        }
 
         // auto-orient to hub
         get.isPressed(get.autoOrient(), () -> {
@@ -141,7 +140,7 @@ public class Teleop {
         get.isPressed(get.alignLeft() && alliance == Alliance.Red, () -> targetRot = Rotation2d.fromDegrees(-90));
 
         get.isPressed(get.alignBack() || get.alignFront() || get.alignRight() || get.alignLeft() || get.autoOrient(), () -> {
-            double currentAngle = Robot.getGyroscopeRotation2d().getRadians();
+            double currentAngle = _odometry.getPose().getRotation().getRadians();
 
             headingController.setState(HeadingType.SNAP);
             headingController.setTarget(targetRot.getRadians());
@@ -277,6 +276,8 @@ public class Teleop {
 
         Rotation2d angleToHub = compensatedVector.getAngle();
 
+        SmartDashboard.putNumber("Hub Distance", distance);
+
         //intake is front of the robot, shooter is 90 degree offset
         return angleToHub.minus(Rotation2d.fromDegrees(90)); 
     }
@@ -316,7 +317,7 @@ public class Teleop {
 
     public boolean pastHub(){
         if(alliance == Alliance.Blue){
-            if (_odometry.getPose().getX() > FieldConstants.hubPosBlue.getX()) {
+            if (_odometry.getPose().getX() < FieldConstants.hubPosBlue.getX()) {
                 return true;
             } else return false;
         } else if(_odometry.getPose().getX() > FieldConstants.hubPosRed.getX()){

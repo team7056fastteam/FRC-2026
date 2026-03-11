@@ -52,10 +52,10 @@ public class Constants {
 
         //to test this put robot up so wheels aren't touching ground and if you put the stick all the way forward they should all be driving in the forward direction
         //if not they adjust this value
-        public static final boolean kFrontLeftDriveMotorReversed = true;
+        public static final boolean kFrontLeftDriveMotorReversed = false;
         public static final boolean kBackLeftDriveMotorReversed = true;
-        public static final boolean kFrontRightDriveMotorReversed = false;
-        public static final boolean kBackRightDriveMotorReversed = false;
+        public static final boolean kFrontRightDriveMotorReversed = true;
+        public static final boolean kBackRightDriveMotorReversed = true;
 
         //abs encoders ids
         public static final int kFrontLeftDriveAbsoluteEncoderPort = 1;
@@ -72,8 +72,8 @@ public class Constants {
         //adjust wheel offsets
         public static final double kFrontLeftDriveAbsoluteEncoderOffsetRad = Math.toRadians(0);
         public static final double kBackLeftDriveAbsoluteEncoderOffsetRad = Math.toRadians(0);
-        public static final double kFrontRightDriveAbsoluteEncoderOffsetRad = Math.toRadians(0.0);
-        public static final double kBackRightDriveAbsoluteEncoderOffsetRad = Math.toRadians(0.0);
+        public static final double kFrontRightDriveAbsoluteEncoderOffsetRad = Math.toRadians(0);
+        public static final double kBackRightDriveAbsoluteEncoderOffsetRad = Math.toRadians(0);
 
         //these are the physical max of the motor. Look up the values for these.
         public static final double kPhysicalMaxSpeedMetersPerSecond = 6.03504;
