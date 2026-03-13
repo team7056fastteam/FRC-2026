@@ -83,6 +83,9 @@ public class Teleop {
     public void Driver() {
         if (!driver.isConnected()) return;
 
+        get.isPressed(get.lockWheels(), () -> _drive.setState(SwerveState.Lock_Wheels));
+        get.isNotPressed(get.lockWheels(), () -> _drive.setState(SwerveState.TeleOp));
+
         // turbo
         get.isPressed(get.speedAdjustment(), () -> xT = 1.4);
         
@@ -183,7 +186,7 @@ public class Teleop {
             if(timer.get() < 0.3){
                 _intake.setState(IntakeState.ForwardSlow);
             }
-            else if(timer.get() < 0.45){
+            else if(timer.get() < 0.6){
                 _intake.setState(IntakeState.Backward);
             }
             else{

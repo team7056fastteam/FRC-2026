@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.0404504504504506,
-        "y": 1.9104954954954962
+        "x": 3.0,
+        "y": 2.0999999999999996
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.04045045045045,
-        "y": 1.9104954954954958
+        "x": 3.086848188124412,
+        "y": 1.8655700697020388
       },
       "isLocked": false,
-      "linkedName": "rightPitEnd"
+      "linkedName": "rightGunsBlazingEnd"
     },
     {
       "anchor": {
-        "x": 0.375,
-        "y": 0.6541779279279285
+        "x": 3.7,
+        "y": 0.8380292792792796
       },
       "prevControl": {
-        "x": -0.625,
-        "y": 0.6541779279279291
+        "x": 3.457145897285793,
+        "y": 1.3331367778264371
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "wait"
+      "linkedName": "rightgunsoutstart"
     }
   ],
   "rotationTargets": [],
@@ -41,14 +41,14 @@
     "unlimited": false
   },
   "goalEndState": {
-    "velocity": 0,
-    "rotation": -90.0
+    "velocity": 1.0,
+    "rotation": 1.6033762060495775
   },
   "reversed": false,
   "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -41.257
+    "rotation": -46.607000000000006
   },
   "useDefaultConstraints": true
 }

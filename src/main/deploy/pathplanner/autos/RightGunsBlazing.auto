@@ -7,43 +7,25 @@
         {
           "type": "path",
           "data": {
-            "pathName": "RightPitShoot"
+            "pathName": "RightGunsBlazing"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "shootShort"
+            "name": "shootMid"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "RightPitRotate"
+            "pathName": "RightRotate"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "RightPitContinue"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "RightPitToHumanPlayer"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 1.0
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "RightShoot"
+            "pathName": "RightPitGunsOut"
           }
         },
         {

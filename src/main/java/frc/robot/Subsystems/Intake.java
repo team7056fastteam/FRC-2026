@@ -74,7 +74,7 @@ public class Intake extends SubsystemBase {
         public static final double IntakeForwardMinSpeed = 0.5;
         public static final double IntakeForwardSpeed = .8;
         public static final double IntakeForwardSlowSpeed = 0.5;
-        public static final double IntakeBackwardSpeed = -.75;
+        public static final double IntakeBackwardSpeed = -IntakeForwardSlowSpeed;
     }
 
 }

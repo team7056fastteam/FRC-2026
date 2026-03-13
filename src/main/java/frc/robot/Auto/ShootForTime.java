@@ -54,7 +54,7 @@ public class ShootForTime extends Command {
             if(intakeTimer.get() < 0.3){
                 _intake.setState(IntakeState.ForwardSlow);
             }
-            else if(intakeTimer.get() < 0.45){
+            else if(intakeTimer.get() < 0.6){
                 _intake.setState(IntakeState.Backward);
             }
             else{

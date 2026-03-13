@@ -5,33 +5,46 @@
     "data": {
       "commands": [
         {
-          "type": "path",
+          "type": "sequential",
           "data": {
-            "pathName": "LeftPitShoot"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "shootShort"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "LeftPitRotate"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "LeftPit"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "shootShort"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "LeftPitShoot"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "shootShort"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "LeftDeploy"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "LeftDeployPt2"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "LeftPitGunsOut"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "shootMid"
+                }
+              }
+            ]
           }
         }
       ]
