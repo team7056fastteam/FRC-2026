@@ -1,7 +1,7 @@
 package frc.robot.Subsystems;
 
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
-import com.revrobotics.spark.config.SparkMaxConfig;
+import com.revrobotics.spark.config.SparkFlexConfig;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.Debouncer;
@@ -22,15 +22,15 @@ import frc.robot.Common.PIDValues;
 import frc.robot.Constants.FieldConstants;
 
 import com.revrobotics.spark.SparkBase.ControlType;
+import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
-import com.revrobotics.spark.SparkMax;
 
 public class Shooter extends SubsystemBase{
     public enum ShooterState{Idle, Targeting, Far, Close, Mid, Passing}
     ShooterState intendedState = ShooterState.Targeting;
     ShooterState state = ShooterState.Idle;
-    SparkMax shooterMotor;
-    SparkMaxConfig motorConfig;
+    SparkFlex shooterMotor;
+    SparkFlexConfig motorConfig;
     Pose2d currentPose;
     double targetRPM;
     Odometry _odometry = Robot.getOdometryInstance();
@@ -41,8 +41,8 @@ public class Shooter extends SubsystemBase{
     private double kD;
 
     public Shooter(){
-        shooterMotor = new SparkMax(ShooterConstants.ShooterMotorID, MotorType.kBrushless);
-        motorConfig = new SparkMaxConfig();
+        shooterMotor = new SparkFlex(ShooterConstants.ShooterMotorID, MotorType.kBrushless);
+        motorConfig = new SparkFlexConfig();
         motorConfig.inverted(ShooterConstants.ReversedShooter)
             .idleMode(IdleMode.kCoast);
         setPids(ShooterConstants.ShooterPID);

@@ -38,6 +38,7 @@ public class Teleop {
     XboxController operator = new XboxController(1);
 
     ControllerFunction get;
+    //TODO increase rT
     double xT = 1, rT = 1, driveX, driveY, driveZ;
 
     double xPowerOffset;
@@ -86,6 +87,8 @@ public class Teleop {
         get.isPressed(get.lockWheels(), () -> _drive.setState(SwerveState.Lock_Wheels));
         get.isNotPressed(get.lockWheels(), () -> _drive.setState(SwerveState.TeleOp));
 
+        //TODO increase turbo
+
         // turbo
         get.isPressed(get.speedAdjustment(), () -> xT = 1.4);
         
@@ -113,7 +116,7 @@ public class Teleop {
                 driveX = -driveX;
                 driveY = -driveY;
             }
-
+        //TODO add over the bump button (maybe negative turbo at full speed?)
         //negative turbo
         get.isPressed(get.negativeTurbo(), () -> {
             if(Math.abs(driveX) > DriveConstants.kDeadband || Math.abs(driveY) > DriveConstants.kDeadband){

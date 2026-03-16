@@ -27,6 +27,12 @@
           "data": {
             "pathName": "LeftPitGunsOut"
           }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "shootMid"
+          }
         }
       ]
     }
