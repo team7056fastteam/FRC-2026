@@ -189,7 +189,7 @@ public class Teleop {
             if(timer.get() < 0.3){
                 _intake.setState(IntakeState.ForwardSlow);
             }
-            else if(timer.get() < 0.6){
+            else if(timer.get() < 0.5){
                 _intake.setState(IntakeState.Backward);
             }
             else{
@@ -285,7 +285,8 @@ public class Teleop {
         SmartDashboard.putNumber("Hub Distance", distance);
 
         //intake is front of the robot, shooter is 90 degree offset
-        return angleToHub.minus(Rotation2d.fromDegrees(90)); 
+        double rotationalOffset = alliance == Alliance.Blue ? -90 : 90;
+        return angleToHub.minus(Rotation2d.fromDegrees(rotationalOffset)); 
     }
 
     public Rotation2d getPassTargetRotation(){
@@ -318,7 +319,8 @@ public class Teleop {
         Translation2d toTarget = passPos.minus(shooterPose.getTranslation());
 
         //shooter isn't front of the robot
-        return toTarget.getAngle().minus(Rotation2d.fromDegrees(90));
+        double rotationalOffset = alliance == Alliance.Blue ? -90 : 90;
+        return toTarget.getAngle().minus(Rotation2d.fromDegrees(rotationalOffset));
     }
 
     public boolean pastHub(){

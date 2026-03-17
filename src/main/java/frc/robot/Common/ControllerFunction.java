@@ -103,7 +103,7 @@ public class ControllerFunction {
     }
     /**Driver Left Trigger*/
     public boolean lockWheels(){
-        return driver.getRawAxis(2) > 0.1;
+        return driver.getLeftBumperButton();
     }
     /**Operator A Button*/
     public boolean RevShooter(){
