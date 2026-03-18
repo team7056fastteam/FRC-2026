@@ -38,7 +38,6 @@ public class Teleop {
     XboxController operator = new XboxController(1);
 
     ControllerFunction get;
-    //TODO increase rT
     double xT = 1, rT = 1, driveX, driveY, driveZ;
 
     double xPowerOffset;
@@ -90,7 +89,7 @@ public class Teleop {
         //TODO increase turbo
 
         // turbo
-        get.isPressed(get.speedAdjustment(), () -> xT = 1.4);
+        get.isPressed(get.speedAdjustment(), () -> xT = 1.6);
         
         get.isNotPressed(List.of(get.speedAdjustment(), get.negativeTurbo()), () -> xT = 0.675);
 
@@ -112,10 +111,6 @@ public class Teleop {
         driveY *= DriveConstants.kTeleDriveMaxSpeedMetersPerSecond * xT;
         driveZ *= DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond * rT;
 
-            if(alliance == Alliance.Red){
-                driveX = -driveX;
-                driveY = -driveY;
-            }
         //TODO add over the bump button (maybe negative turbo at full speed?)
         //negative turbo
         get.isPressed(get.negativeTurbo(), () -> {
@@ -125,6 +120,11 @@ public class Teleop {
                 driveY = 0.2 * DriveConstants.kTeleDriveMaxSpeedMetersPerSecond * Math.sin(angle);
             }
         });
+
+        if(alliance == Alliance.Red){
+            driveX = -driveX;
+            driveY = -driveY;
+        }
 
         // auto-orient to hub
         get.isPressed(get.autoOrient(), () -> {
@@ -184,18 +184,6 @@ public class Teleop {
         get.isNotPressed(get.SpindexerSlow(), () -> slowSpindexer = false);
 
         get.isPressed(get.RevShooter(), () -> _shooter.fire());       
-        
-        get.isPressed(get.Shoot(), () -> {
-            if(timer.get() < 0.3){
-                _intake.setState(IntakeState.ForwardSlow);
-            }
-            else if(timer.get() < 0.5){
-                _intake.setState(IntakeState.Backward);
-            }
-            else{
-                timer.reset();
-            }
-        });
 
         get.isNotPressed(get.Shoot(), () -> {
             timer.reset();
@@ -205,6 +193,15 @@ public class Teleop {
         get.isPressed(get.Shoot(), () -> {
             _shooter.fire();
             if(_shooter.atSpeed()){
+                if(timer.get() < DriveConstants.IntakeForwardTime){
+                    _intake.setState(IntakeState.ForwardSlow);
+                }
+                else if(timer.get() < DriveConstants.IntakeBackwardTime){
+                    _intake.setState(IntakeState.Backward);
+                }
+                else{
+                    timer.reset();
+                }
                 _kicker.setState(KickerState.Firing);
                 if(slowSpindexer){
                     _spindexer.setState(SpindexerState.ForwardSlow);
@@ -218,6 +215,15 @@ public class Teleop {
         get.isPressed(get.Pass(), () -> {
             _shooter.setState(ShooterState.Passing);
             if(_shooter.atSpeed()){
+                if(timer.get() < DriveConstants.IntakeForwardTime){
+                    _intake.setState(IntakeState.ForwardSlow);
+                }
+                else if(timer.get() < DriveConstants.IntakeBackwardTime){
+                    _intake.setState(IntakeState.Backward);
+                }
+                else{
+                    timer.reset();
+                }
                 _kicker.setState(KickerState.Firing);
                 if(slowSpindexer){
                     _spindexer.setState(SpindexerState.ForwardSlow);
@@ -285,7 +291,7 @@ public class Teleop {
         SmartDashboard.putNumber("Hub Distance", distance);
 
         //intake is front of the robot, shooter is 90 degree offset
-        double rotationalOffset = alliance == Alliance.Blue ? -90 : 90;
+        double rotationalOffset = 90;
         return angleToHub.minus(Rotation2d.fromDegrees(rotationalOffset)); 
     }
 
@@ -319,7 +325,7 @@ public class Teleop {
         Translation2d toTarget = passPos.minus(shooterPose.getTranslation());
 
         //shooter isn't front of the robot
-        double rotationalOffset = alliance == Alliance.Blue ? -90 : 90;
+        double rotationalOffset = 90;
         return toTarget.getAngle().minus(Rotation2d.fromDegrees(rotationalOffset));
     }
 

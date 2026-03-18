@@ -75,7 +75,7 @@ public class Spindexer extends SubsystemBase {
         public static final int SpindexerMotorID = 11;
         public static final boolean ReversedSpindexer = true;
 
-        public static final double SpindexerForwardVelocity = 4000;
+        public static final double SpindexerForwardVelocity = 3250;
         public static final double SpindexerForwardSlowVelocity = 1000;
 
         public static final PIDValues SpindexerPID = new PIDValues(0.0002, 0, 0);

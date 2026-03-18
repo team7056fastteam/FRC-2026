@@ -3,6 +3,7 @@ package frc.robot.Auto;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
+import frc.robot.Constants.DriveConstants;
 import frc.robot.Subsystems.Intake;
 import frc.robot.Subsystems.Intake.IntakeState;
 import frc.robot.Subsystems.Kicker;
@@ -51,10 +52,10 @@ public class ShootForTime extends Command {
         // Only run spindexer and kicker if shooter is at speed
         if (_shooter.atSpeed() && !spinup) {
             _spindexer.setState(Spindexer.SpindexerState.Forward);
-            if(intakeTimer.get() < 0.3){
+            if(intakeTimer.get() < DriveConstants.IntakeForwardTime){
                 _intake.setState(IntakeState.ForwardSlow);
             }
-            else if(intakeTimer.get() < 0.5){
+            else if(intakeTimer.get() < DriveConstants.IntakeBackwardTime){
                 _intake.setState(IntakeState.Backward);
             }
             else{
