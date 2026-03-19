@@ -247,6 +247,6 @@ public class Shooter extends SubsystemBase{
         public static final double ShooterPoseOffsetY = Units.inchesToMeters(7);
         public static final double FlightTimeSlope = .00479;
         public static final double FlightTimeYInt = .95;
-        public static final double FudgeFactor = 1.11;
+        public static final double FudgeFactor = 1.05;
     }
 }
