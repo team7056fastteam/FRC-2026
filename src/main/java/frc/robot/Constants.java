@@ -93,9 +93,10 @@ public class Constants {
         //you probally want to replace controllers after two seasons or if the stick drift is too high for preicous movement of robot
         public static final double kDeadband = 0.09;
 
-        public static final double IntakeForwardTime = .2;
-        public static final double IntakeBackwardTime = .3;
-    } //3.5
+        public static final boolean IntakeBackAndForthEnabled = false;
+        public static final double IntakeForwardTime = .3;
+        public static final double IntakeBackwardTime = .4;
+    } 
 
     public static final class FieldConstants {
         public static final Translation2d hubPosBlue = new Translation2d(4.625,4.03);

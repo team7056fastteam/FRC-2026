@@ -52,16 +52,18 @@ public class ShootForTime extends Command {
         // Only run spindexer and kicker if shooter is at speed
         if (_shooter.atSpeed() && !spinup) {
             _spindexer.setState(Spindexer.SpindexerState.Forward);
-            if(intakeTimer.get() < DriveConstants.IntakeForwardTime){
-                _intake.setState(IntakeState.ForwardSlow);
-            }
-            else if(intakeTimer.get() < DriveConstants.IntakeBackwardTime){
-                _intake.setState(IntakeState.Backward);
-            }
-            else{
-                intakeTimer.reset();
-                intakeTimer.start();
-            }
+            if(DriveConstants.IntakeBackAndForthEnabled){
+                    if(timer.get() < DriveConstants.IntakeForwardTime){
+                        _intake.setState(IntakeState.ForwardSlow);
+                    }
+                    else if(timer.get() < DriveConstants.IntakeBackwardTime){
+                        _intake.setState(IntakeState.Backward);
+                    }
+                    else{
+                        timer.reset();
+                        timer.start();
+                    }
+                }
             _kicker.setState(Kicker.KickerState.Firing);
         }
     }

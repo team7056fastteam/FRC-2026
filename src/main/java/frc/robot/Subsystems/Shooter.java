@@ -245,8 +245,8 @@ public class Shooter extends SubsystemBase{
         public static final double ShooterFF = 1.0 / 5676.0;
         public static final double ShooterPoseOffsetX = Units.inchesToMeters(-9); //wpi is weird, x is forward positive, y is left positive
         public static final double ShooterPoseOffsetY = Units.inchesToMeters(7);
-        public static final double FlightTimeSlope = .00479;
-        public static final double FlightTimeYInt = .95;
+        public static final double FlightTimeSlope = .01;
+        public static final double FlightTimeYInt = 1;
         public static final double FudgeFactor = 1.05;
     }
 }

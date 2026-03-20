@@ -86,8 +86,6 @@ public class Teleop {
         get.isPressed(get.lockWheels(), () -> _drive.setState(SwerveState.Lock_Wheels));
         get.isNotPressed(get.lockWheels(), () -> _drive.setState(SwerveState.TeleOp));
 
-        //TODO increase turbo
-
         // turbo
         get.isPressed(get.speedAdjustment(), () -> xT = 1.6);
         
@@ -111,7 +109,6 @@ public class Teleop {
         driveY *= DriveConstants.kTeleDriveMaxSpeedMetersPerSecond * xT;
         driveZ *= DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond * rT;
 
-        //TODO add over the bump button (maybe negative turbo at full speed?)
         //negative turbo
         get.isPressed(get.negativeTurbo(), () -> {
             if(Math.abs(driveX) > DriveConstants.kDeadband || Math.abs(driveY) > DriveConstants.kDeadband){
@@ -193,14 +190,16 @@ public class Teleop {
         get.isPressed(get.Shoot(), () -> {
             _shooter.fire();
             if(_shooter.atSpeed()){
-                if(timer.get() < DriveConstants.IntakeForwardTime){
-                    _intake.setState(IntakeState.ForwardSlow);
-                }
-                else if(timer.get() < DriveConstants.IntakeBackwardTime){
-                    _intake.setState(IntakeState.Backward);
-                }
-                else{
-                    timer.reset();
+                if(DriveConstants.IntakeBackAndForthEnabled){
+                    if(timer.get() < DriveConstants.IntakeForwardTime){
+                        _intake.setState(IntakeState.ForwardSlow);
+                    }
+                    else if(timer.get() < DriveConstants.IntakeBackwardTime){
+                        _intake.setState(IntakeState.Backward);
+                    }
+                    else{
+                        timer.reset();
+                    }
                 }
                 _kicker.setState(KickerState.Firing);
                 if(slowSpindexer){
@@ -215,14 +214,16 @@ public class Teleop {
         get.isPressed(get.Pass(), () -> {
             _shooter.setState(ShooterState.Passing);
             if(_shooter.atSpeed()){
-                if(timer.get() < DriveConstants.IntakeForwardTime){
-                    _intake.setState(IntakeState.ForwardSlow);
-                }
-                else if(timer.get() < DriveConstants.IntakeBackwardTime){
-                    _intake.setState(IntakeState.Backward);
-                }
-                else{
-                    timer.reset();
+                if(DriveConstants.IntakeBackAndForthEnabled){
+                    if(timer.get() < DriveConstants.IntakeForwardTime){
+                        _intake.setState(IntakeState.ForwardSlow);
+                    }
+                    else if(timer.get() < DriveConstants.IntakeBackwardTime){
+                        _intake.setState(IntakeState.Backward);
+                    }
+                    else{
+                        timer.reset();
+                    }
                 }
                 _kicker.setState(KickerState.Firing);
                 if(slowSpindexer){

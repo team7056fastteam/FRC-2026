@@ -31,8 +31,7 @@ public class Spindexer extends SubsystemBase {
         motorConfig.closedLoop
             .p(kP)
             .i(kI)
-            .d(kD)
-            .outputRange(0, 1);
+            .d(kD);
         spindexerMotor.configure(motorConfig, com.revrobotics.ResetMode.kNoResetSafeParameters, com.revrobotics.PersistMode.kNoPersistParameters);
     }
 
