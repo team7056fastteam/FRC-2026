@@ -15,7 +15,7 @@ public class SwerveHeadingController {
     PIDController stabilizeController;
 
     public SwerveHeadingController(){
-        snapController = new PIDController(5, 0, 0.5);
+        snapController = new PIDController(5, 0, 0.2); //8, 1, 0.2
         stabilizeController = new PIDController(3.5, 0, 0.5);
 
         snapController.enableContinuousInput(-Math.PI, Math.PI);
@@ -42,7 +42,7 @@ public class SwerveHeadingController {
                 correction = snapController.calculate(currentRadians,targetRadians);
                 break;
         }
-        MathUtil.clamp(correction, -Constants.DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond,Constants.DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond);
+        correction = MathUtil.clamp(correction, -Constants.DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond,Constants.DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond);
         return correction;
     }
 }

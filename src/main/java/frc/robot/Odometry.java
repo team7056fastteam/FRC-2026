@@ -59,8 +59,8 @@ public class Odometry {
         pigeon = new Pigeon2(pigeonID);
 
         //the name has to be the exact same in PhotonVision
-        cam0 = new AprilTagVision("Camera0", kRobotToCam0);
-        cam1 = new AprilTagVision("Camera1", kRobotToCam1);
+        cam0 = new AprilTagVision("Cam0", kRobotToCam0);
+        cam1 = new AprilTagVision("Cam1", kRobotToCam1);
 
         poseEstimator =
             new SwerveDrivePoseEstimator(
@@ -141,7 +141,8 @@ public class Odometry {
    }
 
     public Pose2d getPose() {
-        return new Pose2d(poseEstimator.getEstimatedPosition().getTranslation(), pigeon.getRotation2d());
+        return poseEstimator.getEstimatedPosition();
+        // return new Pose2d(poseEstimator.getEstimatedPosition().getTranslation(), pigeon.getRotation2d());
     }
 
 
@@ -224,11 +225,17 @@ public class Odometry {
                 return Optional.empty();
 
             var result = camera.getLatestResult();
+            SmartDashboard.putBoolean(camera.getName() + " has targets?", result.hasTargets());
+
+            
 
             if (!result.hasTargets())
                 return Optional.empty();
+            var estimate = estimator.update(result);
 
-            return estimator.update(result);
+            SmartDashboard.putBoolean(camera.getName() + " pose present?", estimate.isPresent());
+
+            return estimate;
         }
     }
     

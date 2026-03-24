@@ -34,13 +34,14 @@ public class Shooter extends SubsystemBase{
     Pose2d currentPose;
     double targetRPM;
     Odometry _odometry = Robot.getOdometryInstance();
-    private final Debouncer atSpeedDebouncer = new Debouncer(.05, DebounceType.kRising);
+    private final Debouncer atSpeedDebouncer = new Debouncer(.2, DebounceType.kRising);
 
     private double kP;
     private double kI;
     private double kD;
 
     public Shooter(){
+        // SmartDashboard.putNumber("RPM", 0.0);
         shooterMotor = new SparkFlex(ShooterConstants.ShooterMotorID, MotorType.kBrushless);
         motorConfig = new SparkFlexConfig();
         motorConfig.inverted(ShooterConstants.ReversedShooter)
@@ -70,6 +71,7 @@ public class Shooter extends SubsystemBase{
                 break;
             case Close:
                 targetRPM = 2850;
+                // targetRPM = SmartDashboard.getNumber("RPM", 0.0);
                 shooterMotor.getClosedLoopController().setSetpoint(targetRPM, ControlType.kVelocity);
                 break;
             case Mid:
@@ -140,9 +142,9 @@ public class Shooter extends SubsystemBase{
 
         // Quadratic regression (fits real-world data)
         double rpm =
-            (0.07656 * distanceInches * distanceInches
-            - 0.1938 * distanceInches
-            + 2608.24) * ShooterConstants.FudgeFactor;
+            (ShooterConstants.RPMQuadraticA * distanceInches * distanceInches
+            + ShooterConstants.RPMQuadraticB * distanceInches
+            + ShooterConstants.RPMQuadraticC) * ShooterConstants.FudgeFactor;
 
         return MathUtil.clamp(rpm, 0, 6000);
     }
@@ -200,9 +202,9 @@ public class Shooter extends SubsystemBase{
 
         // Quadratic regression (fits real-world data)
         double rpm =
-            (0.07656 * distanceInches * distanceInches
-            - 0.1938 * distanceInches
-            + 2608.24) * ShooterConstants.FudgeFactor;
+            (ShooterConstants.RPMQuadraticA * distanceInches * distanceInches
+            + ShooterConstants.RPMQuadraticB * distanceInches
+            + ShooterConstants.RPMQuadraticC) * ShooterConstants.FudgeFactor;
 
         return MathUtil.clamp(rpm, 0, 6000);
     }
@@ -227,7 +229,7 @@ public class Shooter extends SubsystemBase{
         double actual = shooterMotor.getEncoder().getVelocity();
 
         boolean validTarget = targetRPM > 500;
-        boolean withinTolerance = Math.abs(targetRPM - actual) < 50;
+        boolean withinTolerance = Math.abs(targetRPM - actual) < 400;
         boolean debouncedValue = atSpeedDebouncer.calculate(withinTolerance);
         return debouncedValue && validTarget;
     }
@@ -241,10 +243,13 @@ public class Shooter extends SubsystemBase{
     public static final class ShooterConstants{
         public static final int ShooterMotorID = 13;
         public static final boolean ReversedShooter = true;
-        public static final PIDValues ShooterPID = new PIDValues(.001, 0, 0);
+        public static final PIDValues ShooterPID = new PIDValues(0.00025, 0.000, 0.000);
         public static final double ShooterFF = 1.0 / 5676.0;
         public static final double ShooterPoseOffsetX = Units.inchesToMeters(-9); //wpi is weird, x is forward positive, y is left positive
         public static final double ShooterPoseOffsetY = Units.inchesToMeters(7);
+        public static final double RPMQuadraticA = 0.0837;
+        public static final double RPMQuadraticB = -0.223;
+        public static final double RPMQuadraticC = 2668.1;
         public static final double FlightTimeSlope = .01;
         public static final double FlightTimeYInt = 1;
         public static final double FudgeFactor = 1.05;

@@ -2,12 +2,14 @@ package frc.robot;
 
 import java.util.List;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -144,13 +146,16 @@ public class Teleop {
 
         get.isPressed(get.alignBack() || get.alignFront() || get.alignRight() || get.alignLeft() || get.autoOrient(), () -> {
             double currentAngle = _odometry.getPose().getRotation().getRadians();
-
+            SmartDashboard.putNumber("Target Rotation", targetRot.getDegrees());
             headingController.setState(HeadingType.SNAP);
             headingController.setTarget(targetRot.getRadians());
             double correction = headingController.calculate(currentAngle);
 
             double maxAngular = DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond;
             zPowerOffset = Math.max(-maxAngular, Math.min(correction, maxAngular));
+            if(Math.abs(currentAngle - targetRot.getRadians()) < Math.toRadians(2)){
+                zPowerOffset = 0;
+            }
         });
 
         get.isNotPressed(List.of(get.autoOrient(), get.alignBack(), get.alignFront(), get.alignLeft(), get.alignRight()), ()->{
@@ -260,36 +265,47 @@ public class Teleop {
 
     // get rotation to hub
     private Rotation2d getHubTargetRotation() {
-        Pose2d shooterPose = _odometry
-            .getPose()
-                .transformBy(
-                    new Transform2d(
-                        ShooterConstants.ShooterPoseOffsetX,
-                        ShooterConstants.ShooterPoseOffsetY,
-                        new Rotation2d()
-                    ));
+        Pose2d robotPose = _odometry.getPose();
+        Translation2d shooterTranslation = robotPose.getTranslation().plus(
+            new Translation2d(
+                ShooterConstants.ShooterPoseOffsetX,
+                ShooterConstants.ShooterPoseOffsetY
+            ).rotateBy(robotPose.getRotation())
+        );
 
+Pose2d shooterPose = new Pose2d(shooterTranslation, robotPose.getRotation());
         Translation2d hubPos = (alliance == Alliance.Blue ?
                         FieldConstants.hubPosBlue : FieldConstants.hubPosRed);
 
-        double distance = hubPos.minus(shooterPose.getTranslation()).getNorm();
-
         ChassisSpeeds speeds = Robot.getOdometryInstance().getFieldRelativeSpeeds();
 
-        Translation2d linearVelocity = new Translation2d(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond);
+        Rotation2d robotRot = _odometry.getPose().getRotation();
+
+        Translation2d linearVelocity = new Translation2d(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond).rotateBy(robotRot);
+
+        double distance = hubPos.minus(shooterPose.getTranslation()).getNorm();
+        double distanceInches = Units.metersToInches(distance);
 
         //has to match calculateRPM()
-        double flightTime = (distance * ShooterConstants.FlightTimeSlope) + ShooterConstants.FlightTimeYInt;
+        double flightTime = (distanceInches * ShooterConstants.FlightTimeSlope) + ShooterConstants.FlightTimeYInt;
 
         Translation2d leadOffset = linearVelocity.times(flightTime);
 
         Translation2d compensatedHubPos = hubPos.minus(leadOffset);
 
+        double compensatedDistance = compensatedHubPos.minus(shooterPose.getTranslation()).getNorm();
+
         Translation2d compensatedVector = compensatedHubPos.minus(shooterPose.getTranslation());
 
-        Rotation2d angleToHub = compensatedVector.getAngle();
+        Rotation2d rawAngle = compensatedVector.getAngle();
+        Rotation2d currentRot = _odometry.getPose().getRotation();
+        Rotation2d angleToHub = currentRot.plus(
+            Rotation2d.fromRadians(
+                MathUtil.angleModulus(rawAngle.minus(currentRot).getRadians())
+            )
+        );
 
-        SmartDashboard.putNumber("Hub Distance", distance);
+        SmartDashboard.putNumber("Hub Distance", compensatedDistance);
 
         //intake is front of the robot, shooter is 90 degree offset
         double rotationalOffset = 90;

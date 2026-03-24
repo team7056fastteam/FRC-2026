@@ -14,7 +14,7 @@ import frc.robot.Robot;
 import frc.robot.Constants.DriveConstants;
 
 public class Intake extends SubsystemBase {
-    public enum IntakeState{Idle,Forward, ForwardSlow, Backward}
+    public enum IntakeState{Idle,Forward, ForwardSlow, Backward, Preload}
     IntakeState state = IntakeState.Idle;
     SparkMax intakeMotor;
     SparkMaxConfig motorConfig;
@@ -51,6 +51,9 @@ public class Intake extends SubsystemBase {
             case Backward:
                 intakeMotor.set(IntakeConstants.IntakeBackwardSpeed);
                 break;
+            case Preload:
+                intakeMotor.set(IntakeConstants.IntakePreloadSpeed);
+                break;
         }
     }
 
@@ -74,6 +77,7 @@ public class Intake extends SubsystemBase {
         public static final double IntakeForwardMinSpeed = 0.5;
         public static final double IntakeForwardSpeed = .8;
         public static final double IntakeForwardSlowSpeed = 0.5;
+        public static final double IntakePreloadSpeed = 0.1;
         public static final double IntakeBackwardSpeed = -IntakeForwardSlowSpeed;
     }
 

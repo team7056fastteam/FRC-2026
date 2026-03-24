@@ -19,11 +19,12 @@ public class ShootForTime extends Command {
     private final Shooter.ShooterState shooterState;
     private final double durationSeconds;
     private final boolean spinup;
+    private final boolean preload;
 
     private final Timer timer = new Timer();
     private final Timer intakeTimer = new Timer();
 
-    public ShootForTime(Shooter.ShooterState shooterState, double durationSeconds, boolean spinup) {
+    public ShootForTime(Shooter.ShooterState shooterState, double durationSeconds, boolean spinup, boolean preload) {
         this._shooter = Robot.getShooterInstance();
         this._spindexer = Robot.getSpindexerInstance();
         this._kicker = Robot.getKickerInstance();
@@ -31,6 +32,7 @@ public class ShootForTime extends Command {
         this.shooterState = shooterState;
         this.durationSeconds = durationSeconds;
         this.spinup = spinup;
+        this.preload = preload;
 
         addRequirements(_shooter, _spindexer, _kicker, _intake);
     }
@@ -52,7 +54,8 @@ public class ShootForTime extends Command {
         // Only run spindexer and kicker if shooter is at speed
         if (_shooter.atSpeed() && !spinup) {
             _spindexer.setState(Spindexer.SpindexerState.Forward);
-            if(DriveConstants.IntakeBackAndForthEnabled){
+            if(!preload){
+                if(DriveConstants.IntakeBackAndForthEnabled){
                     if(timer.get() < DriveConstants.IntakeForwardTime){
                         _intake.setState(IntakeState.ForwardSlow);
                     }
@@ -64,6 +67,9 @@ public class ShootForTime extends Command {
                         timer.start();
                     }
                 }
+            } else{
+                _intake.setState(IntakeState.Preload);
+            }
             _kicker.setState(Kicker.KickerState.Firing);
         }
     }
