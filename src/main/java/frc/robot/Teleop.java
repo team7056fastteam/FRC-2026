@@ -56,7 +56,6 @@ public class Teleop {
 
     Timer timer = new Timer();
 
-
     public void TeleopInit() {
         _drive = Robot.getSwerveInstance();
         _intake = Robot.getIntakeInstance();
@@ -102,8 +101,12 @@ public class Teleop {
         driveZ = get.driverZ();
 
         // apply deadband
-        driveX = Math.abs(driveX) > DriveConstants.kDeadband ? driveX : 0.0;
-        driveY = Math.abs(driveY) > DriveConstants.kDeadband ? driveY : 0.0;
+        if(!(Math.abs(driveX) > DriveConstants.kDeadband || Math.abs(driveY) > DriveConstants.kDeadband)){
+            driveX = 0;
+            driveY = 0;
+        }
+        // driveX = Math.abs(driveX) > DriveConstants.kDeadband ? driveX : 0.0;
+        // driveY = Math.abs(driveY) > DriveConstants.kDeadband ? driveY : 0.0;
         driveZ = Math.abs(driveZ) > DriveConstants.kDeadband ? driveZ : 0.0;
 
         // drive constants
@@ -146,16 +149,17 @@ public class Teleop {
 
         get.isPressed(get.alignBack() || get.alignFront() || get.alignRight() || get.alignLeft() || get.autoOrient(), () -> {
             double currentAngle = _odometry.getPose().getRotation().getRadians();
+            headingController.updatePIDS();
             SmartDashboard.putNumber("Target Rotation", targetRot.getDegrees());
             headingController.setState(HeadingType.SNAP);
             headingController.setTarget(targetRot.getRadians());
             double correction = headingController.calculate(currentAngle);
 
             double maxAngular = DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond;
-            zPowerOffset = Math.max(-maxAngular, Math.min(correction, maxAngular));
-            if(Math.abs(currentAngle - targetRot.getRadians()) < Math.toRadians(2)){
-                zPowerOffset = 0;
-            }
+            zPowerOffset = MathUtil.clamp(correction, -maxAngular, maxAngular);
+            // if(Math.abs(currentAngle - targetRot.getRadians()) < Math.toRadians(1)){
+            //     zPowerOffset = 0;
+            // }
         });
 
         get.isNotPressed(List.of(get.autoOrient(), get.alignBack(), get.alignFront(), get.alignLeft(), get.alignRight()), ()->{
@@ -273,7 +277,7 @@ public class Teleop {
             ).rotateBy(robotPose.getRotation())
         );
 
-Pose2d shooterPose = new Pose2d(shooterTranslation, robotPose.getRotation());
+        Pose2d shooterPose = new Pose2d(shooterTranslation, robotPose.getRotation());
         Translation2d hubPos = (alliance == Alliance.Blue ?
                         FieldConstants.hubPosBlue : FieldConstants.hubPosRed);
 

@@ -41,7 +41,7 @@ public class Shooter extends SubsystemBase{
     private double kD;
 
     public Shooter(){
-        // SmartDashboard.putNumber("RPM", 0.0);
+        SmartDashboard.putNumber("RPM", 0.0);
         shooterMotor = new SparkFlex(ShooterConstants.ShooterMotorID, MotorType.kBrushless);
         motorConfig = new SparkFlexConfig();
         motorConfig.inverted(ShooterConstants.ReversedShooter)
@@ -71,7 +71,7 @@ public class Shooter extends SubsystemBase{
                 break;
             case Close:
                 targetRPM = 2850;
-                // targetRPM = SmartDashboard.getNumber("RPM", 0.0);
+                targetRPM = SmartDashboard.getNumber("RPM", 0.0);
                 shooterMotor.getClosedLoopController().setSetpoint(targetRPM, ControlType.kVelocity);
                 break;
             case Mid:
@@ -229,7 +229,7 @@ public class Shooter extends SubsystemBase{
         double actual = shooterMotor.getEncoder().getVelocity();
 
         boolean validTarget = targetRPM > 500;
-        boolean withinTolerance = Math.abs(targetRPM - actual) < 400;
+        boolean withinTolerance = Math.abs(targetRPM - actual) < ShooterConstants.AtSpeedTolerance;
         boolean debouncedValue = atSpeedDebouncer.calculate(withinTolerance);
         return debouncedValue && validTarget;
     }
@@ -243,15 +243,16 @@ public class Shooter extends SubsystemBase{
     public static final class ShooterConstants{
         public static final int ShooterMotorID = 13;
         public static final boolean ReversedShooter = true;
-        public static final PIDValues ShooterPID = new PIDValues(0.00025, 0.000, 0.000);
-        public static final double ShooterFF = 1.0 / 5676.0;
+        public static final PIDValues ShooterPID = new PIDValues(0.00025, 0.000, 0.000); //0.00025, 0.000, 0.000
+        public static final double ShooterFF = 1.0 / 6784.0; 
         public static final double ShooterPoseOffsetX = Units.inchesToMeters(-9); //wpi is weird, x is forward positive, y is left positive
         public static final double ShooterPoseOffsetY = Units.inchesToMeters(7);
         public static final double RPMQuadraticA = 0.0837;
         public static final double RPMQuadraticB = -0.223;
         public static final double RPMQuadraticC = 2668.1;
-        public static final double FlightTimeSlope = .01;
-        public static final double FlightTimeYInt = 1;
+        public static final double FlightTimeSlope = .0479;
+        public static final double FlightTimeYInt = .95;
         public static final double FudgeFactor = 1.05;
+        public static final double AtSpeedTolerance = 75;
     }
 }

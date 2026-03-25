@@ -2,6 +2,7 @@ package frc.robot.Common;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 
 public class SwerveHeadingController {
@@ -15,7 +16,13 @@ public class SwerveHeadingController {
     PIDController stabilizeController;
 
     public SwerveHeadingController(){
-        snapController = new PIDController(5, 0, 0.2); //8, 1, 0.2
+        double kp = 14;
+        double ki = 2.7;
+        double kd = 0;
+        SmartDashboard.putNumber("kP", kp);
+        SmartDashboard.putNumber("kI", ki);
+        SmartDashboard.putNumber("kD", kd);
+        snapController = new PIDController(8, 0, 0); //8, 1, 0.2
         stabilizeController = new PIDController(3.5, 0, 0.5);
 
         snapController.enableContinuousInput(-Math.PI, Math.PI);
@@ -44,5 +51,8 @@ public class SwerveHeadingController {
         }
         correction = MathUtil.clamp(correction, -Constants.DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond,Constants.DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond);
         return correction;
+    }
+    public void updatePIDS(){
+        snapController = new PIDController(SmartDashboard.getNumber("kP", 0), SmartDashboard.getNumber("kI", 0), SmartDashboard.getNumber("kD", 0));
     }
 }

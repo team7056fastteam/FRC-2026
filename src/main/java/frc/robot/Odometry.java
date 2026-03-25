@@ -140,10 +140,11 @@ public class Odometry {
         SmartDashboard.putString(cam.camera.getName() + " pose", est.estimatedPose.toPose2d().toString());
    }
 
-    public Pose2d getPose() {
-        return poseEstimator.getEstimatedPosition();
-        // return new Pose2d(poseEstimator.getEstimatedPosition().getTranslation(), pigeon.getRotation2d());
-    }
+    public Pose2d getPose() { 
+        // return poseEstimator.getEstimatedPosition();
+        double pigeonDegrees = (Math.abs(pigeon.getRotation2d().getDegrees()) % 360) - 180;
+        return new Pose2d(poseEstimator.getEstimatedPosition().getTranslation(), Rotation2d.fromDegrees(pigeonDegrees));
+    } 
 
 
     public void zeroPigeon(){
