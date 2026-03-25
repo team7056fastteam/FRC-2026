@@ -12,6 +12,7 @@ import com.ctre.phoenix6.hardware.Pigeon2;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -142,7 +143,7 @@ public class Odometry {
 
     public Pose2d getPose() { 
         // return poseEstimator.getEstimatedPosition();
-        double pigeonDegrees = (Math.abs(pigeon.getRotation2d().getDegrees()) % 360) - 180;
+        double pigeonDegrees = MathUtil.inputModulus(pigeon.getRotation2d().getDegrees(), -180, 180);
         return new Pose2d(poseEstimator.getEstimatedPosition().getTranslation(), Rotation2d.fromDegrees(pigeonDegrees));
     } 
 
