@@ -96,6 +96,8 @@ public class Constants {
         public static final boolean IntakeBackAndForthEnabled = false;
         public static final double IntakeForwardTime = .3;
         public static final double IntakeBackwardTime = .4;
+
+        public static final double shooterAngleOffset = 86;
     } 
 
     public static final class FieldConstants {
@@ -106,6 +108,7 @@ public class Constants {
         public static final Translation2d passRightPosBlue = new Translation2d(4.625, 2.50);
         public static final Translation2d passLeftPosRed = new Translation2d(11.915, 2.50);
         public static final Translation2d passRightPosRed = new Translation2d(11.915, 6.00);
+        public static final Translation2d middleOfField = new Translation2d(8.280, 4.035);
     } 
 
 }

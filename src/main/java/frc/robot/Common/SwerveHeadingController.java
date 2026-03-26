@@ -38,15 +38,17 @@ public class SwerveHeadingController {
     }
 
     public double calculate(double currentRadians){
+        double error = MathUtil.angleModulus(targetRadians - currentRadians);
+
         double correction = 0;
         switch (headingType) {
             case OFF:
                 break;
             case STABILIZE:
-                correction = stabilizeController.calculate(currentRadians,targetRadians);
+                correction = stabilizeController.calculate(0,error);
                 break;
             case SNAP:
-                correction = snapController.calculate(currentRadians,targetRadians);
+                correction = snapController.calculate(0,error);
                 break;
         }
         correction = MathUtil.clamp(correction, -Constants.DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond,Constants.DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond);

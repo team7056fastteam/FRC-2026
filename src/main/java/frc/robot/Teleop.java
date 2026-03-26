@@ -54,6 +54,8 @@ public class Teleop {
 
     Alliance alliance;
 
+    boolean bumpButton = true;
+
     Timer timer = new Timer();
 
     public void TeleopInit() {
@@ -90,7 +92,7 @@ public class Teleop {
         // turbo
         get.isPressed(get.speedAdjustment(), () -> xT = 1.6);
         
-        get.isNotPressed(List.of(get.speedAdjustment(), get.negativeTurbo()), () -> xT = 0.675);
+        get.isNotPressed(List.of(get.speedAdjustment()), () -> xT = 0.675);
 
         // reorient
         get.isPressed(get.Reset(), () -> _odometry.zeroPigeon());
@@ -105,23 +107,12 @@ public class Teleop {
             driveX = 0;
             driveY = 0;
         }
-        // driveX = Math.abs(driveX) > DriveConstants.kDeadband ? driveX : 0.0;
-        // driveY = Math.abs(driveY) > DriveConstants.kDeadband ? driveY : 0.0;
         driveZ = Math.abs(driveZ) > DriveConstants.kDeadband ? driveZ : 0.0;
 
         // drive constants
         driveX *= DriveConstants.kTeleDriveMaxSpeedMetersPerSecond * xT;
         driveY *= DriveConstants.kTeleDriveMaxSpeedMetersPerSecond * xT;
         driveZ *= DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond * rT;
-
-        //negative turbo
-        get.isPressed(get.negativeTurbo(), () -> {
-            if(Math.abs(driveX) > DriveConstants.kDeadband || Math.abs(driveY) > DriveConstants.kDeadband){
-                double angle = Math.atan2(get.driverY(),get.driverX());
-                driveX = 0.2 * DriveConstants.kTeleDriveMaxSpeedMetersPerSecond * Math.cos(angle);
-                driveY = 0.2 * DriveConstants.kTeleDriveMaxSpeedMetersPerSecond * Math.sin(angle);
-            }
-        });
 
         if(alliance == Alliance.Red){
             driveX = -driveX;
@@ -147,13 +138,34 @@ public class Teleop {
         get.isPressed(get.alignBack() && alliance == Alliance.Red, () -> targetRot = Rotation2d.fromDegrees(0));
         get.isPressed(get.alignLeft() && alliance == Alliance.Red, () -> targetRot = Rotation2d.fromDegrees(-90));
 
-        get.isPressed(get.alignBack() || get.alignFront() || get.alignRight() || get.alignLeft() || get.autoOrient(), () -> {
-            double currentAngle = _odometry.getPose().getRotation().getRadians();
+        get.isPressed(get.negativeTurbo(), () -> {
+            if (bumpButton) {
+                double current = _odometry.getPose().getRotation().getRadians();
+                double option1;
+                double option2;
+                if(blueHub() || (redHalf() && !redHub())) {
+                    option1 = -160;
+                    option2 = 160;
+                } else{
+                    option1 = 20;
+                    option2 = -20;
+                }
+                double error1 = Math.abs(MathUtil.angleModulus(Units.degreesToRadians(option1) - current));
+                double error2 = Math.abs(MathUtil.angleModulus(Units.degreesToRadians(option2) - current));
+                targetRot = (error1 < error2) ? Rotation2d.fromDegrees(option1) : Rotation2d.fromDegrees(option2);
+                bumpButton = false;
+            }
+        });
+
+        get.isNotPressed(get.negativeTurbo(), () -> bumpButton = true);
+
+        get.isPressed(get.alignBack() || get.alignFront() || get.alignRight() || get.alignLeft() || get.autoOrient() || get.negativeTurbo(), () -> {
+            double currentAngle = MathUtil.angleModulus(_odometry.getPose().getRotation().getRadians());
             headingController.updatePIDS();
             SmartDashboard.putNumber("Target Rotation", targetRot.getDegrees());
             headingController.setState(HeadingType.SNAP);
             headingController.setTarget(targetRot.getRadians());
-            double correction = headingController.calculate(currentAngle);
+            double correction = headingController.calculate(MathUtil.angleModulus(currentAngle));
 
             double maxAngular = DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond;
             zPowerOffset = MathUtil.clamp(correction, -maxAngular, maxAngular);
@@ -162,7 +174,7 @@ public class Teleop {
             // }
         });
 
-        get.isNotPressed(List.of(get.autoOrient(), get.alignBack(), get.alignFront(), get.alignLeft(), get.alignRight()), ()->{
+        get.isNotPressed(List.of(get.autoOrient(), get.alignBack(), get.alignFront(), get.alignLeft(), get.alignRight(), get.negativeTurbo()), ()->{
             zPowerOffset = 0;
             headingController.setState(HeadingType.OFF);
         });
@@ -281,21 +293,22 @@ public class Teleop {
         Translation2d hubPos = (alliance == Alliance.Blue ?
                         FieldConstants.hubPosBlue : FieldConstants.hubPosRed);
 
-        ChassisSpeeds speeds = Robot.getOdometryInstance().getFieldRelativeSpeeds();
+        // ChassisSpeeds speeds = Robot.getOdometryInstance().getFieldRelativeSpeeds();
 
-        Rotation2d robotRot = _odometry.getPose().getRotation();
+        // Rotation2d robotRot = _odometry.getPose().getRotation();
 
-        Translation2d linearVelocity = new Translation2d(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond).rotateBy(robotRot);
+        // Translation2d linearVelocity = new Translation2d(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond).rotateBy(robotRot);
 
-        double distance = hubPos.minus(shooterPose.getTranslation()).getNorm();
-        double distanceInches = Units.metersToInches(distance);
+        // double distance = hubPos.minus(shooterPose.getTranslation()).getNorm();
+        // double distanceInches = Units.metersToInches(distance);
 
         //has to match calculateRPM()
-        double flightTime = (distanceInches * ShooterConstants.FlightTimeSlope) + ShooterConstants.FlightTimeYInt;
+        // double flightTime = (distanceInches * ShooterConstants.FlightTimeSlope) + ShooterConstants.FlightTimeYInt;
 
-        Translation2d leadOffset = linearVelocity.times(flightTime);
+        // Translation2d leadOffset = linearVelocity.times(flightTime);
 
-        Translation2d compensatedHubPos = hubPos.minus(leadOffset);
+        // Translation2d compensatedHubPos = hubPos.minus(leadOffset);
+        Translation2d compensatedHubPos = hubPos;
 
         double compensatedDistance = compensatedHubPos.minus(shooterPose.getTranslation()).getNorm();
 
@@ -312,8 +325,7 @@ public class Teleop {
         SmartDashboard.putNumber("Hub Distance", compensatedDistance);
 
         //intake is front of the robot, shooter is 90 degree offset
-        double rotationalOffset = 90;
-        return angleToHub.minus(Rotation2d.fromDegrees(rotationalOffset)); 
+        return angleToHub.minus(Rotation2d.fromDegrees(DriveConstants.shooterAngleOffset)); 
     }
 
     public Rotation2d getPassTargetRotation(){
@@ -346,8 +358,7 @@ public class Teleop {
         Translation2d toTarget = passPos.minus(shooterPose.getTranslation());
 
         //shooter isn't front of the robot
-        double rotationalOffset = 90;
-        return toTarget.getAngle().minus(Rotation2d.fromDegrees(rotationalOffset));
+        return toTarget.getAngle().minus(Rotation2d.fromDegrees(DriveConstants.shooterAngleOffset));
     }
 
     public boolean pastHub(){
@@ -356,6 +367,31 @@ public class Teleop {
                 return true;
             } else return false;
         } else if(_odometry.getPose().getX() > FieldConstants.hubPosRed.getX()){
+            return true;
+        } return false;
+    }
+
+    public boolean blueHalf(){
+            if (_odometry.getPose().getX() < FieldConstants.middleOfField.getX()) {
+                return true;
+            }  else return false;
+    }
+
+    public boolean blueHub(){
+            if (_odometry.getPose().getX() < FieldConstants.hubPosBlue.getX()) {
+                return true;
+            }  else return false;
+    }
+
+    public boolean redHalf(){
+        if(_odometry.getPose().getX() > FieldConstants.middleOfField.getX()){
+            return true;
+        } return false;
+        
+    }
+
+    public boolean redHub(){
+        if(_odometry.getPose().getX() > FieldConstants.hubPosRed.getX()){
             return true;
         } return false;
     }
