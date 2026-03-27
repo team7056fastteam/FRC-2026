@@ -162,7 +162,7 @@ public class ControllerFunction {
         return operator.getRawAxis(1) > 0.5;
     }
     /**Operator Right Stick Up*/
-    public boolean ClimbUp(){
+    public boolean OverrideAtSpeed(){
         return operator.getRawAxis(5) < -0.5;
     }
     /**Operator Right Stick Down*/

@@ -58,6 +58,8 @@ public class Teleop {
 
     boolean intakeReady = false;
 
+    boolean overrideAtSpeed = false;
+
     Timer timer = new Timer();
 
     public void TeleopInit() {
@@ -213,8 +215,14 @@ public class Teleop {
 
         get.isPressed(get.Shoot(), () -> {
             _shooter.fire();
-            if(_shooter.atSpeed()){
+            if(_shooter.atSpeed() || overrideAtSpeed){
                     intakeReady = true;
+                    _kicker.setState(KickerState.Firing);
+                    if(slowSpindexer){
+                        _spindexer.setState(SpindexerState.ForwardSlow);
+                    } else{
+                        _spindexer.setState(SpindexerState.Forward);
+                    } 
                 }
             if(intakeReady){
                 if(DriveConstants.IntakeBackAndForthEnabled){
@@ -229,19 +237,13 @@ public class Teleop {
                         timer.reset();
                     }
                 }
-                _kicker.setState(KickerState.Firing);
-                if(slowSpindexer){
-                    _spindexer.setState(SpindexerState.ForwardSlow);
-                } else{
-                    _spindexer.setState(SpindexerState.Forward);
-                } 
             }
             get.driverRumble();
         });
 
         get.isPressed(get.Pass(), () -> {
             _shooter.setState(ShooterState.Passing);
-            if(_shooter.atSpeed()){
+            if(_shooter.atSpeed() || overrideAtSpeed){
                 if(DriveConstants.IntakeBackAndForthEnabled){
                     if(timer.get() < DriveConstants.IntakeForwardTime){
                         _intake.setState(IntakeState.ForwardSlow);
@@ -279,11 +281,15 @@ public class Teleop {
         get.isPressed(get.OverrideLongShot(), () -> _shooter.setIntendedState(ShooterState.Far));
         get.isPressed(get.OverrideMidShot(), () -> _shooter.setIntendedState(ShooterState.Mid));
         get.isPressed(get.OverrideShortShot(), () -> _shooter.setIntendedState(ShooterState.Close));
+
+        get.isPressed(get.OverrideAtSpeed(), () -> overrideAtSpeed = true);
+        get.isNotPressed(get.OverrideAtSpeed(), () -> overrideAtSpeed = false);
     }
 
     public void Dashboard() {
         SmartDashboard.putBoolean("Driver Connected?", driver.isConnected());
         SmartDashboard.putBoolean("Operator Connected?", operator.isConnected());
+        SmartDashboard.putBoolean("Past Hub", pastHub());
     }
 
     // get rotation to hub
