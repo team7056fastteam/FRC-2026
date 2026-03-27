@@ -93,10 +93,10 @@ public class Constants {
         //you probally want to replace controllers after two seasons or if the stick drift is too high for preicous movement of robot
         public static final double kDeadband = 0.05;
 
-        public static final boolean IntakeBackAndForthEnabled = false;
+        public static final boolean IntakeBackAndForthEnabled = true;
         public static final double IntakeForwardTime = .3;
-        public static final double IntakeBackwardTime = .4;
-
+        public static final double IntakeStopTime = .5;
+        public static final double IntakeBackwardTime = .65;
         public static final double shooterAngleOffset = 86;
     } 
 

@@ -25,7 +25,7 @@
       },
       "nextControl": {
         "x": 5.7387040488139105,
-        "y": 0.7133723291013679
+        "y": 0.7133723291013678
       },
       "isLocked": false,
       "linkedName": null
@@ -36,12 +36,12 @@
         "y": 1.1750900900900911
       },
       "prevControl": {
-        "x": 7.497532206013796,
-        "y": 0.32132673202153084
+        "x": 7.599647336356594,
+        "y": 0.7334103857121962
       },
       "nextControl": {
-        "x": 8.30442228602228,
-        "y": 3.059858878191564
+        "x": 8.208716216216217,
+        "y": 2.533547297297298
       },
       "isLocked": false,
       "linkedName": null
@@ -73,23 +73,23 @@
       },
       "nextControl": {
         "x": 5.292465989371691,
-        "y": 0.7389629481425956
+        "y": 0.7389629481425954
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 3.7,
-        "y": 1.0499999999999998
+        "x": 3.653288288288289,
+        "y": 0.94016891891892
       },
       "prevControl": {
-        "x": 4.836236155072962,
-        "y": 0.6806121126024733
+        "x": 4.789524443361251,
+        "y": 0.5707810315213935
       },
       "nextControl": {
-        "x": 3.3580229719438273,
-        "y": 1.1611759834152104
+        "x": 3.311311260232116,
+        "y": 1.0513449023341306
       },
       "isLocked": false,
       "linkedName": null
@@ -133,7 +133,7 @@
   "constraintZones": [
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 2.165170556552963,
+      "minWaypointRelativePos": 1.7558348294434485,
       "maxWaypointRelativePos": 2.9964093357271113,
       "constraints": {
         "maxVelocity": 0.65,
@@ -189,7 +189,7 @@
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 3.0,
+    "maxVelocity": 2.0,
     "maxAcceleration": 3.0,
     "maxAngularVelocity": 600.0,
     "maxAngularAcceleration": 720.0,
@@ -198,7 +198,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -46.607000000000006
+    "rotation": -41.473
   },
   "reversed": false,
   "folder": null,

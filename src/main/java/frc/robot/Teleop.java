@@ -56,6 +56,8 @@ public class Teleop {
 
     boolean bumpButton = true;
 
+    boolean intakeReady = false;
+
     Timer timer = new Timer();
 
     public void TeleopInit() {
@@ -206,16 +208,21 @@ public class Teleop {
         get.isNotPressed(get.Shoot(), () -> {
             timer.reset();
             timer.start();
+            intakeReady = false;
         });
 
         get.isPressed(get.Shoot(), () -> {
             _shooter.fire();
             if(_shooter.atSpeed()){
+                    intakeReady = true;
+                }
+            if(intakeReady){
                 if(DriveConstants.IntakeBackAndForthEnabled){
                     if(timer.get() < DriveConstants.IntakeForwardTime){
-                        _intake.setState(IntakeState.ForwardSlow);
-                    }
-                    else if(timer.get() < DriveConstants.IntakeBackwardTime){
+                        _intake.setState(IntakeState.Forward);
+                    } else if(timer.get() < DriveConstants.IntakeStopTime){
+                        _intake.setState(IntakeState.Idle);
+                    } else if(timer.get() < DriveConstants.IntakeBackwardTime){
                         _intake.setState(IntakeState.Backward);
                     }
                     else{

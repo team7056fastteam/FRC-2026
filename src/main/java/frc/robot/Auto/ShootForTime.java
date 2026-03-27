@@ -20,6 +20,7 @@ public class ShootForTime extends Command {
     private final double durationSeconds;
     private final boolean spinup;
     private final boolean preload;
+    private boolean intakeReady;
 
     private final Timer timer = new Timer();
     private final Timer intakeTimer = new Timer();
@@ -47,30 +48,35 @@ public class ShootForTime extends Command {
         timer.start();
         intakeTimer.reset();
         intakeTimer.start();
+        intakeReady = false;
     }
 
     @Override
     public void execute() {
         // Only run spindexer and kicker if shooter is at speed
         if (_shooter.atSpeed() && !spinup) {
+            intakeReady = true;
             _spindexer.setState(Spindexer.SpindexerState.Forward);
+            _kicker.setState(Kicker.KickerState.Firing);
+        }
+        if(intakeReady){
             if(!preload){
                 if(DriveConstants.IntakeBackAndForthEnabled){
                     if(timer.get() < DriveConstants.IntakeForwardTime){
-                        _intake.setState(IntakeState.ForwardSlow);
-                    }
-                    else if(timer.get() < DriveConstants.IntakeBackwardTime){
+                        _intake.setState(IntakeState.Forward);
+                    } else if(timer.get() < DriveConstants.IntakeStopTime){
+                        _intake.setState(IntakeState.Idle);
+                    } else if(timer.get() < DriveConstants.IntakeBackwardTime){
                         _intake.setState(IntakeState.Backward);
                     }
                     else{
                         timer.reset();
-                        timer.start();
+                        // timer.start();
                     }
                 }
             } else{
                 _intake.setState(IntakeState.Preload);
             }
-            _kicker.setState(Kicker.KickerState.Firing);
         }
     }
 
