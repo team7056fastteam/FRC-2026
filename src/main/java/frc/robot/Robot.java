@@ -43,7 +43,7 @@ public class Robot extends TimedRobot {
   private PathLoader pathLoader;
   private Command autonomousCommand;
   private Field2d field;
-
+  boolean hasEnabled;
 
 
   @Override
@@ -58,6 +58,7 @@ public class Robot extends TimedRobot {
     registerNamedCommands();
     pathLoader = new PathLoader();
     field = new Field2d();
+    hasEnabled = false;
   }
 
   @Override
@@ -70,6 +71,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
+    hasEnabled = true;
     autonomousCommand = pathLoader.getSelectedAuto();
     if (autonomousCommand != null) {
       autonomousCommand.schedule();
@@ -83,6 +85,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
+    hasEnabled = true;
     if (autonomousCommand != null) {
       autonomousCommand.cancel();
     }
@@ -121,7 +124,9 @@ public class Robot extends TimedRobot {
             .toString()
         );
       SmartDashboard.putString("Robot Starting Pose Meters", startPose.toString());
-      _odometry.setPigeonAngle(startPose.getRotation().getDegrees());
+      if(!hasEnabled){
+        _odometry.setPigeonAngle(startPose.getRotation().getDegrees());
+      }
     }
     
   }
@@ -131,7 +136,8 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("Heading",_odometry.getHeading().getDegrees() % 360);
     SmartDashboard.putString("Robot Pose", _odometry.getPose().toString());
     SmartDashboard.putData("Field", field);
-    SmartDashboard.putBoolean("Cameras Connected?", _odometry.areCamerasConnected());
+    SmartDashboard.putBoolean("Cam0?", _odometry.isCam0Connected());
+    SmartDashboard.putBoolean("Cam1?", _odometry.isCam1Connected());
   }
 
 

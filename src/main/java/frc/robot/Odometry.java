@@ -181,8 +181,12 @@ public class Odometry {
         pigeon.setYaw(rot);
     }
 
-    public boolean areCamerasConnected() {
-        return cam0.isConnected() && cam1.isConnected();
+    public boolean isCam0Connected() {
+        return cam0.isConnected();
+    }
+
+    public boolean isCam1Connected() {
+        return cam1.isConnected();
     }
 
     private static class AprilTagVision {

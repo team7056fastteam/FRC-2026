@@ -74,8 +74,8 @@ public class Intake extends SubsystemBase {
     public static final class IntakeConstants{
         public static final int IntakeMotorID = 10;
         public static final boolean ReversedIntake = false;
-        public static final double IntakeForwardMinSpeed = 0.5;
-        public static final double IntakeForwardSpeed = .8;
+        public static final double IntakeForwardMinSpeed = 0.7;
+        public static final double IntakeForwardSpeed = .9;
         public static final double IntakeForwardSlowSpeed = 0.5;
         public static final double IntakePreloadSpeed = 0.1;
         public static final double IntakeBackwardSpeed = -IntakeForwardSlowSpeed;
