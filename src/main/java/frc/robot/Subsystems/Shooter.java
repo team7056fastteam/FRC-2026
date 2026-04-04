@@ -245,8 +245,8 @@ public class Shooter extends SubsystemBase{
         public static final boolean ReversedShooter = true;
         public static final PIDValues ShooterPID = new PIDValues(0.00025, 0.000, 0.000); //0.00025, 0.000, 0.000
         public static final double ShooterFF = 1.0 / 6784.0; 
-        public static final double ShooterPoseOffsetX = Units.inchesToMeters(-9.5); //wpi is weird, x is forward positive, y is left positive
-        public static final double ShooterPoseOffsetY = Units.inchesToMeters(12);
+        public static final double ShooterPoseOffsetX = Units.inchesToMeters(0); //wpi is weird, x is forward positive, y is left positive
+        public static final double ShooterPoseOffsetY = Units.inchesToMeters(0);
         public static final double RPMQuadraticA = 0.0837;
         public static final double RPMQuadraticB = -0.223;
         public static final double RPMQuadraticC = 2668.1;

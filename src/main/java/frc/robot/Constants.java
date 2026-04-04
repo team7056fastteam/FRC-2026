@@ -97,7 +97,8 @@ public class Constants {
         public static final double IntakeForwardTime = .3;
         public static final double IntakeStopTime = .5;
         public static final double IntakeBackwardTime = .65;
-        public static final double shooterAngleOffset = 86;
+        // public static final double shooterAngleOffset = 86;
+        public static final double shooterAngleOffset = 90;
     } 
 
     public static final class FieldConstants {

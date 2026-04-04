@@ -40,7 +40,7 @@ public class Teleop {
     XboxController operator = new XboxController(1);
 
     ControllerFunction get;
-    double xT = 1, rT = 1.75, driveX, driveY, driveZ;
+    double xT = 1, rT = 1.25, driveX, driveY, driveZ;
 
     double xPowerOffset;
     double yPowerOffset;
@@ -95,9 +95,9 @@ public class Teleop {
 
         // turbo
         // get.isPressed(get.speedAdjustment(), () -> xT = 1.7);
-        get.isPressed(get.speedAdjustment(), () -> xT = 3.0);
+        get.isPressed(get.speedAdjustment(), () -> {xT = 3.0; rT = 1.75;});
         
-        get.isNotPressed(List.of(get.speedAdjustment()), () -> xT = 0.675);
+        get.isNotPressed(List.of(get.speedAdjustment()), () -> {xT = 0.675; rT = 1.25;});
 
         // reorient
         get.isPressed(get.Reset(), () -> _odometry.zeroPigeon());
