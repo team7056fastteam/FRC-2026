@@ -13,8 +13,10 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -45,6 +47,7 @@ public class Robot extends TimedRobot {
   private Command autonomousCommand;
   private Field2d field;
   boolean hasEnabled;
+  boolean wonAuto;
 
 
   @Override
@@ -64,6 +67,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotPeriodic() {
+    wonAuto();
     _odometry.periodic();
     CommandScheduler.getInstance().run();
     RobotDashboard();
@@ -140,8 +144,61 @@ public class Robot extends TimedRobot {
     SmartDashboard.putBoolean("Cam0?", _odometry.isCam0Connected());
     SmartDashboard.putBoolean("Cam1?", _odometry.isCam1Connected());
     SmartDashboard.putNumber("Battery Volatge", RobotController.getBatteryVoltage());
+    SmartDashboard.putNumber("Time", DriverStation.getMatchTime());
+    SmartDashboard.putBoolean("Active Hub?", isActive());
+    SmartDashboard.putNumber("Shift Time", getShiftTime());
   }
 
+  public boolean isActive(){
+    if(DriverStation.isAutonomousEnabled()){
+      return true;
+    }
+    double matchTime = DriverStation.getMatchTime();
+    if(matchTime > 130) return true;
+    else if(matchTime > 105) return !wonAuto;
+    else if(matchTime > 80) return  wonAuto;
+    else if(matchTime > 55) return  !wonAuto;
+    else if(matchTime > 30) return  wonAuto;
+    else return true;
+  }
+
+  public void wonAuto(){
+    String gameData = DriverStation.getGameSpecificMessage();
+    boolean blueWon = false;
+    if(gameData.length() > 0){
+      switch (gameData.charAt(0)) {
+        case 'B':
+            blueWon = true;
+        break;
+        case 'R':
+            blueWon = false;
+        break;
+      }
+      if(DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Blue){
+        wonAuto = blueWon;
+      } else{
+        wonAuto = !blueWon;
+      }
+    } else{
+      wonAuto = false;
+    }
+  }
+
+  public double getShiftTime(){
+    double matchTime = DriverStation.getMatchTime();
+
+    if(DriverStation.isAutonomousEnabled()) return matchTime;
+    if(!DriverStation.isTeleopEnabled()) return 0.0;
+
+    if(matchTime - 130 > 0.0) return matchTime - 130.0;
+    else if(matchTime - 105.0 > 0.0) return matchTime - 105.0;
+    else if(matchTime - 80.0 > 0.0) return matchTime - 80.0;
+    else if(matchTime - 55.0 > 0.0) return matchTime - 55.0;
+    else if(!wonAuto){
+     if(matchTime - 30.0 > 0.0) return matchTime - 30.0;
+    else return matchTime;
+    } else return matchTime;
+  }
 
   public static void ResetOdometry(Pose2d pose){
     _odometry.resetPose(pose);
