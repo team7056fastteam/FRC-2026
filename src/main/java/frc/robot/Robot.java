@@ -13,6 +13,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -138,6 +139,7 @@ public class Robot extends TimedRobot {
     SmartDashboard.putData("Field", field);
     SmartDashboard.putBoolean("Cam0?", _odometry.isCam0Connected());
     SmartDashboard.putBoolean("Cam1?", _odometry.isCam1Connected());
+    SmartDashboard.putNumber("Battery Volatge", RobotController.getBatteryVoltage());
   }
 
 
