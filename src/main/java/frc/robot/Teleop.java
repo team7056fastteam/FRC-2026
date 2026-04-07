@@ -95,7 +95,7 @@ public class Teleop {
 
         // turbo
         // get.isPressed(get.speedAdjustment(), () -> xT = 1.7);
-        get.isPressed(get.speedAdjustment(), () -> {xT = 3.0; rT = 1.75;});
+        get.isPressed(get.speedAdjustment(), () -> {xT = 2.0; rT = 1.75;});
         
         get.isNotPressed(List.of(get.speedAdjustment()), () -> {xT = 0.675; rT = 1.25;});
 

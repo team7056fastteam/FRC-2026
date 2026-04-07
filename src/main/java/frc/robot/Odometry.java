@@ -87,7 +87,7 @@ public class Odometry {
         );
 
         applyVision(cam0);
-        applyVision(cam1);
+        // TODO applyVision(cam1);
     }
 
     private void applyVision(AprilTagVision cam) {

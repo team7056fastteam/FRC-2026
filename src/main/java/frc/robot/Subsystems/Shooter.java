@@ -252,7 +252,7 @@ public class Shooter extends SubsystemBase{
         public static final double RPMQuadraticC = 2668.1;
         public static final double FlightTimeSlope = .0479;
         public static final double FlightTimeYInt = .95;
-        public static final double FudgeFactor = 1.1;
+        public static final double FudgeFactor = 1.03;
         public static final double AtSpeedTolerance = 125;
     }
 }
