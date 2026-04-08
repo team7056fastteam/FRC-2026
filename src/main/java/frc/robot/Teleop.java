@@ -97,6 +97,7 @@ public class Teleop {
         // get.isPressed(get.speedAdjustment(), () -> xT = 1.7);
         get.isPressed(get.speedAdjustment(), () -> {xT = 2.0; rT = 1.75;});
         
+        
         get.isNotPressed(List.of(get.speedAdjustment()), () -> {xT = 0.675; rT = 1.25;});
 
         // reorient
@@ -182,6 +183,11 @@ public class Teleop {
         get.isNotPressed(List.of(get.autoOrient(), get.alignBack(), get.alignFront(), get.alignLeft(), get.alignRight(), get.negativeTurbo()), ()->{
             zPowerOffset = 0;
             headingController.setState(HeadingType.OFF);
+        });
+        get.isPressed(get.speedAdjustment(), () -> {
+            double angle = Math.atan2(get.driverY(),get.driverX());
+            driveX = .65 * Math.cos(angle);
+            driveY = .65 * Math.sin(angle);
         });
 
         // feed swerve

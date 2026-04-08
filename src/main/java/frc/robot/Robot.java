@@ -147,6 +147,7 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("Time", DriverStation.getMatchTime());
     SmartDashboard.putBoolean("Active Hub?", isActive());
     SmartDashboard.putNumber("Shift Time", getShiftTime());
+    SmartDashboard.putString("Speed", _odometry.getFieldRelativeSpeeds().toString());
   }
 
   public boolean isActive(){
