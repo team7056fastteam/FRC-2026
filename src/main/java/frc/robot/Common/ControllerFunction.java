@@ -78,7 +78,7 @@ public class ControllerFunction {
         return driver.getLeftBumperButton();
     }
     /**Driver Right Bumper */
-    public boolean negativeTurbo(){
+    public boolean rotateBump(){
         return driver.getRightBumperButton();
     }
     /**Driver D-Pad Any*/

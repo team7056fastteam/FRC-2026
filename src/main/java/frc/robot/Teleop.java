@@ -144,7 +144,7 @@ public class Teleop {
         get.isPressed(get.alignBack() && alliance == Alliance.Red, () -> targetRot = Rotation2d.fromDegrees(0));
         get.isPressed(get.alignLeft() && alliance == Alliance.Red, () -> targetRot = Rotation2d.fromDegrees(-90));
 
-        get.isPressed(get.negativeTurbo(), () -> {
+        get.isPressed(get.rotateBump(), () -> {
             if (bumpButton) {
                 double current = _odometry.getPose().getRotation().getRadians();
                 double option1;
@@ -163,9 +163,9 @@ public class Teleop {
             }
         });
 
-        get.isNotPressed(get.negativeTurbo(), () -> bumpButton = true);
+        get.isNotPressed(get.rotateBump(), () -> bumpButton = true);
 
-        get.isPressed(get.alignBack() || get.alignFront() || get.alignRight() || get.alignLeft() || get.autoOrient() || get.negativeTurbo(), () -> {
+        get.isPressed(get.alignBack() || get.alignFront() || get.alignRight() || get.alignLeft() || get.autoOrient() || get.rotateBump(), () -> {
             double currentAngle = MathUtil.angleModulus(_odometry.getPose().getRotation().getRadians());
             headingController.updatePIDS();
             SmartDashboard.putNumber("Target Rotation", targetRot.getDegrees());
@@ -180,15 +180,15 @@ public class Teleop {
             // }
         });
 
-        get.isNotPressed(List.of(get.autoOrient(), get.alignBack(), get.alignFront(), get.alignLeft(), get.alignRight(), get.negativeTurbo()), ()->{
+        get.isNotPressed(List.of(get.autoOrient(), get.alignBack(), get.alignFront(), get.alignLeft(), get.alignRight(), get.rotateBump()), ()->{
             zPowerOffset = 0;
             headingController.setState(HeadingType.OFF);
         });
-        get.isPressed(get.speedAdjustment(), () -> {
-            double angle = Math.atan2(get.driverY(),get.driverX());
-            driveX = .65 * Math.cos(angle);
-            driveY = .65 * Math.sin(angle);
-        });
+        // get.isPressed(get.speedAdjustment(), () -> {
+        //     double angle = Math.atan2(get.driverY(),get.driverX());
+        //     driveX = .65 * Math.cos(angle);
+        //     driveY = .65 * Math.sin(angle);
+        // });
 
         // feed swerve
         _drive.feedSwerveSpeeds(
