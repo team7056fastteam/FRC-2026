@@ -95,7 +95,7 @@ public class Constants {
 
         public static final boolean IntakeBackAndForthEnabled = true;
         public static final double IntakeForwardTime = .3;
-        public static final double IntakeStopTime = .5;
+        public static final double IntakeStopTime = .6;
         public static final double IntakeBackwardTime = .65;
         // public static final double shooterAngleOffset = 86;
         public static final double shooterAngleOffset = 90;
