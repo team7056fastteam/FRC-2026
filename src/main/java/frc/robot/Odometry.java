@@ -129,8 +129,14 @@ public class Odometry {
                 (1 + (avgDist * avgDist / 30.0))
             );
         }
-
-        
+        //TODO tune max translation error
+        // if (tagCount == 1 && translationError > 1.5) return;
+        // if (tagCount > 1 && translationError > 3.0) return;
+        double maxTranslationError = 1.5;
+        double translationError =
+            getPose().getTranslation()
+               .getDistance(est.estimatedPose.toPose2d().getTranslation());
+        if(translationError > maxTranslationError) return;
         poseEstimator.addVisionMeasurement(
             est.estimatedPose.toPose2d(),
             est.timestampSeconds,
