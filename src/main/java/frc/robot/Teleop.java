@@ -280,6 +280,7 @@ public class Teleop {
             }
             get.driverUnRumble();
         });
+        get.isPressed(get.RevShooter(), () -> get.driverLowRumble());
 
         get.isNotPressed(List.of(get.Pass(), get.Shoot(), get.RevShooter()), () -> _shooter.setState(ShooterState.Idle));
         get.isNotPressed(List.of(get.Pass(), get.Shoot(), get.UnstuckalateKicker()), () -> _kicker.setState(KickerState.Idle));

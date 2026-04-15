@@ -50,8 +50,8 @@ public class Odometry {
     
     public static final Transform3d kRobotToCam1 =
         new Transform3d(
-            new Translation3d(Units.inchesToMeters(-10.5), Units.inchesToMeters(-10.125), Units.inchesToMeters(7.5)),
-            new Rotation3d(0, Math.toRadians(30), Math.toRadians(180))
+            new Translation3d(Units.inchesToMeters(-10.75), Units.inchesToMeters(-9.5), Units.inchesToMeters(7.5)),
+            new Rotation3d(0, Math.toRadians(22), Math.toRadians(180))
         );
 
     public Odometry() {
@@ -87,7 +87,7 @@ public class Odometry {
         );
 
         applyVision(cam0);
-        // applyVision(cam1);
+        applyVision(cam1);
     }
 
     private void applyVision(AprilTagVision cam) {

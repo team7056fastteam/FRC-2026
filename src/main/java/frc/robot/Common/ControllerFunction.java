@@ -171,7 +171,11 @@ public class ControllerFunction {
     }
 
     public void driverRumble(){
-        driver.setRumble(RumbleType.kBothRumble, 0.25);
+        driver.setRumble(RumbleType.kBothRumble, 1);
+    }
+
+    public void driverLowRumble(){
+        driver.setRumble(RumbleType.kBothRumble, 0.1);
     }
 
     public void driverUnRumble(){
