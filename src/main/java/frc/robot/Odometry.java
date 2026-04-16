@@ -84,7 +84,7 @@ public class Odometry {
         poseEstimator.update(
             pigeon.getRotation2d(),
             modulePositions
-        );
+        ); 
 
         applyVision(cam0);
         applyVision(cam1);
@@ -92,59 +92,51 @@ public class Odometry {
 
     private void applyVision(AprilTagVision cam) {
 
-        Optional<EstimatedRobotPose> visionEstimate =
-            cam.getEstimatedVisionPose();
+    Optional<EstimatedRobotPose> visionEstimate =
+        cam.getEstimatedVisionPose();
 
-        if (visionEstimate.isEmpty()) return;
+    if (visionEstimate.isEmpty()) return;
 
-        EstimatedRobotPose est = visionEstimate.get();
-        int tagCount = est.targetsUsed.size();
-        if (tagCount == 0) return;
+    EstimatedRobotPose est = visionEstimate.get();
+    int tagCount = est.targetsUsed.size();
+    if (tagCount == 0) return;
 
-        double avgDist = 0.0;
+    double avgDist = 0.0;
 
-        for (var target : est.targetsUsed) {
-            avgDist +=
-                target.getBestCameraToTarget()
-                      .getTranslation()
-                      .getNorm();
-        }
+    for (var target : est.targetsUsed) {
+        avgDist +=
+            target.getBestCameraToTarget()
+                  .getTranslation()
+                  .getNorm();
+    }
 
-        avgDist /= tagCount;
+    avgDist /= tagCount;
 
-        Matrix<N3, N1> visionStdDevs;
+    Matrix<N3, N1> visionStdDevs;
 
-        if (tagCount > 1) {
+    if (tagCount > 1) {
             visionStdDevs = VecBuilder.fill(0.5, 0.5, 1);
         } else {
             visionStdDevs = VecBuilder.fill(4.0, 4.0, 8.0);
         }
 
-        // scale based on distance
-        for (int i = 0; i < 3; i++) {
-            visionStdDevs.set(
-                i,
-                0,
-                visionStdDevs.get(i, 0) *
-                (1 + (avgDist * avgDist / 30.0))
-            );
-        }
-        //TODO tune max translation error
-        // if (tagCount == 1 && translationError > 1.5) return;
-        // if (tagCount > 1 && translationError > 3.0) return;
-        double maxTranslationError = 1.5;
-        double translationError =
-            getPose().getTranslation()
-               .getDistance(est.estimatedPose.toPose2d().getTranslation());
-        if(translationError > maxTranslationError) return;
-        poseEstimator.addVisionMeasurement(
-            est.estimatedPose.toPose2d(),
-            est.timestampSeconds,
-            visionStdDevs
+    // scale based on distance
+    for (int i = 0; i < 3; i++) {
+        visionStdDevs.set(
+            i,
+            0,
+            visionStdDevs.get(i, 0) *
+            (1 + (avgDist * avgDist / 30.0))
         );
+    }
+    poseEstimator.addVisionMeasurement(
+        est.estimatedPose.toPose2d(),
+        est.timestampSeconds,
+        visionStdDevs
+    );
 
-        SmartDashboard.putString(cam.camera.getName() + " pose", est.estimatedPose.toPose2d().toString());
-   }
+    SmartDashboard.putString(cam.camera.getName() + " pose", est.estimatedPose.toPose2d().toString()); 
+}
 
     public Pose2d getPose() { 
         // return poseEstimator.getEstimatedPosition();
@@ -220,7 +212,7 @@ public class Odometry {
                 );
 
             estimator.setMultiTagFallbackStrategy(
-                PoseStrategy.AVERAGE_BEST_TARGETS
+                PoseStrategy.LOWEST_AMBIGUITY
             );
 
             estimator.setTagModel(TargetModel.kAprilTag36h11);

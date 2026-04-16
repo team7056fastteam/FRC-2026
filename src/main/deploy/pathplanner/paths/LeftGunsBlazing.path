@@ -4,28 +4,28 @@
     {
       "anchor": {
         "x": 4.4,
-        "y": 7.1
+        "y": 7.15
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.922775742544609,
-        "y": 7.1
+        "x": 4.649729670975327,
+        "y": 7.138377115910618
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "leftGunsBlazingStart"
     },
     {
       "anchor": {
         "x": 5.522,
-        "y": 7.1
+        "y": 7.15
       },
       "prevControl": {
-        "x": 5.222487692116722,
-        "y": 7.073280541283882
+        "x": 4.889511623694007,
+        "y": 7.224855234394275
       },
       "nextControl": {
-        "x": 7.115822072072072,
-        "y": 7.242184684684685
+        "x": 7.239212374943843,
+        "y": 6.9467672772392834
       },
       "isLocked": false,
       "linkedName": null
@@ -36,44 +36,60 @@
         "y": 6.813198198199034
       },
       "prevControl": {
-        "x": 7.637980501275577,
-        "y": 7.134315770670848
+        "x": 7.706886785571405,
+        "y": 7.062541157720782
       },
       "nextControl": {
-        "x": 8.167860360355508,
-        "y": 5.1789639639648
+        "x": 7.770406832561443,
+        "y": 6.188136641178799
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 7.85,
-        "y": 3.953288288289124
+        "x": 7.708231981977125,
+        "y": 4.801047297293103
       },
       "prevControl": {
-        "x": 7.901069819819821,
-        "y": 4.443558558559394
+        "x": 7.9791490461968735,
+        "y": 4.836564754069208
       },
       "nextControl": {
-        "x": 7.811967450505524,
-        "y": 3.588175813142165
+        "x": 7.421008047779645,
+        "y": 4.7633919960395525
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 7.320101351351351,
-        "y": 6.721272522522522
+        "x": 7.115822072069431,
+        "y": 5.168749999997062
       },
       "prevControl": {
-        "x": 7.886755056923807,
-        "y": 6.141127062055483
+        "x": 7.359761215064729,
+        "y": 4.916633439486349
       },
       "nextControl": {
-        "x": 6.891114864864864,
-        "y": 7.160472972972973
+        "x": 6.879922720742269,
+        "y": 5.412557255991476
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 7.034110360355503,
+        "y": 6.547635135130941
+      },
+      "prevControl": {
+        "x": 7.179553511574639,
+        "y": 6.119835528317587
+      },
+      "nextControl": {
+        "x": 6.935611054465229,
+        "y": 6.837356335325227
       },
       "isLocked": false,
       "linkedName": null
@@ -81,15 +97,15 @@
     {
       "anchor": {
         "x": 5.808434684684685,
-        "y": 7.1
+        "y": 7.2
       },
       "prevControl": {
-        "x": 6.4825563063063045,
-        "y": 7.1
+        "x": 6.30701708056927,
+        "y": 7.176865798436101
       },
       "nextControl": {
-        "x": 5.327349918356794,
-        "y": 7.1
+        "x": 5.476838026178214,
+        "y": 7.2153860705855735
       },
       "isLocked": false,
       "linkedName": null
@@ -97,15 +113,15 @@
     {
       "anchor": {
         "x": 4.15,
-        "y": 7.1
+        "y": 7.2
       },
       "prevControl": {
-        "x": 4.586699220767425,
-        "y": 7.1
+        "x": 4.809976005186711,
+        "y": 7.134464539259034
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "leftGunsBlazingEnd"
     }
   ],
   "rotationTargets": [
@@ -118,15 +134,19 @@
       "rotationDegrees": -90.0
     },
     {
-      "waypointRelativePos": 3.0,
-      "rotationDegrees": -90.0
+      "waypointRelativePos": 2.85,
+      "rotationDegrees": -91.0
     },
     {
-      "waypointRelativePos": 4.4,
+      "waypointRelativePos": 4.0,
+      "rotationDegrees": 90.0
+    },
+    {
+      "waypointRelativePos": 5.4,
       "rotationDegrees": 180.0
     },
     {
-      "waypointRelativePos": 5.528301886792463,
+      "waypointRelativePos": 6.528301886792463,
       "rotationDegrees": 180.0
     }
   ],
@@ -134,24 +154,11 @@
     {
       "name": "Constraints Zone",
       "minWaypointRelativePos": 1.9389587073608616,
-      "maxWaypointRelativePos": 3.35,
+      "maxWaypointRelativePos": 4.0,
       "constraints": {
         "maxVelocity": 0.8,
         "maxAcceleration": 3.0,
         "maxAngularVelocity": 540.0,
-        "maxAngularAcceleration": 720.0,
-        "nominalVoltage": 12.0,
-        "unlimited": false
-      }
-    },
-    {
-      "name": "Constraints Zone",
-      "minWaypointRelativePos": 4.190305206463192,
-      "maxWaypointRelativePos": 4.944344703770201,
-      "constraints": {
-        "maxVelocity": 1.8,
-        "maxAcceleration": 3.0,
-        "maxAngularVelocity": 600.0,
         "maxAngularAcceleration": 720.0,
         "nominalVoltage": 12.0,
         "unlimited": false
@@ -162,7 +169,7 @@
   "eventMarkers": [
     {
       "name": "ingest",
-      "waypointRelativePos": 2.0359066427289054,
+      "waypointRelativePos": 2.0,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
@@ -172,8 +179,19 @@
       }
     },
     {
+      "name": "spinup",
+      "waypointRelativePos": 4.5,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "spinup"
+        }
+      }
+    },
+    {
       "name": "unIngest",
-      "waypointRelativePos": 4.25,
+      "waypointRelativePos": 6.6,
       "endWaypointRelativePos": null,
       "command": {
         "type": "sequential",
@@ -188,17 +206,6 @@
           ]
         }
       }
-    },
-    {
-      "name": "spinup",
-      "waypointRelativePos": 4.5,
-      "endWaypointRelativePos": null,
-      "command": {
-        "type": "named",
-        "data": {
-          "name": "spinup"
-        }
-      }
     }
   ],
   "globalConstraints": {
@@ -211,7 +218,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -171.368
+    "rotation": -172.151
   },
   "reversed": false,
   "folder": null,

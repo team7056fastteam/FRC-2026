@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.0,
-        "y": 6.0
+        "x": 4.15,
+        "y": 7.2
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.7646734234234236,
-        "y": 6.4148536036036035
+        "x": 4.385232592557911,
+        "y": 7.115349971066256
       },
       "isLocked": false,
-      "linkedName": "leftPitShoot"
+      "linkedName": "leftGunsBlazingEnd"
     },
     {
       "anchor": {
-        "x": 3.7,
-        "y": 7.1
+        "x": 4.4,
+        "y": 7.15
       },
       "prevControl": {
-        "x": 2.9280968468468473,
-        "y": 6.923896396396396
+        "x": 4.176697784819698,
+        "y": 7.2624105008243
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "leftPitStart"
+      "linkedName": "leftGunsBlazingStart"
     }
   ],
   "rotationTargets": [],
@@ -48,7 +48,7 @@
   "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -146.036
+    "rotation": -172.151
   },
   "useDefaultConstraints": true
 }

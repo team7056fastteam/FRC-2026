@@ -64,6 +64,10 @@ public class SwerveModule {
         return angle * (absoluteEncoderReversed ? -1.0 : 1.0);
     }
 
+    public double getCurrent() {
+        return driveMotor.getOutputCurrent();
+    }
+
     public SwerveModuleState getState() {
         return new SwerveModuleState(getDriveVelocity(), new Rotation2d(getAbsoluteEncoderRad()));
     }

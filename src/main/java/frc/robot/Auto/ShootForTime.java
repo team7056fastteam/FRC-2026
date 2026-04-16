@@ -62,15 +62,15 @@ public class ShootForTime extends Command {
         if(intakeReady){
             if(!preload){
                 if(DriveConstants.IntakeBackAndForthEnabled){
-                    if(timer.get() < DriveConstants.IntakeForwardTime){
+                    if(intakeTimer.get() < DriveConstants.IntakeForwardTime){
                         _intake.setState(IntakeState.Forward);
-                    } else if(timer.get() < DriveConstants.IntakeStopTime){
+                    } else if(intakeTimer.get() < DriveConstants.IntakeStopTime){
                         _intake.setState(IntakeState.Idle);
-                    } else if(timer.get() < DriveConstants.IntakeBackwardTime){
+                    } else if(intakeTimer.get() < DriveConstants.IntakeBackwardTime){
                         _intake.setState(IntakeState.Backward);
                     }
                     else{
-                        timer.reset();
+                        intakeTimer.reset();
                         // timer.start();
                     }
                 }

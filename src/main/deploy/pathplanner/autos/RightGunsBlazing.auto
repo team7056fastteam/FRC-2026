@@ -19,12 +19,6 @@
         {
           "type": "path",
           "data": {
-            "pathName": "RightRotate"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
             "pathName": "RightPitGunsOut"
           }
         },
